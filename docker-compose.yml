@@ -1,0 +1,33 @@
+version: "3.2"
+
+volumes:
+  db-maria_data:
+  api_node_modules:
+
+services:
+  db-maria:
+    build:
+      context: .
+      dockerfile: db-maria.Dockerfile
+    ports:
+      - 13307:3306
+    restart: always
+    volumes:
+      - db-maria_data:/var/lib/mysql
+    env_file:
+      - .env
+
+  api:
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+    ports:
+      - 4100:4100
+      - 9339:9339
+    env_file:
+      - .env
+    volumes:
+      - ./api:/var/www/html
+      - api_node_modules:/var/www/html/node_modules
+    restart: always
+    command: bash -c "/wait-for-it.sh db-maria:3306 --strict -- npm install && npm run start"
