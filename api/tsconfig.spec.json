@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "types": ["node", "jest", "axios", "./spec.d.ts"],
+    "target": "es5",
+    "strict": false,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  }
+}
