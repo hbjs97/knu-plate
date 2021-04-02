@@ -1,0 +1,8 @@
+{
+  "dialect": "mariadb",
+  "timezone": "Asia/Seoul",
+  "dialectOptions": {
+    "timezone": "Etc/GMT+9"
+  },
+  "singularize": true
+}
