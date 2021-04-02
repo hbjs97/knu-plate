@@ -1,0 +1,5 @@
+*/node_modules
+api/dist
+.env
+api/test
+api/src/models
