@@ -174,7 +174,7 @@ DROP TABLE IF EXISTS `report`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `report` (
   `report_id` int(11) NOT NULL,
-  `user_id` varchar(255) NOT NULL COMMENT 'uuid',
+  `user_id` varchar(255) NOT NULL,
   `board_id` int(11) NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `reason` varchar(255) NOT NULL,
@@ -197,7 +197,7 @@ DROP TABLE IF EXISTS `simple_evaluate`;
 CREATE TABLE `simple_evaluate` (
   `simple_evaluate_id` int(11) NOT NULL,
   `reply_id` int(11) NOT NULL,
-  `user_id` varchar(255) NOT NULL COMMENT 'uuid',
+  `user_id` varchar(255) NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `menu_name` varchar(255) DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
@@ -220,7 +220,7 @@ DROP TABLE IF EXISTS `suggestion`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `suggestion` (
   `suggestion_id` int(11) NOT NULL,
-  `user_id` varchar(255) NOT NULL COMMENT 'uuid',
+  `user_id` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `contents` text NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
@@ -240,7 +240,7 @@ DROP TABLE IF EXISTS `suggestion_reply`;
 CREATE TABLE `suggestion_reply` (
   `suggestion_reply_id` int(11) NOT NULL,
   `suggestion_id` int(11) NOT NULL,
-  `user_id` varchar(255) NOT NULL COMMENT 'uuid',
+  `user_id` varchar(255) NOT NULL,
   `reply` text NOT NULL,
   `is_active` varchar(1) DEFAULT 'Y',
   PRIMARY KEY (`suggestion_reply_id`),
@@ -259,7 +259,7 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
-  `user_id` varchar(255) NOT NULL COMMENT 'uuid',
+  `user_id` varchar(255) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL COMMENT 'encryped_password',
   `display_name` varchar(255) NOT NULL COMMENT '이름 - 중복불가',
@@ -351,4 +351,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-04 22:03:17
+-- Dump completed on 2021-04-05  3:03:32
