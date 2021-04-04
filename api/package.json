@@ -4,7 +4,10 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "modeling:delete": "rm -rf \"./src/models\"",
+    "build": "rm -rf ./dist/ && tsc",
+    "start": "npm run modeling:dev && cross-env NODE_ENV=development FORCE_COLOR=1 nodemon -L -e ts --exec 'node --nolazy --inspect=0.0.0.0:9339 --require ts-node/register ./src/index.ts'",
+    "modeling:dev": "npm run modeling:delete && npx sequelize-auto -o \"./src/models\" -d ${MYSQL_DATABASE} -h ${DB_URL} -u ${MYSQL_USER} -p 3306 -x ${MYSQL_PASSWORD} -e mariadb -l ts -c \"./sequelize.config.json\""
   },
   "repository": {
     "type": "git",
