@@ -264,9 +264,12 @@ CREATE TABLE `user` (
   `password` varchar(255) NOT NULL COMMENT 'encryped_password',
   `display_name` varchar(255) NOT NULL COMMENT '이름 - 중복불가',
   `mail_address` varchar(255) NOT NULL COMMENT '학교 메일',
-  `date_create` datetime NOT NULL,
+  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `is_active` varchar(1) NOT NULL DEFAULT 'Y',
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `display_name` (`display_name`),
+  UNIQUE KEY `mail_address` (`mail_address`),
+  UNIQUE KEY `user_name` (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -351,4 +354,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-05  3:03:32
+-- Dump completed on 2021-04-05 23:19:33
