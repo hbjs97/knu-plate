@@ -26,7 +26,7 @@ const router = Router();
  *        type: string
  *        required: false
  *        name: name
- *        description: 이름으로 조회. 공백일 때 본인 정보 조회.
+ *        description: 이름으로 조회, 공백일 때 본인 정보 조회.
  *    responses:
  *      200:
  *        description: success
