@@ -36,7 +36,7 @@ pipeline {
 
                 dir('./') {    
                     sh '''
-                    cp /root/environment/.env .
+                    cp /environment/.env .
                     docker-compose -f stack.yml build
                     docker-compose -f stack.yml push
                     '''
@@ -62,8 +62,8 @@ pipeline {
                     cp /root/environment/.env .
                     docker-compose -f stack.yml build
                     docker-compose -f stack.yml push
-                    scp .env ubuntu@3.35.58.40:~/nexa_pms_dev/
-                    ssh ubuntu@3.35.58.40 "cd ~/nexa_pms_dev && bash ./deploy.sh"
+                    scp .env hbjs@23.97.52.234:~/knu-plate/
+                    ssh hbjs@23.97.52.234 "cd ~/knu-plate/ && bash ./deploy.sh"
                     '''
                 }
 
