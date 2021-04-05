@@ -9,7 +9,7 @@ services:
     build:
       context: .
       dockerfile: db-maria.Dockerfile
-    image: hbjs97/ # repo
+    image: hbjs97/knu-plate-db-maria
     ports:
       - 13307:3306
     restart: always
@@ -22,7 +22,7 @@ services:
     build:
       context: .
       dockerfile: api.Dockerfile
-    image: hbjs97/ # repo
+    image: hbjs97/knu-plate-api
     ports:
       - 4100:4100
       - 9339:9339
