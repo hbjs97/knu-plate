@@ -36,7 +36,7 @@ pipeline {
 
                 dir('./') {    
                     sh '''
-                    cp /environment/.env .
+                    cp /environment/knu-plate/.env .
                     docker-compose -f stack.yml build
                     docker-compose -f stack.yml push
                     '''
