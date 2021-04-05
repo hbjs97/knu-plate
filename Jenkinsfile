@@ -62,8 +62,8 @@ pipeline {
                     cp /root/environment/.env .
                     docker-compose -f stack.yml build
                     docker-compose -f stack.yml push
-                    scp .env hbjs@23.97.52.234:~/knu-plate/
-                    ssh hbjs@23.97.52.234 "cd ~/knu-plate/ && bash ./deploy.sh"
+                    scp .env ubuntu@3.35.58.40:~/knu-plate/
+                    ssh ubuntu@3.35.58.40 "cd ~/knu-plate/ && bash ./deploy.sh"
                     '''
                 }
 
