@@ -7,6 +7,7 @@ import nonAuthRoute from './non.auth';
 import { authentication, getUserType } from '../middleware/user.middleware';
 import { uploadFileType } from '../lib/constant';
 import { keys } from 'lodash';
+import authRoute from './auth';
 
 const router = Router();
 
@@ -34,5 +35,6 @@ router.use(errorHandler(authentication));
 router.use(errorHandler(getUserType));
 
 // authRouters
+router.use('/auth', authRoute);
 
 export default router;
