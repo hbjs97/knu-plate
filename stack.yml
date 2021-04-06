@@ -11,7 +11,7 @@ services:
       dockerfile: db-maria.Dockerfile
     image: hbjs97/knu-plate-db-maria
     ports:
-      - 13307:3306
+      - 13307:3307
     restart: always
     volumes:
       - db-maria_data_knu-plate:/var/lib/mysql
@@ -32,4 +32,4 @@ services:
       - ./api:/var/www/html
       - api_node_modules_knu-plate:/var/www/html/node_modules
     restart: always
-    command: bash -c "/wait-for-it.sh db-maria:3306 --strict -- npm install && npm run start"
+    command: bash -c "/wait-for-it.sh db-maria:3307 --strict -- npm install && npm run start"
