@@ -4,7 +4,7 @@ import path from 'path';
 const options = {
   swaggerDefinition: {
     info: {
-      title: 'nexa',
+      title: 'knu-plate',
       version: '1.0.0',
       description: 'API Documentation.',
     },
