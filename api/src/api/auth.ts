@@ -65,7 +65,7 @@ router.get(
 
 /**
  * @swagger
- * /api/auth/signout:
+ * /api/auth/unregister:
  *  delete:
  *    tags: [회원]
  *    summary: 회원탈퇴
@@ -79,7 +79,7 @@ router.get(
  *      500:
  *        description: internal error
  */
-router.delete('/signout', async (req: Request, res: Response) => {
+router.delete('/unregister', async (req: Request, res: Response) => {
   // if (!req.body._token_id) {
   //   return res.status(BAD_REQUEST).json({ error: 'refresh token is empty' });
   // }
