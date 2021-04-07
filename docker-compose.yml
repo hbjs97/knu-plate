@@ -30,4 +30,4 @@ services:
       - ./api:/var/www/html
       - api_node_modules_knu-plate:/var/www/html/node_modules
     restart: always
-    command: bash -c "/wait-for-it.sh db-maria:3306 --strict -- npm install && npm run start:dev"
+    command: bash -c "/wait-for-it.sh db-maria:3306 --strict -- npm install && npm run start"
