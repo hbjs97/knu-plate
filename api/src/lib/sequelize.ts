@@ -30,14 +30,14 @@ let selectedDB: {
   },
 };
 
-if (NODE_ENV === 'test') {
+if (NODE_ENV === 'development') {
   selectedDB = {
     db: MYSQL_DATABASE,
     user: MYSQL_USER,
     pass: MYSQL_PASSWORD,
     option: {
       ...selectedDB.option,
-      host: '127.0.0.1',
+      host: 'db-maria',
     },
   };
 } else {
