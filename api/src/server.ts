@@ -28,9 +28,9 @@ morgan.token('date', () => {
 });
 app.use(morgan('common'));
 
-if (NODE_ENV === 'production') {
-  app.use(helmet());
-}
+// if (NODE_ENV === 'production') {
+//   app.use(helmet());
+// }
 
 app.use(timeout('5s'));
 
