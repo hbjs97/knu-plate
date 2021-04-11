@@ -116,6 +116,27 @@ CREATE TABLE `file_folder` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `mail_auth`
+--
+
+DROP TABLE IF EXISTS `mail_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mail_auth` (
+  `mail_auth_id` int(11) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
+  `date_expire` datetime DEFAULT NULL,
+  `auth_url` varchar(255) NOT NULL,
+  `date_auth` datetime DEFAULT NULL,
+  `is_auth` varchar(1) DEFAULT 'N',
+  PRIMARY KEY (`mail_auth_id`),
+  KEY `FK_user_TO_mail_auth_1` (`user_id`),
+  CONSTRAINT `FK_user_TO_mail_auth_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `mall`
 --
 
@@ -354,4 +375,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-05 23:19:33
+-- Dump completed on 2021-04-11 20:37:55

@@ -5,8 +5,6 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-USE `test2`;
-
 SET NAMES utf8mb4;
 
 TRUNCATE `board`;
@@ -16,6 +14,8 @@ TRUNCATE `evaluate`;
 TRUNCATE `file`;
 
 TRUNCATE `file_folder`;
+
+TRUNCATE `mail_auth`;
 
 TRUNCATE `mall`;
 
@@ -43,4 +43,4 @@ INSERT INTO `user_role_group` (`user_role_group_id`, `name`, `description`) VALU
 
 TRUNCATE `user_token`;
 
--- 2021-04-04 15:40:09
+-- 2021-04-11 11:38:10
