@@ -6,3 +6,5 @@ dist/
 .env
 
 api/src/models
+
+send-message.sh

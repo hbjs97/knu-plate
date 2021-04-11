@@ -3,3 +3,4 @@ api/dist
 .env
 api/test
 api/src/models
+send-message.sh
