@@ -8,6 +8,9 @@ import { setRoleToUser } from './user.role.controller';
 import { user_token } from '../models/user_token';
 import { changeModelTimestamp } from '../lib/common';
 import { verificationToken } from '../lib/type';
+import { mail_auth, mail_authAttributes } from '../models/mail_auth';
+import dayjs from 'dayjs';
+import { EXPIRE_AUTH_MAIL } from '../lib/constant';
 
 export async function userDuplicateChecker(
   user_name: string,
@@ -59,6 +62,19 @@ export async function insertUser(
         },
         transaction
       );
+
+      const mailAuthModel: mail_authAttributes = {
+        user_id: theUser.user_id,
+        date_expire: dayjs().add(EXPIRE_AUTH_MAIL, 'minute').toDate(),
+        auth_code: uuidV4().split('-')[0],
+      };
+
+      const enrolledMailAuth = await mail_auth.create(mailAuthModel, {
+        transaction,
+      });
+      if (!enrolledMailAuth) {
+        throw new Error('mail auth create fail');
+      }
 
       if (roleData != 'ok') {
         throw new Error(roleData);

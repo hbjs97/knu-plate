@@ -17,3 +17,5 @@ export const REG_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|
 export const uploadFileType = {};
 
 export const PER_PAGE = 9;
+
+export const EXPIRE_AUTH_MAIL = 3;
