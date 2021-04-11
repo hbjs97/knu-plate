@@ -75,5 +75,24 @@ pipeline {
             }
         }
 
+        stage('Slack message') {
+            agent any
+
+            steps {
+                echo 'Slack webhook'
+                dir('./') {
+                    sh '''
+                    chmod +x ./send-message.sh && bash ./send-message.sh "[Sucess] Staging server!" "$(git log -1 --pretty="%B")"
+                    '''
+                }
+            }
+
+            post {
+                success {
+                    echo 'slack message post success.'
+                }
+            }
+        }
+
     }
 }
