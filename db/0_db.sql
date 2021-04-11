@@ -127,7 +127,7 @@ CREATE TABLE `mail_auth` (
   `user_id` varchar(255) NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `date_expire` datetime DEFAULT NULL,
-  `auth_url` varchar(255) NOT NULL,
+  `auth_code` varchar(255) NOT NULL,
   `date_auth` datetime DEFAULT NULL,
   `is_auth` varchar(1) DEFAULT 'N',
   PRIMARY KEY (`mail_auth_id`),
@@ -374,4 +374,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-11 22:04:02
+-- Dump completed on 2021-04-11 22:07:31

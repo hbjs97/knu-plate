@@ -19,11 +19,11 @@ TRUNCATE `mail_auth`;
 
 TRUNCATE `mall`;
 
+TRUNCATE `menu`;
+
 TRUNCATE `my_recommend`;
 
 TRUNCATE `report`;
-
-TRUNCATE `simple_evaluate`;
 
 TRUNCATE `suggestion`;
 
@@ -43,4 +43,4 @@ INSERT INTO `user_role_group` (`user_role_group_id`, `name`, `description`) VALU
 
 TRUNCATE `user_token`;
 
--- 2021-04-11 11:38:10
+-- 2021-04-11 13:05:59
