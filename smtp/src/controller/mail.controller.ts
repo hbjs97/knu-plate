@@ -16,10 +16,11 @@ export async function sendMail(
     });
     const mailOptions = {
       from: MAIL_INFO.mailid,
-      to: targetMailAddress + '@knu.ac.kr',
+      to: targetMailAddress,
       subject: MAIL_SUBJECT,
       text: authenticationUrl,
     };
+    console.log(mailOptions);
     await transporter.sendMail(mailOptions);
     transporter.close();
     return 'ok';
