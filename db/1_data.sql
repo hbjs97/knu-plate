@@ -39,7 +39,7 @@ TRUNCATE `user_role_group`;
 INSERT INTO `user_role_group` (`user_role_group_id`, `name`, `description`) VALUES
 (1,	'ADMIN',	'모든 권한'),
 (2,	'NON_AUTH_USER',	'메일 비인증 사용자'),
-(3,	'AUTH_USER',	'메일 인증 유저');
+(3,	'AUTH_USER',	'메일 인증 사용자');
 
 TRUNCATE `user_token`;
 
