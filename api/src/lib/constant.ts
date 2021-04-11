@@ -19,3 +19,9 @@ export const uploadFileType = {};
 export const PER_PAGE = 9;
 
 export const EXPIRE_AUTH_MAIL = 3;
+
+export const USER_ROLE_GROUP = {
+  ADMIN: 1,
+  NON_AUTH_USER: 2,
+  AUTH_USER: 3,
+};

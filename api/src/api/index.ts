@@ -4,6 +4,7 @@ import bytes from 'bytes';
 import { FILE_MAX_COUNT, FILE_MAX_SIZE } from '../lib/config';
 import { errorHandler } from '../lib/common';
 import nonAuthRoute from './non.auth';
+import mailAuthRoute from './mail.auth';
 import { authentication, getUserType } from '../middleware/user.middleware';
 import { uploadFileType } from '../lib/constant';
 import { keys } from 'lodash';
@@ -36,5 +37,6 @@ router.use(errorHandler(getUserType));
 
 // authRouters
 router.use('/auth', authRoute);
+router.use('/mail-auth', mailAuthRoute);
 
 export default router;

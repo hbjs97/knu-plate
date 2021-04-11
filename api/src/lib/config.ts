@@ -14,6 +14,10 @@ export const DB_URL = process.env.DB_URL || 'db-maria';
 export const PASSWORD_SALT = process.env.PASSWORD_SALT || 'oh my gosh';
 export const DEV_FILE_SERVER_URL =
   process.env.DEV_FILE_SERVER_URL || 'http://localhost:4200/';
+export const DEV_SMTP_SERVER = process.env.DEV_SMTP_SERVER || '';
+if (!DEV_SMTP_SERVER) {
+  throw new Error('DEV_SMTP_SERVER is empty');
+}
 export const FILE_MAX_SIZE = process.env.FILE_MAX_SIZE || '50mb';
 export const FILE_MAX_COUNT = Number(process.env.FILE_MAX_COUNT) || 10;
 export const PORT = Number(process.env.PORT) || 4100;
