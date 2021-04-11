@@ -4,7 +4,7 @@ import { MAIL_SUBJECT } from '../lib/constant';
 
 export async function sendMail(
   targetMailAddress: string,
-  authenticationUrl: string
+  authenticationCode: string
 ): Promise<string> {
   try {
     const transporter = nodemailer.createTransport({
@@ -18,7 +18,7 @@ export async function sendMail(
       from: MAIL_INFO.mailid,
       to: targetMailAddress,
       subject: MAIL_SUBJECT,
-      text: authenticationUrl,
+      text: authenticationCode,
     };
     console.log(mailOptions);
     await transporter.sendMail(mailOptions);

@@ -9,19 +9,22 @@ router.post(
   '/send-mail',
   errorHandler(async (req: Request, res: Response) => {
     const targetMailAddress = req.body.targetMailAddress;
-    const authenticationUrl = req.body.authenticationUrl;
+    const authenticationCode = req.body.authenticationCode;
     if (!targetMailAddress) {
       return res
         .status(BAD_REQUEST)
         .json({ error: 'targetMailAddress is empty' });
     }
-    if (!authenticationUrl) {
+    if (!authenticationCode) {
       return res
         .status(BAD_REQUEST)
-        .json({ error: 'authenticationUrl is empty' });
+        .json({ error: 'authenticationCode is empty' });
     }
 
-    const sendMailResult = await sendMail(targetMailAddress, authenticationUrl);
+    const sendMailResult = await sendMail(
+      targetMailAddress,
+      authenticationCode
+    );
     if (sendMailResult != 'ok') {
       return res.status(INTERNAL_ERROR).json({ error: sendMailResult });
     }
