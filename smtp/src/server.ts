@@ -1,5 +1,4 @@
 import morgan from 'morgan';
-import helmet from 'helmet';
 import express, { Request, Response, NextFunction } from 'express';
 import apiRoute from './api/index';
 import { INTERNAL_ERROR, NOT_FOUND } from './lib/constant';
