@@ -123,7 +123,7 @@ DROP TABLE IF EXISTS `mail_auth`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mail_auth` (
-  `mail_auth_id` int(11) NOT NULL,
+  `mail_auth_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `date_expire` datetime DEFAULT NULL,
@@ -375,4 +375,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-11 20:37:55
+-- Dump completed on 2021-04-11 21:05:10
