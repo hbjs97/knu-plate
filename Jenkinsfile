@@ -60,6 +60,7 @@ pipeline {
                 dir('./') {
                     sh '''
                     cp /root/environment/knu-plate/.env .
+                    cp /root/environment/knu-plate/send-message.sh .
                     docker-compose -f stack.yml build
                     docker-compose -f stack.yml push
                     scp .env ubuntu@3.35.58.40:~/knu-plate/
