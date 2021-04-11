@@ -1,1 +1,1 @@
-curl -X POST --data-urlencode "payload={\"channel\": \"#app-project\", \"username\": \"hbjs\", \"text\": \"ec2 staging server deploy success.\"}" https://hooks.slack.com/services/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
+curl -X POST --data-urlencode "payload={\"channel\": \"#app-project\", \"username\": \"hbjs\", \"text\": \"ec2 staging server deploy success.\"}" https://hooks.slack.com/services/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
