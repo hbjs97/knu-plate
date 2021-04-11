@@ -166,6 +166,29 @@ CREATE TABLE `mall` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `menu`
+--
+
+DROP TABLE IF EXISTS `menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `menu` (
+  `menu_id` int(11) NOT NULL,
+  `mall_id` int(11) NOT NULL,
+  `reply_id` int(11) NOT NULL,
+  `menu_name` varchar(255) NOT NULL,
+  `like` int(11) NOT NULL DEFAULT 0,
+  `dislike` int(11) NOT NULL DEFAULT 0,
+  `date_create` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`menu_id`),
+  KEY `FK_mall_TO_menu_1` (`mall_id`),
+  KEY `FK_evaluate_TO_menu_1` (`reply_id`),
+  CONSTRAINT `FK_evaluate_TO_menu_1` FOREIGN KEY (`reply_id`) REFERENCES `evaluate` (`reply_id`),
+  CONSTRAINT `FK_mall_TO_menu_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `my_recommend`
 --
 
@@ -205,30 +228,6 @@ CREATE TABLE `report` (
   KEY `FK_board_TO_report_1` (`board_id`),
   CONSTRAINT `FK_board_TO_report_1` FOREIGN KEY (`board_id`) REFERENCES `board` (`board_id`),
   CONSTRAINT `FK_user_TO_report_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `simple_evaluate`
---
-
-DROP TABLE IF EXISTS `simple_evaluate`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `simple_evaluate` (
-  `simple_evaluate_id` int(11) NOT NULL,
-  `reply_id` int(11) NOT NULL,
-  `user_id` varchar(255) NOT NULL,
-  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
-  `menu_name` varchar(255) DEFAULT NULL,
-  `price` int(11) DEFAULT NULL,
-  `contents` varchar(255) DEFAULT NULL,
-  `is_active` varchar(1) DEFAULT 'Y',
-  PRIMARY KEY (`simple_evaluate_id`),
-  KEY `FK_evaluate_TO_simple_evaluate_1` (`reply_id`),
-  KEY `FK_user_TO_simple_evaluate_1` (`user_id`),
-  CONSTRAINT `FK_evaluate_TO_simple_evaluate_1` FOREIGN KEY (`reply_id`) REFERENCES `evaluate` (`reply_id`),
-  CONSTRAINT `FK_user_TO_simple_evaluate_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -375,4 +374,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-11 21:05:10
+-- Dump completed on 2021-04-11 22:04:02
