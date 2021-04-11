@@ -16,7 +16,7 @@ export async function sendMail(
     });
     const mailOptions = {
       from: MAIL_INFO.mailid,
-      to: targetMailAddress,
+      to: targetMailAddress + '@knu.ac.kr',
       subject: MAIL_SUBJECT,
       text: authenticationUrl,
     };
