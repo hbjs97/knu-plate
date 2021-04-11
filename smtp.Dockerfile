@@ -10,4 +10,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 WORKDIR /var/www/html
 COPY ./smtp /var/www/html
 
-CMD [ "bash", "-c", "npm install && npm run start" ]
+COPY ./wait-for-it.sh /wait-for-it.sh
+RUN ["chmod", "+x", "/wait-for-it.sh"]
+
+CMD [ "bash", "-c", "/wait-for-it.sh db-maria:3306 --strict npm install && npm run start" ]
