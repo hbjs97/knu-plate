@@ -164,14 +164,14 @@ DROP TABLE IF EXISTS `report`;
 CREATE TABLE `report` (
   `report_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) NOT NULL,
-  `board_id` int(11) NOT NULL,
+  `review_id` int(11) NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `reason` varchar(255) NOT NULL,
   `result` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`report_id`),
   KEY `FK_user_TO_report_1` (`user_id`),
-  KEY `FK_review_TO_report_1` (`board_id`),
-  CONSTRAINT `FK_review_TO_report_1` FOREIGN KEY (`board_id`) REFERENCES `review` (`review_id`),
+  KEY `FK_review_TO_report_1` (`review_id`) USING BTREE,
+  CONSTRAINT `FK_review_TO_report_1` FOREIGN KEY (`review_id`) REFERENCES `review` (`review_id`),
   CONSTRAINT `FK_user_TO_report_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -316,7 +316,7 @@ CREATE TABLE `user_role_group` (
   `name` varchar(20) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_role_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,4 +346,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-17  9:28:06
+-- Dump completed on 2021-04-17  9:54:29
