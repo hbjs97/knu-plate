@@ -7,10 +7,6 @@ SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 SET NAMES utf8mb4;
 
-TRUNCATE `board`;
-
-TRUNCATE `evaluate`;
-
 TRUNCATE `file`;
 
 TRUNCATE `file_folder`;
@@ -24,6 +20,8 @@ TRUNCATE `menu`;
 TRUNCATE `my_recommend`;
 
 TRUNCATE `report`;
+
+TRUNCATE `review`;
 
 TRUNCATE `suggestion`;
 
@@ -43,4 +41,4 @@ INSERT INTO `user_role_group` (`user_role_group_id`, `name`, `description`) VALU
 
 TRUNCATE `user_token`;
 
--- 2021-04-11 13:05:59
+-- 2021-04-17 00:06:29

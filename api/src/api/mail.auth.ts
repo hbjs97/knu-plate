@@ -5,7 +5,7 @@ import {
 } from '../controller/mail.auth.controller';
 import { getUserRoleByUserID } from '../controller/user.role.controller';
 import { errorHandler } from '../lib/common';
-import { BAD_REQUEST, INTERNAL_ERROR, OK, REG_EMAIL } from '../lib/constant';
+import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
 
 const router = Router();
@@ -15,7 +15,6 @@ const router = Router();
  *  post:
  *    tags: [회원 - 인증]
  *    summary: 인증코드 발급
- *    parameters:
  *    responses:
  *      200:
  *        description: success

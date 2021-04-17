@@ -24,58 +24,6 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `test2` /*!40100 DEFAULT CHARACTER SET 
 USE `test2`;
 
 --
--- Table structure for table `board`
---
-
-DROP TABLE IF EXISTS `board`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `board` (
-  `board_id` int(11) NOT NULL,
-  `user_id` varchar(255) NOT NULL,
-  `mall_id` int(11) NOT NULL,
-  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
-  `title` varchar(255) DEFAULT NULL,
-  `evaluate` int(1) NOT NULL COMMENT '1~5',
-  `board_image` varchar(255) NOT NULL,
-  PRIMARY KEY (`board_id`),
-  KEY `FK_user_TO_board_1` (`user_id`),
-  KEY `FK_mall_TO_board_1` (`mall_id`),
-  KEY `FK_file_folder_TO_board_1` (`board_image`),
-  CONSTRAINT `FK_file_folder_TO_board_1` FOREIGN KEY (`board_image`) REFERENCES `file_folder` (`file_folder_id`),
-  CONSTRAINT `FK_mall_TO_board_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`),
-  CONSTRAINT `FK_user_TO_board_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `evaluate`
---
-
-DROP TABLE IF EXISTS `evaluate`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `evaluate` (
-  `reply_id` int(11) NOT NULL,
-  `board_id` int(11) NOT NULL,
-  `mall_id` int(11) NOT NULL,
-  `user_id` varchar(255) NOT NULL,
-  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
-  `is_active` varchar(1) DEFAULT 'Y',
-  `doc_food` varchar(255) DEFAULT NULL,
-  `evaluate` int(1) NOT NULL DEFAULT 0 COMMENT '0~5',
-  `evaluate_contents` varchar(255) NOT NULL,
-  PRIMARY KEY (`reply_id`),
-  KEY `FK_board_TO_evaluate_1` (`board_id`),
-  KEY `FK_mall_TO_evaluate_1` (`mall_id`),
-  KEY `FK_user_TO_evaluate_1` (`user_id`),
-  CONSTRAINT `FK_board_TO_evaluate_1` FOREIGN KEY (`board_id`) REFERENCES `board` (`board_id`),
-  CONSTRAINT `FK_mall_TO_evaluate_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`),
-  CONSTRAINT `FK_user_TO_evaluate_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `file`
 --
 
@@ -144,7 +92,7 @@ DROP TABLE IF EXISTS `mall`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mall` (
-  `mall_id` int(11) NOT NULL,
+  `mall_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `mall_name` varchar(255) NOT NULL,
@@ -173,17 +121,14 @@ DROP TABLE IF EXISTS `menu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `menu` (
-  `menu_id` int(11) NOT NULL,
+  `menu_id` int(11) NOT NULL AUTO_INCREMENT,
   `mall_id` int(11) NOT NULL,
-  `reply_id` int(11) NOT NULL,
   `menu_name` varchar(255) NOT NULL,
   `like` int(11) NOT NULL DEFAULT 0,
   `dislike` int(11) NOT NULL DEFAULT 0,
   `date_create` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`menu_id`),
   KEY `FK_mall_TO_menu_1` (`mall_id`),
-  KEY `FK_evaluate_TO_menu_1` (`reply_id`),
-  CONSTRAINT `FK_evaluate_TO_menu_1` FOREIGN KEY (`reply_id`) REFERENCES `evaluate` (`reply_id`),
   CONSTRAINT `FK_mall_TO_menu_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -196,7 +141,7 @@ DROP TABLE IF EXISTS `my_recommend`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `my_recommend` (
-  `recommend_id` int(11) NOT NULL,
+  `recommend_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) NOT NULL,
   `mall_id` int(11) NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
@@ -217,7 +162,7 @@ DROP TABLE IF EXISTS `report`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `report` (
-  `report_id` int(11) NOT NULL,
+  `report_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) NOT NULL,
   `board_id` int(11) NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
@@ -225,9 +170,39 @@ CREATE TABLE `report` (
   `result` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`report_id`),
   KEY `FK_user_TO_report_1` (`user_id`),
-  KEY `FK_board_TO_report_1` (`board_id`),
-  CONSTRAINT `FK_board_TO_report_1` FOREIGN KEY (`board_id`) REFERENCES `board` (`board_id`),
+  KEY `FK_review_TO_report_1` (`board_id`),
+  CONSTRAINT `FK_review_TO_report_1` FOREIGN KEY (`board_id`) REFERENCES `review` (`review_id`),
   CONSTRAINT `FK_user_TO_report_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `review`
+--
+
+DROP TABLE IF EXISTS `review`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `review` (
+  `review_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) NOT NULL,
+  `mall_id` int(11) NOT NULL,
+  `menu_id` int(11) NOT NULL,
+  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
+  `contents` varchar(255) NOT NULL,
+  `evaluate` int(1) NOT NULL COMMENT '1~5',
+  `review_image` varchar(255) NOT NULL,
+  `is_like` varchar(1) DEFAULT 'Y',
+  `is_active` varchar(1) DEFAULT 'Y',
+  PRIMARY KEY (`review_id`),
+  KEY `FK_user_TO_review_1` (`user_id`),
+  KEY `FK_mall_TO_review_1` (`mall_id`),
+  KEY `FK_menu_TO_review_1` (`menu_id`),
+  KEY `FK_file_folder_TO_review_1` (`review_image`),
+  CONSTRAINT `FK_file_folder_TO_review_1` FOREIGN KEY (`review_image`) REFERENCES `file_folder` (`file_folder_id`),
+  CONSTRAINT `FK_mall_TO_review_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`),
+  CONSTRAINT `FK_menu_TO_review_1` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`),
+  CONSTRAINT `FK_user_TO_review_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -239,7 +214,7 @@ DROP TABLE IF EXISTS `suggestion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `suggestion` (
-  `suggestion_id` int(11) NOT NULL,
+  `suggestion_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `contents` text NOT NULL,
@@ -258,7 +233,7 @@ DROP TABLE IF EXISTS `suggestion_reply`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `suggestion_reply` (
-  `suggestion_reply_id` int(11) NOT NULL,
+  `suggestion_reply_id` int(11) NOT NULL AUTO_INCREMENT,
   `suggestion_id` int(11) NOT NULL,
   `user_id` varchar(255) NOT NULL,
   `reply` text NOT NULL,
@@ -284,12 +259,9 @@ CREATE TABLE `user` (
   `password` varchar(255) NOT NULL COMMENT 'encryped_password',
   `display_name` varchar(255) NOT NULL COMMENT '이름 - 중복불가',
   `mail_address` varchar(255) NOT NULL COMMENT '학교 메일',
-  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
+  `date_create` datetime NOT NULL,
   `is_active` varchar(1) NOT NULL DEFAULT 'Y',
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `display_name` (`display_name`),
-  UNIQUE KEY `mail_address` (`mail_address`),
-  UNIQUE KEY `user_name` (`user_name`)
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -318,7 +290,7 @@ DROP TABLE IF EXISTS `user_role_authority`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_role_authority` (
-  `user_role_authority_id` int(11) NOT NULL,
+  `user_role_authority_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_role_group_id` int(11) NOT NULL,
   `name` varchar(30) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -340,7 +312,7 @@ DROP TABLE IF EXISTS `user_role_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_role_group` (
-  `user_role_group_id` int(11) NOT NULL,
+  `user_role_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_role_group_id`)
@@ -374,4 +346,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-11 22:07:31
+-- Dump completed on 2021-04-17  9:28:06
