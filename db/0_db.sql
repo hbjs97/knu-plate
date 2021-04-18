@@ -259,7 +259,7 @@ CREATE TABLE `user` (
   `password` varchar(255) NOT NULL COMMENT 'encryped_password',
   `display_name` varchar(255) NOT NULL COMMENT '이름 - 중복불가',
   `mail_address` varchar(255) NOT NULL COMMENT '학교 메일',
-  `date_create` datetime DEFAULT current_timestamp(),
+  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `is_active` varchar(1) NOT NULL DEFAULT 'Y',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
