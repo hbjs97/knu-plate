@@ -81,7 +81,7 @@ CREATE TABLE `mail_auth` (
   PRIMARY KEY (`mail_auth_id`),
   KEY `FK_user_TO_mail_auth_1` (`user_id`),
   CONSTRAINT `FK_user_TO_mail_auth_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,20 +97,21 @@ CREATE TABLE `mall` (
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `mall_name` varchar(255) NOT NULL,
   `contact` varchar(255) DEFAULT NULL,
-  `category_name` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `latitude` double DEFAULT NULL,
-  `longitude` double DEFAULT NULL,
+  `category_name` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `latitude` double NOT NULL,
+  `longitude` double NOT NULL,
   `thumbnail` varchar(255) DEFAULT NULL,
   `evaluate_average` int(1) DEFAULT NULL,
   `recommend_count` int(11) NOT NULL DEFAULT 0,
   `is_active` varchar(1) DEFAULT 'Y',
+  `gate_location` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`mall_id`),
   KEY `FK_user_TO_mall_1` (`user_id`),
   KEY `FK_file_folder_TO_mall_1` (`thumbnail`),
   CONSTRAINT `FK_file_folder_TO_mall_1` FOREIGN KEY (`thumbnail`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_user_TO_mall_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,4 +347,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-18 12:46:42
+-- Dump completed on 2021-04-18 16:26:57
