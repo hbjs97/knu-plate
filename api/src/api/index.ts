@@ -4,11 +4,12 @@ import bytes from 'bytes';
 import { FILE_MAX_COUNT, FILE_MAX_SIZE } from '../lib/config';
 import { errorHandler } from '../lib/common';
 import nonAuthRoute from './non.auth';
+import authRoute from './auth';
 import mailAuthRoute from './mail.auth';
+import mallRoute from './mall';
 import { authentication, getUserType } from '../middleware/user.middleware';
 import { uploadFileType } from '../lib/constant';
 import { keys } from 'lodash';
-import authRoute from './auth';
 
 const router = Router();
 
@@ -38,5 +39,6 @@ router.use(errorHandler(getUserType));
 // authRouters
 router.use('/auth', authRoute);
 router.use('/mail-auth', mailAuthRoute);
+router.use('/mall', mallRoute);
 
 export default router;

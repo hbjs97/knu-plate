@@ -1,0 +1,177 @@
+import { Request, Response, Router } from 'express';
+import {
+  enrollMall,
+  getAddressListFromKakaoMapApi,
+  mallValidationChecker,
+} from '../controller/mall.controller';
+import {
+  changeModelTimestamp,
+  errorHandler,
+  regexTestDecoded,
+} from '../lib/common';
+import {
+  BAD_REQUEST,
+  INTERNAL_ERROR,
+  OK,
+  PER_PAGE,
+  REG_MOBILE_PHONE,
+} from '../lib/constant';
+import { DB } from '../lib/sequelize';
+import { mallAttributes } from '../models/mall';
+
+const router = Router();
+
+/**
+ * @swagger
+ * /api/mall:
+ *  post:
+ *    tags: [매장]
+ *    summary: 매장 등록
+ *    parameters:
+ *      - in: formData
+ *        type: string
+ *        required: true
+ *        name: mall_name
+ *        description: 매장 이름
+ *      - in: formData
+ *        type: string
+ *        required: false
+ *        name: contact
+ *        description: 연락처
+ *      - in: formData
+ *        type: string
+ *        required: true
+ *        name: category_name
+ *        description: 카테고리
+ *      - in: formData
+ *        type: string
+ *        required: true
+ *        name: address
+ *        description: 주소
+ *      - in: formData
+ *        type: number
+ *        required: true
+ *        name: latitude
+ *        description: 위도
+ *      - in: formData
+ *        type: number
+ *        required: true
+ *        name: longitude
+ *        description: 경도
+ *      - in: formData
+ *        type: file
+ *        required: false
+ *        name: thumbnail
+ *        description: 썸네일
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.post(
+  '/',
+  errorHandler(async (req: Request, res: Response) => {
+    const mall_name = req.body.mall_name;
+    const contact = req.body.contact;
+    const category_name = req.body.category_name;
+    const address = req.body.address;
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
+    const thumbnail = req.body.thumbnail;
+
+    if (!mall_name || !category_name || !address || !latitude || !longitude) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+    if (contact) {
+      if (!regexTestDecoded(REG_MOBILE_PHONE, contact)) {
+        return res.status(BAD_REQUEST).json({
+          error: 'incorrect contact format',
+        });
+      }
+    }
+
+    const resultValidator = await mallValidationChecker({
+      mall_name,
+      address,
+      category_name,
+      longitude,
+      latitude,
+    });
+    if (resultValidator != 'ok') {
+      return res.status(INTERNAL_ERROR).json({ error: resultValidator });
+    }
+
+    const mallData: mallAttributes = {
+      mall_name,
+      contact,
+      category_name,
+      address,
+      latitude,
+      longitude,
+      user_id: req.body._user_id,
+    };
+
+    const enrolledMall = await enrollMall(mallData, req.files);
+    if (typeof enrolledMall == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: enrolledMall });
+    }
+
+    res.status(OK).json({
+      ...enrolledMall.get({ plain: true }),
+      date_create: changeModelTimestamp(enrolledMall.date_create!),
+    });
+  })
+);
+
+/**
+ * @swagger
+ * /api/mall/address:
+ *  get:
+ *    tags: [매장]
+ *    summary: 매장 주소 검색
+ *    parameters:
+ *      - in: query
+ *        type: string
+ *        required: true
+ *        name: keyword
+ *        description: 매장 이름
+ *      - in: query
+ *        type: number
+ *        required: false
+ *        name: page
+ *        description: 페이지 인덱스
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/address',
+  errorHandler(async (req: Request, res: Response) => {
+    const keyword = String(req.query.keyword);
+    const pageNumber = Number(req.query.page) || 1;
+    if (!keyword || !pageNumber) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const addressListFromKakaoMapApi = await getAddressListFromKakaoMapApi(
+      keyword,
+      pageNumber
+    );
+    if (typeof addressListFromKakaoMapApi == 'string') {
+      return res
+        .status(INTERNAL_ERROR)
+        .json({ error: addressListFromKakaoMapApi });
+    }
+
+    res.status(OK).json(addressListFromKakaoMapApi);
+  })
+);
+
+export default router;
