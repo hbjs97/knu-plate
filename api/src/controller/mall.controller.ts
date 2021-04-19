@@ -3,8 +3,10 @@ import { KAKAOAK } from '../lib/config';
 import { FOOD_CATEGORY, KAKAO_MAP_API_URL, PER_PAGE } from '../lib/constant';
 import { DB } from '../lib/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import { addressOutput } from '../lib/type';
+import { addressOutput, mallExpand } from '../lib/type';
 import { mall, mallAttributes } from '../models/mall';
+import { menu } from '../models/menu';
+import { getMyRecommend } from './my.recommend.controller';
 
 export async function mallValidationChecker(
   mallData: mallAttributes
@@ -180,4 +182,42 @@ export async function deleteMall(mall_id: number): Promise<string> {
   }
 
   return 'ok';
+}
+
+export async function getDetailMall(
+  mall_id: number,
+  user_id: string
+): Promise<mallExpand | string> {
+  let expandedMallInfo: null | mallExpand = await mall.findOne({
+    where: {
+      mall_id,
+      is_active: 'Y',
+    },
+    raw: true,
+  });
+  if (!expandedMallInfo) {
+    return 'mall not founded';
+  }
+
+  expandedMallInfo = {
+    ...expandedMallInfo,
+    menu: await menu.findAll({ where: { mall_id } }),
+  };
+
+  const myRecommend = await getMyRecommend(user_id, mall_id);
+  expandedMallInfo =
+    typeof myRecommend != 'string'
+      ? (expandedMallInfo = {
+          ...expandedMallInfo,
+          my_recommend: 'Y',
+        })
+      : (expandedMallInfo = {
+          ...expandedMallInfo,
+          my_recommend: 'N',
+        });
+
+  if (!expandedMallInfo) {
+    return 'detailMallInfo not founded';
+  }
+  return expandedMallInfo;
 }
