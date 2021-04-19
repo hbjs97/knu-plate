@@ -164,3 +164,20 @@ export async function getMallList(
   });
   return mallList;
 }
+
+export async function deleteMall(mall_id: number): Promise<string> {
+  const theMall = await getMallById(mall_id);
+  if (typeof theMall == 'string') {
+    return theMall;
+  }
+  if (theMall.is_active != 'Y') {
+    return 'inactive mall';
+  }
+
+  const deletedMall = await theMall.update({ is_active: 'N' });
+  if (deletedMall.is_active != 'N') {
+    return 'mall delete fail';
+  }
+
+  return 'ok';
+}

@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import {
+  deleteMall,
   enrollMall,
   getAddressListFromKakaoMapApi,
   getMallList,
@@ -225,6 +226,43 @@ router.get(
     }
 
     res.status(OK).json(addressListFromKakaoMapApi);
+  })
+);
+
+/**
+ * @swagger
+ * /api/mall/{mall_id}:
+ *  delete:
+ *    tags: [매장]
+ *    summary: 매장 삭제
+ *    parameters:
+ *      - in: formData
+ *        type: path
+ *        required: true
+ *        name: mall_id
+ *        description: 매장 아이디
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.delete(
+  '/:mall_id',
+  errorHandler(async (req: Request, res: Response) => {
+    const mall_id = Number(req.params.mall_id);
+    if (!mall_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const deleteResult = await deleteMall(mall_id);
+    if (deleteResult != 'ok') {
+      return res.status(INTERNAL_ERROR).json({ error: deleteResult });
+    }
+
+    res.status(OK).json({ result: 'ok' });
   })
 );
 
