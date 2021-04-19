@@ -15,7 +15,7 @@ export async function enrollMenu(
     return 'inactive mall';
   }
 
-  const menuDuplicateCheck = await getMenuByName(menu_name);
+  const menuDuplicateCheck = await getMenuByNameAndMallId(menu_name, mall_id);
   if (typeof menuDuplicateCheck != 'string') {
     return 'duplicated menu';
   }
@@ -38,8 +38,11 @@ export async function getMenuById(menu_id: number): Promise<menu | string> {
   return theMenu;
 }
 
-export async function getMenuByName(menu_name: string): Promise<menu | string> {
-  const theMenu = await menu.findOne({ where: { menu_name } });
+export async function getMenuByNameAndMallId(
+  menu_name: string,
+  menu_id: number
+): Promise<menu | string> {
+  const theMenu = await menu.findOne({ where: { menu_name, menu_id } });
   if (!theMenu) {
     return 'menu not founded';
   }
