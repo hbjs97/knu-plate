@@ -102,7 +102,7 @@ CREATE TABLE `mall` (
   `latitude` double NOT NULL,
   `longitude` double NOT NULL,
   `thumbnail` varchar(255) DEFAULT NULL,
-  `evaluate_average` int(1) DEFAULT NULL,
+  `evaluate_average` double DEFAULT NULL,
   `recommend_count` int(11) NOT NULL DEFAULT 0,
   `is_active` varchar(1) DEFAULT 'Y',
   `gate_location` varchar(20) DEFAULT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE `mall` (
   KEY `FK_file_folder_TO_mall_1` (`thumbnail`),
   CONSTRAINT `FK_file_folder_TO_mall_1` FOREIGN KEY (`thumbnail`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_user_TO_mall_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -347,4 +347,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-18 16:26:57
+-- Dump completed on 2021-04-19  6:59:37

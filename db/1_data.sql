@@ -18,7 +18,10 @@ INSERT INTO `mail_auth` (`mail_auth_id`, `user_id`, `date_create`, `date_expire`
 
 TRUNCATE `mall`;
 INSERT INTO `mall` (`mall_id`, `user_id`, `date_create`, `mall_name`, `contact`, `category_name`, `address`, `latitude`, `longitude`, `thumbnail`, `evaluate_average`, `recommend_count`, `is_active`, `gate_location`) VALUES
-(2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-18 16:30:38',	'끝돈',	NULL,	'한식',	'대구 북구 산격동 1321-2',	35.894697690918576,	128.6112701960862,	NULL,	NULL,	0,	'Y',	NULL);
+(2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-18 16:30:38',	'끝돈',	NULL,	'한식',	'대구 북구 산격동 1321-2',	35.894697690918576,	128.6112701960862,	NULL,	NULL,	0,	'Y',	NULL),
+(3,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:37:39',	'반미리코',	NULL,	'세계 음식',	'대구 북구 산격동 1321-5',	35.8946462818903,	128.611072021845,	NULL,	NULL,	0,	'Y',	NULL),
+(4,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:38:26',	'메타피자 경대점',	NULL,	'양식',	'대구 북구 산격동 1328-5',	35.89404622954,	128.610661169814,	NULL,	NULL,	0,	'Y',	NULL),
+(5,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:39:29',	'맘스터치 경북대점',	NULL,	'세계 음식',	'대구 북구 산격동 1393-25',	35.8928210820776,	128.608749237664,	NULL,	NULL,	0,	'Y',	NULL);
 
 TRUNCATE `menu`;
 
@@ -52,6 +55,6 @@ INSERT INTO `user_role_group` (`user_role_group_id`, `name`, `description`) VALU
 
 TRUNCATE `user_token`;
 INSERT INTO `user_token` (`user_token_id`, `user_id`, `date_create`, `access_point`) VALUES
-('9bdebd39-a294-486d-b030-60b445e178b5',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-18 16:28:43',	'insomnia/2021.2.2');
+('b72adc9f-adc0-407e-8d6c-bff2f58b6c22',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:16:31',	'insomnia/2021.2.2');
 
--- 2021-04-18 07:31:02
+-- 2021-04-19 00:39:50
