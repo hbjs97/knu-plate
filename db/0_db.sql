@@ -132,7 +132,26 @@ CREATE TABLE `menu` (
   UNIQUE KEY `menu_name` (`menu_name`),
   KEY `FK_mall_TO_menu_1` (`mall_id`),
   CONSTRAINT `FK_mall_TO_menu_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `menu_list`
+--
+
+DROP TABLE IF EXISTS `menu_list`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `menu_list` (
+  `menu_list_id` int(11) NOT NULL AUTO_INCREMENT,
+  `review_id` int(11) NOT NULL,
+  `menu_id` int(11) NOT NULL,
+  PRIMARY KEY (`menu_list_id`),
+  KEY `FK_review_TO_menu_list_1` (`review_id`),
+  KEY `FK_menu_TO_menu_list_1` (`menu_id`),
+  CONSTRAINT `FK_menu_TO_menu_list_1` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`),
+  CONSTRAINT `FK_review_TO_menu_list_1` FOREIGN KEY (`review_id`) REFERENCES `review` (`review_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -189,23 +208,19 @@ CREATE TABLE `review` (
   `review_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) NOT NULL,
   `mall_id` int(11) NOT NULL,
-  `menu_id` int(11) NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `contents` varchar(255) NOT NULL,
   `evaluate` int(1) NOT NULL COMMENT '1~5',
-  `review_image` varchar(255) NOT NULL,
-  `is_like` varchar(1) DEFAULT 'Y',
+  `review_image` varchar(255) DEFAULT NULL,
   `is_active` varchar(1) DEFAULT 'Y',
   PRIMARY KEY (`review_id`),
   KEY `FK_user_TO_review_1` (`user_id`),
   KEY `FK_mall_TO_review_1` (`mall_id`),
-  KEY `FK_menu_TO_review_1` (`menu_id`),
   KEY `FK_file_folder_TO_review_1` (`review_image`),
   CONSTRAINT `FK_file_folder_TO_review_1` FOREIGN KEY (`review_image`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_mall_TO_review_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`),
-  CONSTRAINT `FK_menu_TO_review_1` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`),
   CONSTRAINT `FK_user_TO_review_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -348,4 +363,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-19 16:33:33
+-- Dump completed on 2021-04-19 20:49:58

@@ -18,18 +18,31 @@ INSERT INTO `mail_auth` (`mail_auth_id`, `user_id`, `date_create`, `date_expire`
 
 TRUNCATE `mall`;
 INSERT INTO `mall` (`mall_id`, `user_id`, `date_create`, `mall_name`, `contact`, `category_name`, `address`, `latitude`, `longitude`, `thumbnail`, `evaluate_average`, `recommend_count`, `is_active`, `gate_location`) VALUES
-(2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-18 16:30:38',	'끝돈',	NULL,	'한식',	'대구 북구 산격동 1321-2',	35.894697690918576,	128.6112701960862,	NULL,	NULL,	0,	'Y',	NULL),
+(2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-18 16:30:38',	'끝돈',	NULL,	'한식',	'대구 북구 산격동 1321-2',	35.894697690918576,	128.6112701960862,	NULL,	4.5,	0,	'Y',	NULL),
 (3,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:37:39',	'반미리코',	NULL,	'세계 음식',	'대구 북구 산격동 1321-5',	35.8946462818903,	128.611072021845,	NULL,	NULL,	0,	'Y',	NULL),
 (4,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:38:26',	'메타피자 경대점',	NULL,	'양식',	'대구 북구 산격동 1328-5',	35.89404622954,	128.610661169814,	NULL,	NULL,	0,	'Y',	NULL),
 (5,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:39:29',	'맘스터치 경북대점',	NULL,	'세계 음식',	'대구 북구 산격동 1393-25',	35.8928210820776,	128.608749237664,	NULL,	NULL,	0,	'Y',	NULL);
 
 TRUNCATE `menu`;
+INSERT INTO `menu` (`menu_id`, `mall_id`, `menu_name`, `like`, `dislike`, `date_create`) VALUES
+(1,	2,	'백반',	2,	0,	'2021-04-19 16:31:31'),
+(2,	2,	'삼겹살',	1,	1,	'2021-04-19 17:02:18');
+
+TRUNCATE `menu_list`;
+INSERT INTO `menu_list` (`menu_list_id`, `review_id`, `menu_id`) VALUES
+(1,	1,	1),
+(2,	1,	2),
+(3,	2,	1),
+(4,	2,	2);
 
 TRUNCATE `my_recommend`;
 
 TRUNCATE `report`;
 
 TRUNCATE `review`;
+INSERT INTO `review` (`review_id`, `user_id`, `mall_id`, `date_create`, `contents`, `evaluate`, `review_image`, `is_active`) VALUES
+(1,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	2,	'2021-04-19 20:53:10',	'review1',	4,	NULL,	'Y'),
+(2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	2,	'2021-04-19 20:54:49',	'review1',	5,	NULL,	'Y');
 
 TRUNCATE `suggestion`;
 
@@ -55,6 +68,6 @@ INSERT INTO `user_role_group` (`user_role_group_id`, `name`, `description`) VALU
 
 TRUNCATE `user_token`;
 INSERT INTO `user_token` (`user_token_id`, `user_id`, `date_create`, `access_point`) VALUES
-('b72adc9f-adc0-407e-8d6c-bff2f58b6c22',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:16:31',	'insomnia/2021.2.2');
+('f70de74e-0c43-4f13-b850-c28acadb9628',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 17:02:12',	'insomnia/2021.2.2');
 
--- 2021-04-19 00:39:50
+-- 2021-04-19 11:55:28
