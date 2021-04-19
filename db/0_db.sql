@@ -111,7 +111,7 @@ CREATE TABLE `mall` (
   KEY `FK_file_folder_TO_mall_1` (`thumbnail`),
   CONSTRAINT `FK_file_folder_TO_mall_1` FOREIGN KEY (`thumbnail`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_user_TO_mall_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,9 +129,10 @@ CREATE TABLE `menu` (
   `dislike` int(11) NOT NULL DEFAULT 0,
   `date_create` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`menu_id`),
+  UNIQUE KEY `menu_name` (`menu_name`),
   KEY `FK_mall_TO_menu_1` (`mall_id`),
   CONSTRAINT `FK_mall_TO_menu_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -347,4 +348,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-19  6:59:37
+-- Dump completed on 2021-04-19 16:33:33
