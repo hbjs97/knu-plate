@@ -2,6 +2,7 @@ import axios from 'axios';
 import { KAKAOAK } from '../lib/config';
 import { FOOD_CATEGORY, KAKAO_MAP_API_URL, PER_PAGE } from '../lib/constant';
 import { DB } from '../lib/sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { addressOutput } from '../lib/type';
 import { mall, mallAttributes } from '../models/mall';
 
@@ -123,4 +124,43 @@ export async function getMallById(mall_id: number): Promise<mall | string> {
     return 'mall not founded';
   }
   return theMall;
+}
+
+export async function getMallList(
+  mallOption: {
+    mall_name?: string;
+    category_name?: string;
+  },
+  pageOption: {
+    cursor: number;
+  }
+): Promise<mall[]> {
+  let whereAttribute = {};
+  whereAttribute = {
+    is_active: 'Y',
+    mall_id: {
+      [Op.gt]: pageOption.cursor,
+    },
+  };
+  if (mallOption.mall_name) {
+    whereAttribute = {
+      ...whereAttribute,
+      mall_name: {
+        [Op.like]: '%' + mallOption.mall_name + '%',
+      },
+    };
+  }
+  if (mallOption.category_name) {
+    whereAttribute = {
+      ...whereAttribute,
+      category_name: mallOption.category_name,
+    };
+  }
+
+  const mallList = await mall.findAll({
+    where: whereAttribute,
+    // TODO: include my_recommand
+    limit: PER_PAGE,
+  });
+  return mallList;
 }

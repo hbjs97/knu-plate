@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 import {
   enrollMall,
   getAddressListFromKakaoMapApi,
+  getMallList,
   mallValidationChecker,
 } from '../controller/mall.controller';
 import {
@@ -13,7 +14,6 @@ import {
   BAD_REQUEST,
   INTERNAL_ERROR,
   OK,
-  PER_PAGE,
   REG_MOBILE_PHONE,
 } from '../lib/constant';
 import { DB } from '../lib/sequelize';
@@ -123,6 +123,60 @@ router.post(
       ...enrolledMall.get({ plain: true }),
       date_create: changeModelTimestamp(enrolledMall.date_create!),
     });
+  })
+);
+
+/**
+ * @swagger
+ * /api/mall:
+ *  get:
+ *    tags: [매장]
+ *    summary: 매장 목록 조회
+ *    parameters:
+ *      - in: query
+ *        type: string
+ *        required: false
+ *        name: mall_name
+ *        description: 매장 이름
+ *      - in: query
+ *        type: string
+ *        required: false
+ *        name: category_name
+ *        description: 카테고리 이름
+ *      - in: query
+ *        type: number
+ *        required: false
+ *        name: cursor
+ *        description: 현재 페이지 마지막 인덱스
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/',
+  errorHandler(async (req: Request, res: Response) => {
+    const mall_name = <string>req.query.mall_name;
+    const category_name = <string>req.query.category_name;
+    const cursor = Number(req.query.cursor) || 0;
+
+    const mallList = await getMallList(
+      { mall_name, category_name },
+      { cursor }
+    );
+    if (typeof mallList == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: mallList });
+    }
+    const result = mallList.map((v) => {
+      return {
+        ...v.get({ plain: true }),
+        date_create: changeModelTimestamp(v.date_create!),
+      };
+    });
+    res.status(OK).json(result);
   })
 );
 
