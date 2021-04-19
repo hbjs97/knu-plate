@@ -36,6 +36,8 @@ INSERT INTO `menu_list` (`menu_list_id`, `review_id`, `menu_id`) VALUES
 (4,	2,	2);
 
 TRUNCATE `my_recommend`;
+INSERT INTO `my_recommend` (`recommend_id`, `user_id`, `mall_id`, `date_create`, `is_active`) VALUES
+(1,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	2,	'2021-04-20 01:11:39',	'Y');
 
 TRUNCATE `report`;
 
@@ -68,6 +70,6 @@ INSERT INTO `user_role_group` (`user_role_group_id`, `name`, `description`) VALU
 
 TRUNCATE `user_token`;
 INSERT INTO `user_token` (`user_token_id`, `user_id`, `date_create`, `access_point`) VALUES
-('f70de74e-0c43-4f13-b850-c28acadb9628',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 17:02:12',	'insomnia/2021.2.2');
+('842e0fd9-af47-4faa-b3de-7f164f902774',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-20 01:07:12',	'insomnia/2021.2.2');
 
--- 2021-04-19 11:55:28
+-- 2021-04-19 16:27:21
