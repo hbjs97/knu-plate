@@ -18,7 +18,7 @@ INSERT INTO `mail_auth` (`mail_auth_id`, `user_id`, `date_create`, `date_expire`
 
 TRUNCATE `mall`;
 INSERT INTO `mall` (`mall_id`, `user_id`, `date_create`, `mall_name`, `contact`, `category_name`, `address`, `latitude`, `longitude`, `thumbnail`, `evaluate_average`, `recommend_count`, `is_active`, `gate_location`) VALUES
-(2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-18 16:30:38',	'끝돈',	NULL,	'한식',	'대구 북구 산격동 1321-2',	35.894697690918576,	128.6112701960862,	NULL,	4.5,	0,	'Y',	NULL),
+(2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-18 16:30:38',	'끝돈',	NULL,	'한식',	'대구 북구 산격동 1321-2',	35.894697690918576,	128.6112701960862,	NULL,	4.5,	1,	'Y',	NULL),
 (3,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:37:39',	'반미리코',	NULL,	'세계 음식',	'대구 북구 산격동 1321-5',	35.8946462818903,	128.611072021845,	NULL,	NULL,	0,	'Y',	NULL),
 (4,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:38:26',	'메타피자 경대점',	NULL,	'양식',	'대구 북구 산격동 1328-5',	35.89404622954,	128.610661169814,	NULL,	NULL,	0,	'Y',	NULL),
 (5,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-19 09:39:29',	'맘스터치 경북대점',	NULL,	'세계 음식',	'대구 북구 산격동 1393-25',	35.8928210820776,	128.608749237664,	NULL,	NULL,	0,	'Y',	NULL);
@@ -37,7 +37,7 @@ INSERT INTO `menu_list` (`menu_list_id`, `review_id`, `menu_id`) VALUES
 
 TRUNCATE `my_recommend`;
 INSERT INTO `my_recommend` (`recommend_id`, `user_id`, `mall_id`, `date_create`, `is_active`) VALUES
-(1,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	2,	'2021-04-20 01:11:39',	'Y');
+(2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	2,	'2021-04-20 13:41:57',	'Y');
 
 TRUNCATE `report`;
 
@@ -70,6 +70,6 @@ INSERT INTO `user_role_group` (`user_role_group_id`, `name`, `description`) VALU
 
 TRUNCATE `user_token`;
 INSERT INTO `user_token` (`user_token_id`, `user_id`, `date_create`, `access_point`) VALUES
-('842e0fd9-af47-4faa-b3de-7f164f902774',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-20 01:07:12',	'insomnia/2021.2.2');
+('7cd01cb3-21b9-471b-94a9-a77982b8f6b2',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-20 13:26:44',	'insomnia/2021.2.2');
 
--- 2021-04-19 16:27:21
+-- 2021-04-20 04:42:50
