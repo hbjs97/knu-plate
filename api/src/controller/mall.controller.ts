@@ -2,7 +2,7 @@ import axios from 'axios';
 import { KAKAOAK } from '../lib/config';
 import { FOOD_CATEGORY, KAKAO_MAP_API_URL, PER_PAGE } from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { Op, Sequelize } from 'sequelize';
+import { Op, Sequelize, Transaction } from 'sequelize';
 import { addressOutput, mallExpand } from '../lib/type';
 import { mall, mallAttributes } from '../models/mall';
 import { menu } from '../models/menu';
@@ -118,9 +118,13 @@ export async function enrollMall(
   return await getMallById(enrolledMall.mall_id!);
 }
 
-export async function getMallById(mall_id: number): Promise<mall | string> {
+export async function getMallById(
+  mall_id: number,
+  transaction?: Transaction
+): Promise<mall | string> {
   const theMall = await mall.findOne({
     where: { mall_id: mall_id },
+    transaction,
   });
   if (!theMall) {
     return 'mall not founded';

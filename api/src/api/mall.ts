@@ -8,6 +8,10 @@ import {
   mallValidationChecker,
 } from '../controller/mall.controller';
 import {
+  deleteRecommendFromMall,
+  recommendMall,
+} from '../controller/my.recommend.controller';
+import {
   changeModelTimestamp,
   errorHandler,
   regexTestDecoded,
@@ -125,6 +129,42 @@ router.post(
       ...enrolledMall.get({ plain: true }),
       date_create: changeModelTimestamp(enrolledMall.date_create!),
     });
+  })
+);
+
+/**
+ * @swagger
+ * /api/mall/recommend/{mall_id}:
+ *  post:
+ *    tags: [매장]
+ *    summary: 매장 추천
+ *    parameters:
+ *      - in: path
+ *        type: number
+ *        required: true
+ *        name: mall_id
+ *        description: 매장 아이디
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.post(
+  '/recommend/:mall_id',
+  errorHandler(async (req: Request, res: Response) => {
+    const mall_id = Number(req.params.mall_id);
+    if (!mall_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const recommendResult = await recommendMall(mall_id, req.body._user_id);
+    if (recommendResult != 'ok') {
+      return res.status(INTERNAL_ERROR).json({ error: recommendResult });
+    }
+    res.status(OK).json({ result: 'success' });
   })
 );
 
@@ -263,6 +303,45 @@ router.get(
     }
 
     res.status(OK).json(addressListFromKakaoMapApi);
+  })
+);
+
+/**
+ * @swagger
+ * /api/mall/recommend/{mall_id}:
+ *  delete:
+ *    tags: [매장]
+ *    summary: 매장 추천 삭제
+ *    parameters:
+ *      - in: path
+ *        type: number
+ *        required: true
+ *        name: mall_id
+ *        description: 매장 아이디
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.delete(
+  '/recommend/:mall_id',
+  errorHandler(async (req: Request, res: Response) => {
+    const mall_id = Number(req.params.mall_id);
+    if (!mall_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const recommendResult = await deleteRecommendFromMall(
+      mall_id,
+      req.body._user_id
+    );
+    if (recommendResult != 'ok') {
+      return res.status(INTERNAL_ERROR).json({ error: recommendResult });
+    }
+    res.status(OK).json({ result: 'success' });
   })
 );
 
