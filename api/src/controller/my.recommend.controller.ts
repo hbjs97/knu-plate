@@ -131,3 +131,15 @@ export async function deleteRecommendFromMall(
     return error.message;
   }
 }
+
+export async function getMyRecommendList(
+  user_id: string
+): Promise<my_recommend[] | string> {
+  const myRecommendList = await my_recommend.findAll({
+    where: { user_id, is_active: 'Y' },
+  });
+  if (!myRecommendList.length) {
+    return 'myRecommendList not founded';
+  }
+  return myRecommendList;
+}

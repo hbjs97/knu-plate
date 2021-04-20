@@ -5,6 +5,7 @@ import {
   getAddressListFromKakaoMapApi,
   getDetailMall,
   getMallList,
+  getMyRecommendMallList,
   mallValidationChecker,
 } from '../controller/mall.controller';
 import {
@@ -224,16 +225,16 @@ router.get(
 
 /**
  * @swagger
- * /api/mall/{mall_id}:
+ * /api/mall/my-recommend:
  *  get:
  *    tags: [매장]
- *    summary: 매장 상세 조회
+ *    summary: 내 추천 매장 목록 조회
  *    parameters:
- *      - in: path
+ *      - in: query
  *        type: number
- *        required: true
- *        name: mall_id
- *        description: 매장 아이디
+ *        required: false
+ *        name: cursor
+ *        description: 현재 페이지 마지막 인덱스
  *    responses:
  *      200:
  *        description: success
@@ -243,18 +244,23 @@ router.get(
  *        description: internal error
  */
 router.get(
-  '/:mall_id',
+  '/my-recommend',
   errorHandler(async (req: Request, res: Response) => {
-    const mall_id = Number(req.params.mall_id);
-    if (!mall_id) {
-      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    const cursor = Number(req.query.cursor) || 0;
+    const myRecommendMallList = await getMyRecommendMallList(
+      req.body._user_id,
+      cursor
+    );
+    if (typeof myRecommendMallList == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: myRecommendMallList });
     }
-
-    const detailMall = await getDetailMall(mall_id, req.body._user_id);
-    if (typeof detailMall == 'string') {
-      return res.status(BAD_REQUEST).json({ error: detailMall });
-    }
-    res.status(OK).json(detailMall);
+    const result = myRecommendMallList.map((v) => {
+      return {
+        ...v.get({ plain: true }),
+        date_create: changeModelTimestamp(v.date_create!),
+      };
+    });
+    res.status(OK).json(result);
   })
 );
 
@@ -303,6 +309,42 @@ router.get(
     }
 
     res.status(OK).json(addressListFromKakaoMapApi);
+  })
+);
+
+/**
+ * @swagger
+ * /api/mall/{mall_id}:
+ *  get:
+ *    tags: [매장]
+ *    summary: 매장 상세 조회
+ *    parameters:
+ *      - in: path
+ *        type: number
+ *        required: true
+ *        name: mall_id
+ *        description: 매장 아이디
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/:mall_id',
+  errorHandler(async (req: Request, res: Response) => {
+    const mall_id = Number(req.params.mall_id);
+    if (!mall_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const detailMall = await getDetailMall(mall_id, req.body._user_id);
+    if (typeof detailMall == 'string') {
+      return res.status(BAD_REQUEST).json({ error: detailMall });
+    }
+    res.status(OK).json(detailMall);
   })
 );
 

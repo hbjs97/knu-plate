@@ -6,7 +6,7 @@ import { Op, Sequelize, Transaction } from 'sequelize';
 import { addressOutput, mallExpand } from '../lib/type';
 import { mall, mallAttributes } from '../models/mall';
 import { menu } from '../models/menu';
-import { getMyRecommend } from './my.recommend.controller';
+import { getMyRecommend, getMyRecommendList } from './my.recommend.controller';
 
 export async function mallValidationChecker(
   mallData: mallAttributes
@@ -224,4 +224,34 @@ export async function getDetailMall(
     return 'detailMallInfo not founded';
   }
   return expandedMallInfo;
+}
+
+export async function getMyRecommendMallList(
+  user_id: string,
+  cursor: number
+): Promise<mall[] | string> {
+  const myRecommendList = await getMyRecommendList(user_id);
+  if (typeof myRecommendList == 'string') {
+    return myRecommendList;
+  }
+  const mallIdList: number[] = myRecommendList.map((v) => v.mall_id!);
+
+  const myRecommendMallList = await mall.findAll({
+    where: {
+      [Op.and]: [
+        {
+          mall_id: mallIdList,
+        },
+        {
+          mall_id: {
+            [Op.gt]: cursor,
+          },
+        },
+      ],
+      is_active: 'Y',
+    },
+    limit: PER_PAGE,
+  });
+
+  return myRecommendMallList;
 }
