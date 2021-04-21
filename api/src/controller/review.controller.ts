@@ -4,6 +4,7 @@ import { review, reviewAttributes } from '../models/review';
 import { getMallById } from './mall.controller';
 import { menu } from '../models/menu';
 import { menu_list } from '../models/menu_list';
+import { PER_PAGE } from '../lib/constant';
 
 export async function enrollReview(
   reviewData: reviewAttributes,
@@ -101,4 +102,33 @@ export async function getReviewBuId(
     return 'review not founded';
   }
   return theReview;
+}
+
+export async function getReviewListByMallId(
+  mall_id: number,
+  pageNumber: number
+): Promise<review[] | string> {
+  const theMall = await getMallById(mall_id);
+  if (typeof theMall == 'string') {
+    return theMall;
+  }
+
+  const reviewList = await review.findAll({
+    where: {
+      [Op.and]: [
+        {
+          mall_id: mall_id,
+        },
+        {
+          mall_id: {
+            [Op.gt]: pageNumber,
+          },
+        },
+      ],
+      is_active: 'Y',
+    },
+    limit: PER_PAGE,
+  });
+
+  return reviewList;
 }

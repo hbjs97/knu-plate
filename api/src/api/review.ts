@@ -1,5 +1,8 @@
 import { Request, Response, Router } from 'express';
-import { enrollReview } from '../controller/review.controller';
+import {
+  enrollReview,
+  getReviewListByMallId,
+} from '../controller/review.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
@@ -89,6 +92,48 @@ router.post(
       ...enrolledReview.get({ plain: true }),
       date_create: changeModelTimestamp(enrolledReview.date_create!),
     });
+  })
+);
+
+/**
+ * @swagger
+ * /api/review:
+ *  get:
+ *    tags: [리뷰]
+ *    summary: 리뷰 등록
+ *    parameters:
+ *      - in: query
+ *        type: number
+ *        required: true
+ *        name: mall_id
+ *        description: 매장 아이디
+ *      - in: query
+ *        type: number
+ *        required: false
+ *        name: page
+ *        description: 페이지 인덱스
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/',
+  errorHandler(async (req: Request, res: Response) => {
+    const mall_id = Number(req.query.mall_id);
+    const pageNumber = Number(req.query.page) || 0;
+    if (!mall_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const reviewList = await getReviewListByMallId(mall_id, pageNumber);
+    if (typeof reviewList == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: reviewList });
+    }
+    res.status(OK).json(reviewList);
   })
 );
 
