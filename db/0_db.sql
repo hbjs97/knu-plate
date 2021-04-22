@@ -170,7 +170,7 @@ CREATE TABLE `my_recommend` (
   KEY `FK_user_TO_my_recommend_1` (`user_id`),
   KEY `FK_mall_TO_my_recommend_1` (`mall_id`),
   CONSTRAINT `FK_user_TO_my_recommend_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -276,7 +276,10 @@ CREATE TABLE `user` (
   `mail_address` varchar(255) NOT NULL COMMENT '학교 메일',
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `is_active` varchar(1) NOT NULL DEFAULT 'Y',
-  PRIMARY KEY (`user_id`)
+  `medal_list` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `FK_user_file_folder` (`medal_list`),
+  CONSTRAINT `FK_user_file_folder` FOREIGN KEY (`medal_list`) REFERENCES `file_folder` (`file_folder_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -361,4 +364,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-20  0:54:44
+-- Dump completed on 2021-04-22 18:56:34
