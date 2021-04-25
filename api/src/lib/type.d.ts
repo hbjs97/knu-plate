@@ -8,6 +8,10 @@ export interface verificationToken {
   token_id?: string;
 }
 
+export interface fileTimestampable extends fileAttributes {
+  date_create?: Date | number;
+}
+
 export interface addressOutput {
   address_name?: string;
   category_group_code?: string;
