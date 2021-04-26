@@ -1,8 +1,10 @@
 import { Request, Response, Router } from 'express';
 import {
+  displayNameDuplicateChecker,
   insertUser,
   loginProcess,
   userDuplicateChecker,
+  userNameDuplicateChecker,
   userValidator,
 } from '../controller/user.controller';
 import {
@@ -197,6 +199,81 @@ router.post(
       return res.status(INTERNAL_ERROR).json({ error: result });
     }
     res.status(OK).json(result);
+  })
+);
+
+/**
+ * @swagger
+ * /api/check-user-name:
+ *  get:
+ *    tags: [회원 - 인증]
+ *    summary: 아이디 중복 체크
+ *    parameters:
+ *      - in: query
+ *        type: string
+ *        required: true
+ *        name: user_name
+ *        description: 로그인 이름
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      404:
+ *        description: not found
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/check-user-name',
+  errorHandler(async (req: Request, res: Response) => {
+    const user_name = <string>req.query.user_name;
+    if (!user_name) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+    const isDuplicated = await userNameDuplicateChecker(user_name);
+    if (isDuplicated) {
+      return res.status(BAD_REQUEST).json({ error: 'already exist user_name' });
+    }
+    res.status(OK).json({ result: 'not duplicated' });
+  })
+);
+/**
+ * @swagger
+ * /api/check-display-name:
+ *  get:
+ *    tags: [회원 - 인증]
+ *    summary: 닉네임 중복 체크
+ *    parameters:
+ *      - in: query
+ *        type: string
+ *        required: true
+ *        name: display_name
+ *        description: 닉네임
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      404:
+ *        description: not found
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/check-display-name',
+  errorHandler(async (req: Request, res: Response) => {
+    const display_name = <string>req.query.display_name;
+    if (!display_name) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+    const isDuplicated = await displayNameDuplicateChecker(display_name);
+    if (isDuplicated) {
+      return res
+        .status(BAD_REQUEST)
+        .json({ error: 'already exist display_name' });
+    }
+    res.status(OK).json({ result: 'not duplicated' });
   })
 );
 

@@ -269,3 +269,23 @@ export async function logoutProcess(user_id: string): Promise<string> {
   }
   return 'ok';
 }
+
+export async function userNameDuplicateChecker(
+  user_name: string
+): Promise<boolean> {
+  const theUser = await user.findOne({ where: { user_name } });
+  if (theUser) {
+    return true;
+  }
+  return false;
+}
+
+export async function displayNameDuplicateChecker(
+  display_name: string
+): Promise<boolean> {
+  const theUser = await user.findOne({ where: { display_name } });
+  if (theUser) {
+    return true;
+  }
+  return false;
+}
