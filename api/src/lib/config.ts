@@ -12,8 +12,10 @@ export const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD || 'test';
 export const DB_URL = process.env.DB_URL || 'db-maria';
 
 export const PASSWORD_SALT = process.env.PASSWORD_SALT || 'oh my gosh';
-export const STAGING_FILE_SERVER_URL =
-  process.env.STAGING_FILE_SERVER_URL || 'http://localhost:4200/';
+export const FILE_SERVER_URL =
+  NODE_ENV == 'production'
+    ? process.env.STAGING_FILE_SERVER_URL
+    : 'http://localhost:4200/';
 export const DEV_SMTP_SERVER = process.env.DEV_SMTP_SERVER || '';
 if (!DEV_SMTP_SERVER) {
   throw new Error('DEV_SMTP_SERVER is empty');

@@ -1,5 +1,4 @@
-import { NODE_ENV, STAGING_FILE_SERVER_URL } from '../lib/config';
-import { v4 as uuidV4 } from 'uuid';
+import { NODE_ENV } from '../lib/config';
 import { file_folder } from '../models/file_folder';
 import { file, fileAttributes } from '../models/file';
 import crypto from 'crypto';
@@ -14,10 +13,11 @@ export async function fileUploadReturnUrl(
   uploader: string,
   fileList: Express.Multer.File[],
   transaction?: Transaction
-): Promise<string | { folder: string; files: (file | null)[] }> {
+): Promise<string | file_folder> {
   if (NODE_ENV != 'production') {
-    return await fileUploadReturnUrlDevelop(fileList);
+    return await fileUploadReturnUrlDevelop(uploader, fileList);
   }
+
   return 'pass';
 
   // TODO: production file upload logic
