@@ -33,17 +33,33 @@ services:
     restart: always
     command: bash -c "/wait-for-it.sh db-maria:3306 --strict -- npm install && npm run start:dev"
 
+    
   smtp:
     build:
       context: .
       dockerfile: smtp.Dockerfile
+      ports:
+        - 4300:4300
+        - 9349:9349
+        env_file:
+          - .env
+  volumes:
+    - ./smtp:/var/www/html
+    - smtp_node_modules_knu-plate:/var/www/html/node_modules
+    restart: always
+    command: bash -c "/wait-for-it.sh db-maria:3306 --strict -- npm install && npm run start:dev"
+      
+  file:
+    build:
+      context: .
+      dockerfile: file.Dockerfile
     ports:
-      - 4300:4300
-      - 9349:9349
+      - 3200:3200
+      - 9359:9359
     env_file:
       - .env
     volumes:
-      - ./smtp:/var/www/html
-      - smtp_node_modules_knu-plate:/var/www/html/node_modules
+      - file_node_modules:/var/www/html/node_modules
+      - ./file:/var/www/html
     restart: always
-    command: bash -c "/wait-for-it.sh db-maria:3306 --strict -- npm install && npm run start:dev"
+    command: bash -c "npm install && npm run dev"
