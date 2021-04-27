@@ -54,7 +54,7 @@ services:
       context: .
       dockerfile: file.Dockerfile
     ports:
-      - 3200:3200
+      - 4200:4200
       - 9359:9359
     env_file:
       - .env
