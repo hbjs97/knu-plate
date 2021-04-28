@@ -4,6 +4,7 @@ volumes:
   db-maria_data_knu-plate:
   api_node_modules_knu-plate:
   smtp_node_modules_knu-plate:
+  file_node_modules:
 
 services:
   db-maria:
@@ -33,22 +34,21 @@ services:
     restart: always
     command: bash -c "/wait-for-it.sh db-maria:3306 --strict -- npm install && npm run start:dev"
 
-    
   smtp:
     build:
       context: .
       dockerfile: smtp.Dockerfile
-      ports:
-        - 4300:4300
-        - 9349:9349
-        env_file:
-          - .env
-  volumes:
-    - ./smtp:/var/www/html
-    - smtp_node_modules_knu-plate:/var/www/html/node_modules
+    ports:
+      - 4300:4300
+      - 9349:9349
+    env_file:
+      - .env
+    volumes:
+      - ./smtp:/var/www/html
+      - smtp_node_modules_knu-plate:/var/www/html/node_modules
     restart: always
     command: bash -c "/wait-for-it.sh db-maria:3306 --strict -- npm install && npm run start:dev"
-      
+
   file:
     build:
       context: .

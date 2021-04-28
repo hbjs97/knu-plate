@@ -2,7 +2,6 @@ const express = require("express");
 const path = require("path");
 const multer = require("multer");
 const morgan = require("morgan");
-const { v4: uuidV4 } = require("uuid");
 const fs = require("fs");
 
 const app = express();
