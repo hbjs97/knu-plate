@@ -5,11 +5,15 @@ import { v4 as uuidV4 } from 'uuid';
 import { file, fileAttributes } from '../models/file';
 import { FILE_SERVER_URL } from '../lib/config';
 import { DB } from '../lib/sequelize';
-import { file_folder } from '../models/file_folder';
+import { file_folder, file_folderAttributes } from '../models/file_folder';
+import { Transaction } from 'sequelize/types';
+import { getFileListFromFileFolder } from './file.controller';
+import { user } from '../models/user';
 
 export async function fileUploadReturnUrlDevelop(
   uploader: string,
-  fileList: Express.Multer.File[]
+  fileList: Express.Multer.File[],
+  transaction?: Transaction
 ): Promise<string | file_folder> {
   const form = new FormData();
   fileList.forEach((v) => {
@@ -45,23 +49,21 @@ export async function fileUploadReturnUrlDevelop(
       }
     );
 
-    return await DB.transaction(async (transaction) => {
-      const folder = await file_folder.create(
-        {
-          file_folder_id: newFileFolder,
-          type: fileList[0].fieldname,
-        },
-        { transaction }
-      );
-      if (!folder) {
-        throw new Error('file_folder create fail');
-      }
+    const folder = await file_folder.create(
+      {
+        file_folder_id: newFileFolder,
+        type: fileList[0].fieldname,
+      },
+      { transaction }
+    );
+    if (!folder) {
+      throw new Error('file_folder create fail');
+    }
 
-      await file.bulkCreate(fileData, { transaction });
-      return folder;
-    });
+    await file.bulkCreate(fileData, { transaction });
+    return folder;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return error.message || 'upload fail';
   }
 }
@@ -78,5 +80,42 @@ export async function deleteFileDevelop(
   } catch (err) {
     console.error(err);
     return ['error'];
+  }
+}
+
+export async function deleteFileFolderDevelop(
+  userModel: user,
+  models: file_folderAttributes,
+  transaction?: Transaction
+): Promise<string> {
+  try {
+    await Axios({
+      url: 'http://file:4200/' + 'delete/' + models.file_folder_id,
+      method: 'delete',
+    });
+
+    const fileList = await getFileListFromFileFolder(models.file_folder_id!);
+    if (typeof fileList == 'string') {
+      throw new Error(fileList);
+    }
+
+    await Promise.all(
+      fileList.map(async (v) => {
+        await v.destroy();
+      })
+    );
+
+    await userModel.update({ user_thumbnail: null, transaction });
+    if (userModel.user_thumbnail) {
+      throw new Error('user_thumbnail empty fail');
+    }
+
+    await file_folder.destroy({
+      where: { file_folder_id: models.file_folder_id },
+    });
+    return 'ok';
+  } catch (error) {
+    // console.error(err);
+    return error.message;
   }
 }
