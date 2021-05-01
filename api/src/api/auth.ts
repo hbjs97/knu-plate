@@ -1,15 +1,35 @@
 import { Request, Response, Router } from 'express';
+import { isArray } from 'lodash';
+import {
+  fileUploadReturnUrl,
+  getFileFolderById,
+} from '../controller/file.controller';
+import { deleteFileFolderDevelop } from '../controller/file.develop.controller';
 import {
   deleteUser,
+  getUserByDisplayName,
   getUserById,
+  getUserByIdExceptPassword,
   getUserByName,
   loginProcess,
   logoutProcess,
+  setUserByModel,
 } from '../controller/user.controller';
-import { changeModelTimestamp, errorHandler } from '../lib/common';
-import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
+import {
+  changeModelTimestamp,
+  encrypt_password,
+  errorHandler,
+  regexTestDecoded,
+} from '../lib/common';
+import {
+  BAD_REQUEST,
+  INTERNAL_ERROR,
+  OK,
+  REG_ENG_NUM,
+  REG_ENG_NUM_KR,
+} from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { user, userAttributes } from '../models/user';
+import { user } from '../models/user';
 
 const router = Router();
 
@@ -151,6 +171,141 @@ router.post(
       return res.status(INTERNAL_ERROR).json({ error: token });
     }
     res.status(OK).json(token);
+  })
+);
+
+/**
+ * @swagger
+ * /api/auth/modify:
+ *  patch:
+ *    tags: [회원]
+ *    summary: 회원정보 수정
+ *    parameters:
+ *      - in: formData
+ *        type: string
+ *        required: false
+ *        name: password
+ *        description: 비밀번호(변경하지 않을 시 입력X)
+ *      - in: formData
+ *        type: string
+ *        required: false
+ *        name: display_name
+ *        description: 닉네임(변경하지 않을 시 입력X)
+ *      - in: formData
+ *        type: file
+ *        required: false
+ *        name: user_thumbnail
+ *        description: 썸네일(변경하지 않을 시 입력X, 하나만 첨부가능)
+ *    security:
+ *      - refresh: []
+ *    responses:
+ *      200:
+ *        description: success
+ */
+router.patch(
+  '/modify',
+  errorHandler(async (req: Request, res: Response) => {
+    const password = req.body.password;
+    const display_name = req.body.display_name;
+
+    const myInfo = await getUserById(req.body._user_id);
+    if (typeof myInfo == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: myInfo });
+    }
+
+    if (password) {
+      if (password.length < 4 || password.length > 30) {
+        return res
+          .status(BAD_REQUEST)
+          .json({ error: 'password length is too short or too long' });
+      }
+      if (!regexTestDecoded(REG_ENG_NUM, password)) {
+        return res.status(BAD_REQUEST).json({
+          error: 'password is english and number only',
+        });
+      }
+      if (myInfo.password == encrypt_password(password)) {
+        return res
+          .status(BAD_REQUEST)
+          .json({ error: 'same as the previous password' });
+      }
+      myInfo.password = encrypt_password(password);
+    }
+
+    if (display_name) {
+      if (display_name.length < 2 || display_name.length > 10) {
+        return res
+          .status(BAD_REQUEST)
+          .json({ error: 'display_name length is too short or too long' });
+      }
+      if (!regexTestDecoded(REG_ENG_NUM_KR, display_name)) {
+        return res.status(BAD_REQUEST).json({
+          error: 'display_name is english and number only',
+        });
+      }
+      if (typeof (await getUserByDisplayName(display_name)) != 'string') {
+        return res
+          .status(INTERNAL_ERROR)
+          .json({ error: 'display_name already exist' });
+      }
+      myInfo.display_name = display_name;
+    }
+
+    try {
+      const transactionResult = await DB.transaction(async (transaction) => {
+        if (req.files && !isArray(req.files) && req.files.user_thumbnail) {
+          if (req.files.user_thumbnail.length > 1) {
+            throw new Error('only one user_thumbnail can be registered');
+          }
+          if (myInfo.user_thumbnail) {
+            const fileFolder = await getFileFolderById(myInfo.user_thumbnail);
+            if (typeof fileFolder == 'string') {
+              throw new Error(fileFolder);
+            }
+            const deleteFileFolderResult = await deleteFileFolderDevelop(
+              myInfo,
+              fileFolder,
+              transaction
+            );
+            if (deleteFileFolderResult != 'ok') {
+              throw new Error(deleteFileFolderResult);
+            }
+          }
+          const url = await fileUploadReturnUrl(
+            req.body._user_id,
+            req.files.user_thumbnail,
+            transaction
+          );
+          if (typeof url == 'string') {
+            throw new Error(url);
+          }
+          myInfo.user_thumbnail = url.file_folder_id;
+        }
+
+        const updatedUser = await setUserByModel(
+          myInfo,
+          myInfo.get({ plain: true }),
+          transaction
+        );
+        if (typeof updatedUser == 'string') {
+          throw new Error(updatedUser);
+        }
+        if (password && updatedUser.password != myInfo.password) {
+          throw new Error('password update error');
+        }
+        if (display_name && updatedUser.display_name != myInfo.display_name) {
+          throw new Error('display_name update error');
+        }
+
+        return await getUserByIdExceptPassword(
+          updatedUser.user_id!,
+          transaction
+        );
+      });
+      res.status(OK).json(transactionResult);
+    } catch (error) {
+      return res.status(INTERNAL_ERROR).json({ error: error.message });
+    }
   })
 );
 
