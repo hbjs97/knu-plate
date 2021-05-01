@@ -1,3 +1,7 @@
+import { mall } from '../models/mall';
+import { review } from '../models/review';
+import { user } from '../models/user';
+
 export const BAD_REQUEST = 400;
 export const UNAUTHORIZED = 401;
 export const FORBIDDEN = 403;
@@ -15,7 +19,24 @@ export const REG_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|
 
 // text dataForm 입력과 선언된 텍스트에 맞는 파일을 받음
 // '-'만 특수문자 입력 가능
-export const uploadFileType = {};
+export const uploadFileType = {
+  medal_list: {
+    model: user,
+    field: 'medal_list',
+  },
+  user_thumbnail: {
+    model: user,
+    field: 'user_thumbnail',
+  },
+  thumbnail: {
+    model: mall,
+    field: 'thumbnail',
+  },
+  review_image: {
+    model: review,
+    field: 'review_image',
+  },
+};
 
 export const PER_PAGE = 9;
 
