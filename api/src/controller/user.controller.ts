@@ -11,6 +11,7 @@ import { verificationToken } from '../lib/type';
 import { mail_auth, mail_authAttributes } from '../models/mail_auth';
 import dayjs from 'dayjs';
 import { EXPIRE_AUTH_MAIL } from '../lib/constant';
+import { Transaction } from 'sequelize/types';
 
 export async function userDuplicateChecker(
   user_name: string,
@@ -195,9 +196,30 @@ export async function loginProcess(
   }
 }
 
-export async function getUserById(user_id: string): Promise<user | string> {
+export async function getUserById(
+  user_id: string,
+  transaction?: Transaction
+): Promise<user | string> {
   const theUser = await user.findOne({
     where: { user_id: user_id, is_active: 'Y' },
+    transaction,
+  });
+  if (!theUser) {
+    return 'user not founded';
+  }
+  return theUser;
+}
+
+export async function getUserByIdExceptPassword(
+  user_id: string,
+  transaction?: Transaction
+): Promise<user | string> {
+  const theUser = await user.findOne({
+    where: { user_id: user_id, is_active: 'Y' },
+    attributes: {
+      exclude: ['password'],
+    },
+    transaction,
   });
   if (!theUser) {
     return 'user not founded';
@@ -208,6 +230,18 @@ export async function getUserById(user_id: string): Promise<user | string> {
 export async function getUserByName(user_name: string): Promise<user | string> {
   const theUser = await user.findOne({
     where: { user_name: user_name, is_active: 'Y' },
+  });
+  if (!theUser) {
+    return 'user not founded';
+  }
+  return theUser;
+}
+
+export async function getUserByDisplayName(
+  display_name: string
+): Promise<user | string> {
+  const theUser = await user.findOne({
+    where: { display_name: display_name },
   });
   if (!theUser) {
     return 'user not founded';
@@ -242,14 +276,10 @@ export async function deleteUser(user_id: string): Promise<string> {
 
 export async function setUserByModel(
   model: user,
-  data: userAttributes
-): Promise<userAttributes | string> {
-  try {
-    await model.update(data);
-  } catch (error) {
-    return error.message;
-  }
-
+  data: userAttributes,
+  transaction?: Transaction
+): Promise<userAttributes> {
+  await model.update(data, { transaction });
   return model.get({ plain: true });
 }
 
