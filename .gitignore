@@ -8,3 +8,6 @@ dist/
 api/src/models
 
 send-message.sh
+
+file/bucket/*
+!file/bucket/update.sh
