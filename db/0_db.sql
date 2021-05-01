@@ -35,16 +35,16 @@ CREATE TABLE `file` (
   `path` varchar(255) NOT NULL,
   `original_name` varchar(100) NOT NULL,
   `file_folder_id` varchar(255) NOT NULL,
-  `user_id` varchar(255) NOT NULL,
+  `uploader` varchar(255) NOT NULL,
   `size` varchar(255) NOT NULL,
   `extension` varchar(10) NOT NULL,
-  `date_create` datetime NOT NULL,
+  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `checksum` varchar(255) DEFAULT NULL COMMENT '사용여부 미확정',
   PRIMARY KEY (`file_id`),
   KEY `FK_file_folder_TO_file_1` (`file_folder_id`),
-  KEY `FK_user_TO_file_1` (`user_id`),
+  KEY `FK_user_TO_file_1` (`uploader`),
   CONSTRAINT `FK_file_folder_TO_file_1` FOREIGN KEY (`file_folder_id`) REFERENCES `file_folder` (`file_folder_id`),
-  CONSTRAINT `FK_user_TO_file_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+  CONSTRAINT `FK_user_TO_file_1` FOREIGN KEY (`uploader`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -57,8 +57,8 @@ DROP TABLE IF EXISTS `file_folder`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `file_folder` (
   `file_folder_id` varchar(255) NOT NULL,
-  `date_create` datetime NOT NULL,
-  `type` varchar(255) DEFAULT NULL COMMENT 'mall_thumbnail, board_thumbnail',
+  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
+  `type` varchar(255) NOT NULL COMMENT 'mall_thumbnail, board_thumbnail',
   PRIMARY KEY (`file_folder_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -111,7 +111,7 @@ CREATE TABLE `mall` (
   KEY `FK_file_folder_TO_mall_1` (`thumbnail`) USING BTREE,
   CONSTRAINT `FK_file_folder_TO_mall_1` FOREIGN KEY (`thumbnail`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_user_TO_mall_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -277,9 +277,14 @@ CREATE TABLE `user` (
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `is_active` varchar(1) NOT NULL DEFAULT 'Y',
   `medal_list` varchar(255) DEFAULT NULL,
+  `user_thumbnail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
+  UNIQUE KEY `display_name` (`display_name`),
+  UNIQUE KEY `user_name` (`user_name`),
   KEY `FK_user_file_folder` (`medal_list`),
-  CONSTRAINT `FK_user_file_folder` FOREIGN KEY (`medal_list`) REFERENCES `file_folder` (`file_folder_id`)
+  KEY `FK_user_file_folder_2` (`user_thumbnail`),
+  CONSTRAINT `FK_user_file_folder` FOREIGN KEY (`medal_list`) REFERENCES `file_folder` (`file_folder_id`),
+  CONSTRAINT `FK_user_file_folder_2` FOREIGN KEY (`user_thumbnail`) REFERENCES `file_folder` (`file_folder_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -364,4 +369,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-28 16:38:09
+-- Dump completed on 2021-05-01 17:47:40
