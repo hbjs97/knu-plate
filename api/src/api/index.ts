@@ -9,6 +9,7 @@ import mailAuthRoute from './mail.auth';
 import mallRoute from './mall';
 import menuRoute from './menu';
 import reviewRoute from './review';
+import fileRoute from './file';
 import { authentication, getUserType } from '../middleware/user.middleware';
 import { uploadFileType } from '../lib/constant';
 import { keys } from 'lodash';
@@ -44,5 +45,6 @@ router.use('/mail-auth', mailAuthRoute);
 router.use('/mall', mallRoute);
 router.use('/menu', menuRoute);
 router.use('/review', reviewRoute);
+router.use('/file', fileRoute);
 
 export default router;
