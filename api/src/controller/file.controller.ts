@@ -14,13 +14,42 @@ export async function fileUploadReturnUrl(
   fileList: Express.Multer.File[],
   transaction?: Transaction
 ): Promise<string | file_folder> {
-  if (NODE_ENV != 'production') {
-    return await fileUploadReturnUrlDevelop(uploader, fileList);
-  }
+  // if (NODE_ENV != 'production') {
+  return await fileUploadReturnUrlDevelop(uploader, fileList, transaction);
+  // }
 
   return 'pass';
 
   // TODO: production file upload logic
 
   // return { folder: folder.file_folder_id, files: filesResult };
+}
+
+export async function getFileFolderById(
+  file_folder_id: string
+): Promise<file_folder | string> {
+  const theFileFolder = await file_folder.findOne({
+    where: { file_folder_id },
+  });
+  if (!theFileFolder) {
+    return 'file_folder not founded';
+  }
+  return theFileFolder;
+}
+
+export async function getFileListFromFileFolder(
+  file_folder_id: string
+): Promise<string | file[]> {
+  const theFileFolder = await file_folder.findOne({
+    where: {
+      file_folder_id,
+    },
+  });
+  if (!theFileFolder) {
+    return 'file_folder not founded';
+  }
+
+  const fileList = await file.findAll({ where: { file_folder_id } });
+
+  return fileList;
 }

@@ -25,16 +25,10 @@ const thumbnail = multer({
 });
 
 const fileList = [
-  { name: "doc_company_profile" },
-  { name: "doc_company_profile" },
-  { name: "doc_proposal" },
-  { name: "doc_diagnosis" },
-  { name: "doc_performance" },
-  { name: "doc_contract" },
-  { name: "doc_board" },
-  { name: "doc_reply" },
-  { name: "doc_outputs" },
-  { name: "doc_outsourcing_contract" },
+  { name: "medal_list" },
+  { name: "user_thumbnail" },
+  { name: "thumbnail" },
+  { name: "review_image" },
 ];
 
 app.get("/bucket/:file_folder_id", (req, res) => {
@@ -56,6 +50,17 @@ app.post("/upload/:file_folder_id", thumbnail.fields(fileList), (req, res) => {
   const files = req.files;
   console.log(files);
   res.json(files);
+});
+
+app.delete("/delete/:file_folder_id", (req, res) => {
+  const fileFolderId = req.params.file_folder_id;
+  try {
+    fs.rmdirSync("./bucket/" + fileFolderId, { recursive: true });
+    // fs.unlinkSync("/var/www/html/bucket/" + fileFolderId);
+    res.status(200).json({ result: "success" });
+  } catch (error) {
+    res.status(500).json({ error: "file" });
+  }
 });
 
 // catch 404 and forward to error handler
