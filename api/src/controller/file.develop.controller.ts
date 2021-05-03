@@ -68,20 +68,20 @@ export async function fileUploadReturnUrlDevelop(
   }
 }
 
-export async function deleteFileDevelop(
-  models: fileAttributes[]
-): Promise<string[]> {
-  try {
-    const path = '/var/www/html/bucket/' + models[0].original_name;
+// export async function deleteFileDevelop(
+//   models: fileAttributes[]
+// ): Promise<string[]> {
+//   try {
+//     const path = '/var/www/html/bucket/' + models[0].original_name;
 
-    fs.unlinkSync(path);
+//     fs.unlinkSync(path);
 
-    return ['ok'];
-  } catch (err) {
-    console.error(err);
-    return ['error'];
-  }
-}
+//     return ['ok'];
+//   } catch (err) {
+//     console.error(err);
+//     return ['error'];
+//   }
+// }
 
 export async function deleteFileFolderDevelop(
   userModel: user,
@@ -101,7 +101,7 @@ export async function deleteFileFolderDevelop(
 
     await Promise.all(
       fileList.map(async (v) => {
-        await v.destroy();
+        await v.destroy({ transaction });
       })
     );
 
