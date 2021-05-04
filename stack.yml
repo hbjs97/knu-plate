@@ -54,6 +54,22 @@ services:
     #   replicas: 2
     command: bash -c "/wait-for-it.sh 3.35.58.40:3306 --strict -- npm install && npm run start"
 
+  file:
+    build:
+      context: .
+      dockerfile: file.Dockerfile
+    image: hbjs97/knu-plate-file
+    ports:
+      - 4200:4200
+      - 9359:9359
+    env_file:
+      - .env
+    volumes:
+      - ./file:/var/www/html
+      - file_node_modules_knu-plate:/var/www/html/node_modules
+    restart: always
+    command: bash -c "npm install && npm run start"
+
   smtp:
     build:
       context: .

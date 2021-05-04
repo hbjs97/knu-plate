@@ -257,20 +257,20 @@ router.patch(
           if (req.files.user_thumbnail.length > 1) {
             throw new Error('only one user_thumbnail can be registered');
           }
-          if (myInfo.user_thumbnail) {
-            const fileFolder = await getFileFolderById(myInfo.user_thumbnail);
-            if (typeof fileFolder == 'string') {
-              throw new Error(fileFolder);
-            }
-            const deleteFileFolderResult = await deleteFileFolderDevelop(
-              myInfo,
-              fileFolder,
-              transaction
-            );
-            if (deleteFileFolderResult != 'ok') {
-              throw new Error(deleteFileFolderResult);
-            }
-          }
+          // if (myInfo.user_thumbnail) {
+          //   const fileFolder = await getFileFolderById(myInfo.user_thumbnail);
+          //   if (typeof fileFolder == 'string') {
+          //     throw new Error(fileFolder);
+          //   }
+          //   const deleteFileFolderResult = await deleteFileFolderDevelop(
+          //     myInfo,
+          //     fileFolder,
+          //     transaction
+          //   );
+          //   if (deleteFileFolderResult != 'ok') {
+          //     throw new Error(deleteFileFolderResult);
+          //   }
+          // }
           const url = await fileUploadReturnUrl(
             req.body._user_id,
             req.files.user_thumbnail,
@@ -296,6 +296,8 @@ router.patch(
         if (display_name && updatedUser.display_name != myInfo.display_name) {
           throw new Error('display_name update error');
         }
+
+        // TODO: 기존 파일폴더 삭제
 
         return await getUserByIdExceptPassword(
           updatedUser.user_id!,

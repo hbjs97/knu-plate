@@ -4,30 +4,13 @@ import { menu } from '../models/menu';
 import { getMallById } from './mall.controller';
 
 export async function enrollMenu(
-  mall_id: number,
-  menu_name: string
-): Promise<string | menu> {
-  const theMall = await getMallById(mall_id);
-  if (typeof theMall == 'string') {
-    return theMall;
-  }
-  if (theMall.is_active != 'Y') {
-    return 'inactive mall';
-  }
-
-  const menuDuplicateCheck = await getMenuByNameAndMallId(menu_name, mall_id);
-  if (typeof menuDuplicateCheck != 'string') {
-    return 'duplicated menu';
-  }
-
-  const enrolledMenu = await menu.create({
-    mall_id: mall_id,
-    menu_name: menu_name,
-  });
-  if (!enrolledMenu) {
+  menuList: { mall_id: number; menu_name: string }[]
+): Promise<string | menu[]> {
+  const enrolledMenuList = await menu.bulkCreate(menuList);
+  if (!enrolledMenuList.length) {
     return 'menu create fail';
   }
-  return await getMenuById(enrolledMenu.menu_id!);
+  return enrolledMenuList;
 }
 
 export async function getMenuById(menu_id: number): Promise<menu | string> {
@@ -47,4 +30,15 @@ export async function getMenuByNameAndMallId(
     return 'menu not founded';
   }
   return theMenu;
+}
+
+export async function menuDuplicateCheck(
+  mall_id: number,
+  menu_name: string
+): Promise<boolean> {
+  const theMenu = await menu.findOne({ where: { mall_id, menu_name } });
+  if (!theMenu) {
+    return false;
+  }
+  return true;
 }
