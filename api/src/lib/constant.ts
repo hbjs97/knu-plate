@@ -61,28 +61,33 @@ export const CENTER_POSITION = {
 
 export const CENTER_RANGE = 1000; // (meter)
 
-export const GATE_POSITION = {
+export const GATE_INFO = {
   NORTH: {
-    latitude: 35.89233,
-    longitude: 128.60939,
+    name: '북문',
+    position: {
+      latitude: 35.89233,
+      longitude: 128.60939,
+    },
   },
   MAIN: {
-    latitude: 35.8852,
-    longitude: 128.61465,
+    name: '정문/쪽문',
+    position: {
+      latitude: 35.8852,
+      longitude: 128.61465,
+    },
   },
   WEST: {
-    latitude: 35.88844,
-    longitude: 128.60398,
+    name: '서문',
+    position: {
+      latitude: 35.88844,
+      longitude: 128.60398,
+    },
   },
   EAST: {
-    latitude: 35.88853,
-    longitude: 128.61661,
+    name: '동문',
+    position: {
+      latitude: 35.88853,
+      longitude: 128.61661,
+    },
   },
-};
-
-export const GATE_NAME = {
-  NORTH: '북문',
-  MAIN: '정문/쪽문',
-  WEST: '서문',
-  EAST: '동문',
 };
