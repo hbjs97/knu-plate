@@ -1,4 +1,6 @@
 import { Request, Response, Router } from 'express';
+import { isArray } from 'lodash';
+import { fileUploadReturnUrl } from '../controller/file.controller';
 import {
   enrollReview,
   getReviewListByMallId,
@@ -6,6 +8,7 @@ import {
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
+import { reviewAttributes } from '../models/review';
 
 const router = Router();
 
@@ -76,22 +79,43 @@ router.post(
       }
     });
 
-    const enrolledReview = await enrollReview(
-      {
-        mall_id,
-        contents,
-        evaluate,
-        user_id: req.body._user_id,
-      },
-      menu_info
-    );
-    if (typeof enrolledReview == 'string') {
-      return res.status(INTERNAL_ERROR).json({ error: enrolledReview });
+    const reviewModel: reviewAttributes = {
+      mall_id,
+      contents,
+      evaluate,
+      user_id: req.body._user_id,
+    };
+
+    try {
+      const result = await DB.transaction(async (transaction) => {
+        if (req.files && !isArray(req.files) && req.files.review_image) {
+          const url = await fileUploadReturnUrl(
+            req.body._user_id,
+            req.files.review_image,
+            transaction
+          );
+          if (typeof url != 'string') {
+            reviewModel.review_image = url.file_folder_id;
+          }
+        }
+
+        const enrolledReview = await enrollReview(
+          reviewModel,
+          menu_info,
+          transaction
+        );
+        if (typeof enrolledReview == 'string') {
+          throw new Error(enrolledReview);
+        }
+        return enrolledReview;
+      });
+      res.status(OK).json({
+        ...result.get({ plain: true }),
+        date_create: changeModelTimestamp(result.date_create!),
+      });
+    } catch (error) {
+      res.status(INTERNAL_ERROR).json({ error: error.message });
     }
-    res.status(OK).json({
-      ...enrolledReview.get({ plain: true }),
-      date_create: changeModelTimestamp(enrolledReview.date_create!),
-    });
   })
 );
 
