@@ -53,3 +53,36 @@ export const KAKAO_MAP_API_URL =
 
 export const FOOD_CATEGORY = ['한식', '중식', '일식', '양식', '카페', '술집'];
 // 세계 음식: 그 외
+
+export const CENTER_POSITION = {
+  latitude: 35.889529,
+  longitude: 128.609971,
+};
+
+export const CENTER_RANGE = 1000; // (meter)
+
+export const GATE_POSITION = {
+  NORTH: {
+    latitude: 35.89233,
+    longitude: 128.60939,
+  },
+  MAIN: {
+    latitude: 35.8852,
+    longitude: 128.61465,
+  },
+  WEST: {
+    latitude: 35.88844,
+    longitude: 128.60398,
+  },
+  EAST: {
+    latitude: 35.88853,
+    longitude: 128.61661,
+  },
+};
+
+export const GATE_NAME = {
+  NORTH: '북문',
+  MAIN: '정문/쪽문',
+  WEST: '서문',
+  EAST: '동문',
+};
