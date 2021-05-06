@@ -4,8 +4,7 @@ import {
   CENTER_POSITION,
   CENTER_RANGE,
   FOOD_CATEGORY,
-  GATE_NAME,
-  GATE_POSITION,
+  GATE_INFO,
   KAKAO_MAP_API_URL,
   PER_PAGE,
 } from '../lib/constant';
@@ -277,31 +276,31 @@ export function getNearestGateFromMall(mallData: mallAttributes): string {
   const distanceFromGate = [];
   distanceFromGate.push(
     {
-      name: GATE_NAME.NORTH,
+      name: GATE_INFO.NORTH.name,
       distance: getDistance(
         { latitude: mallData.latitude!, longitude: mallData.longitude! },
-        GATE_POSITION.NORTH
+        GATE_INFO.NORTH.position
       ),
     },
     {
-      name: GATE_NAME.MAIN,
+      name: GATE_INFO.MAIN.name,
       distance: getDistance(
         { latitude: mallData.latitude!, longitude: mallData.longitude! },
-        GATE_POSITION.MAIN
+        GATE_INFO.MAIN.position
       ),
     },
     {
-      name: GATE_NAME.WEST,
+      name: GATE_INFO.WEST.name,
       distance: getDistance(
         { latitude: mallData.latitude!, longitude: mallData.longitude! },
-        GATE_POSITION.WEST
+        GATE_INFO.WEST.position
       ),
     },
     {
-      name: GATE_NAME.EAST,
+      name: GATE_INFO.EAST.name,
       distance: getDistance(
         { latitude: mallData.latitude!, longitude: mallData.longitude! },
-        GATE_POSITION.EAST
+        GATE_INFO.EAST.position
       ),
     }
   );
