@@ -112,6 +112,7 @@ export async function deleteFileFolderDevelop(
 
     await file_folder.destroy({
       where: { file_folder_id: models.file_folder_id },
+      transaction,
     });
     return 'ok';
   } catch (error) {
