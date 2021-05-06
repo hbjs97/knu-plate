@@ -1,12 +1,20 @@
 import axios from 'axios';
 import { KAKAOAK } from '../lib/config';
-import { FOOD_CATEGORY, KAKAO_MAP_API_URL, PER_PAGE } from '../lib/constant';
-import { DB } from '../lib/sequelize';
+import {
+  CENTER_POSITION,
+  CENTER_RANGE,
+  FOOD_CATEGORY,
+  GATE_NAME,
+  GATE_POSITION,
+  KAKAO_MAP_API_URL,
+  PER_PAGE,
+} from '../lib/constant';
 import { Op, Sequelize, Transaction } from 'sequelize';
 import { addressOutput, mallExpand } from '../lib/type';
 import { mall, mallAttributes } from '../models/mall';
 import { menu } from '../models/menu';
 import { getMyRecommend, getMyRecommendList } from './my.recommend.controller';
+import { getDistance } from 'geolib';
 
 export async function mallValidationChecker(
   mallData: mallAttributes
@@ -32,11 +40,19 @@ export async function mallValidationChecker(
     }
     return false;
   });
-  if (isExist.length == 1) {
-    return 'ok';
-  } else {
+
+  if (!isExist.length) {
     return 'validate fail';
   }
+  const distanceFromCenter = getDistanceFromCenter({
+    latitude: mallData.latitude!,
+    longitude: mallData.longitude!,
+  });
+  if (distanceFromCenter > CENTER_RANGE) {
+    return 'the mall is out of range';
+  }
+
+  return 'ok';
 }
 
 export async function getAddressListFromKakaoMapApi(
@@ -75,12 +91,7 @@ export async function getAddressListFromKakaoMapApi(
 }
 
 export async function enrollMall(
-  mallModel: mallAttributes,
-  files:
-    | Express.Multer.File[]
-    | {
-        [fieldname: string]: Express.Multer.File[];
-      }
+  mallModel: mallAttributes
 ): Promise<mall | string> {
   const duplicateMallChecker = await mall.findAll({
     where: {
@@ -108,8 +119,7 @@ export async function enrollMall(
     mallModel.category_name = '세계 음식';
   }
 
-  // TODO: fileUpload and getUrl
-  // TODO: counselData.doc_company_profile = getUrl from fileUpload
+  mallModel.gate_location = getNearestGateFromMall(mallModel);
 
   const enrolledMall = await mall.create(mallModel);
   if (!enrolledMall) {
@@ -254,4 +264,49 @@ export async function getMyRecommendMallList(
   });
 
   return myRecommendMallList;
+}
+
+export function getDistanceFromCenter(from: {
+  latitude: number;
+  longitude: number;
+}): number {
+  return getDistance(from, CENTER_POSITION);
+}
+
+export function getNearestGateFromMall(mallData: mallAttributes): string {
+  const distanceFromGate = [];
+  distanceFromGate.push(
+    {
+      name: GATE_NAME.NORTH,
+      distance: getDistance(
+        { latitude: mallData.latitude!, longitude: mallData.longitude! },
+        GATE_POSITION.NORTH
+      ),
+    },
+    {
+      name: GATE_NAME.MAIN,
+      distance: getDistance(
+        { latitude: mallData.latitude!, longitude: mallData.longitude! },
+        GATE_POSITION.MAIN
+      ),
+    },
+    {
+      name: GATE_NAME.WEST,
+      distance: getDistance(
+        { latitude: mallData.latitude!, longitude: mallData.longitude! },
+        GATE_POSITION.WEST
+      ),
+    },
+    {
+      name: GATE_NAME.EAST,
+      distance: getDistance(
+        { latitude: mallData.latitude!, longitude: mallData.longitude! },
+        GATE_POSITION.EAST
+      ),
+    }
+  );
+  distanceFromGate.sort((a, b) => {
+    return a.distance < b.distance ? -1 : 1;
+  });
+  return distanceFromGate[0].name;
 }

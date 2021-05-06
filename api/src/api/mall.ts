@@ -87,7 +87,6 @@ router.post(
     const address = req.body.address;
     const latitude = req.body.latitude;
     const longitude = req.body.longitude;
-    const thumbnail = req.body.thumbnail;
 
     if (!mall_name || !category_name || !address || !latitude || !longitude) {
       return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
@@ -121,7 +120,7 @@ router.post(
       user_id: req.body._user_id,
     };
 
-    const enrolledMall = await enrollMall(mallData, req.files);
+    const enrolledMall = await enrollMall(mallData);
     if (typeof enrolledMall == 'string') {
       return res.status(INTERNAL_ERROR).json({ error: enrolledMall });
     }
