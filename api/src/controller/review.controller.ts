@@ -4,8 +4,14 @@ import { review, reviewAttributes } from '../models/review';
 import { getMallById } from './mall.controller';
 import { menu } from '../models/menu';
 import { menu_list } from '../models/menu_list';
-import { PER_PAGE } from '../lib/constant';
+import {
+  MEDAL_CATEGORY,
+  MEDAL_CATEGORY_COUNT,
+  MEDAL_CATEGORY_OBJECT,
+  PER_PAGE,
+} from '../lib/constant';
 import { user } from '../models/user';
+import { getUserById } from './user.controller';
 
 export async function enrollReview(
   reviewData: reviewAttributes,
@@ -46,7 +52,7 @@ export async function enrollReview(
     transaction,
   });
   if (!enrolledMenuList.length) {
-    throw new Error('menu_list create fail');
+    return 'menu_list create fail';
   }
 
   const reviewList = await review.findAll({
@@ -76,10 +82,64 @@ export async function enrollReview(
       );
     })
   );
-  return await getReviewBuId(enrolledReview.review_id!, transaction);
+
+  const myReviewListLength = (
+    await review.findAll({
+      where: { user_id: reviewData.user_id },
+      attributes: { include: [] },
+      transaction,
+    })
+  ).length;
+
+  if (MEDAL_CATEGORY_COUNT.includes(myReviewListLength)) {
+    const medalUpdateResult = await updateMedal[
+      <keyof typeof MEDAL_CATEGORY_OBJECT>myReviewListLength
+    ](reviewData.user_id!, transaction);
+    if (medalUpdateResult != 'ok') {
+      return 'medal update fail';
+    }
+  }
+
+  return await getReviewById(enrolledReview.review_id!, transaction);
 }
 
-export async function getReviewBuId(
+export const updateMedal = {
+  3: async (user_id: string, transaction: Transaction): Promise<string> => {
+    const theUser = await getUserById(user_id);
+    if (typeof theUser == 'string') {
+      return theUser;
+    }
+    await theUser.update({ medal_id: MEDAL_CATEGORY.BRONZE }, { transaction });
+    if (theUser.medal_id != MEDAL_CATEGORY.BRONZE) {
+      return 'medal update fail';
+    }
+    return 'ok';
+  },
+  10: async (user_id: string, transaction: Transaction): Promise<string> => {
+    const theUser = await getUserById(user_id);
+    if (typeof theUser == 'string') {
+      return theUser;
+    }
+    await theUser.update({ medal_id: MEDAL_CATEGORY.SILVER }, { transaction });
+    if (theUser.medal_id != MEDAL_CATEGORY.SILVER) {
+      return 'medal update fail';
+    }
+    return 'ok';
+  },
+  50: async (user_id: string, transaction: Transaction): Promise<string> => {
+    const theUser = await getUserById(user_id);
+    if (typeof theUser == 'string') {
+      return theUser;
+    }
+    await theUser.update({ medal_id: MEDAL_CATEGORY.GOLD }, { transaction });
+    if (theUser.medal_id != MEDAL_CATEGORY.GOLD) {
+      return 'medal update fail';
+    }
+    return 'ok';
+  },
+};
+
+export async function getReviewById(
   review_id: number,
   transaction?: Transaction
 ): Promise<string | review> {

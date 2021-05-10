@@ -91,3 +91,15 @@ export const GATE_INFO = {
     },
   },
 };
+
+export const MEDAL_CATEGORY_COUNT = [3, 10, 50];
+export const MEDAL_CATEGORY_OBJECT = {
+  3: 3,
+  10: 10,
+  50: 50,
+};
+export const MEDAL_CATEGORY = {
+  BRONZE: 1,
+  SILVER: 2,
+  GOLD: 3,
+};
