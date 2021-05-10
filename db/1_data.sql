@@ -1,4 +1,4 @@
--- Adminer 4.7.4 MySQL dump
+-- Adminer 4.8.0 MySQL 5.5.5-10.5.8-MariaDB-1:10.5.8+maria~focal dump
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
@@ -60,15 +60,21 @@ TRUNCATE `suggestion`;
 TRUNCATE `suggestion_reply`;
 
 TRUNCATE `user`;
-INSERT INTO `user` (`user_id`, `user_name`, `password`, `display_name`, `mail_address`, `date_create`, `is_active`, `medal_list`, `user_thumbnail`) VALUES
-('1aa6a6ea-f52b-4496-b560-5dba4a9aad1c',	'test',	'TrKPCKB8swPI4J3RdDepk7r7YwWmQLd9NWU7T6ztcDoAivkw6/DKN74VrsW02WkVI6eNmdZ9R/Y65ER+rnrA7Q==',	'test',	'asdf@asdf.com',	'2021-04-18 16:28:20',	'Y', null,  null),
-('276f73f9-8dbd-4a38-8344-331d6c5c51d1',	'kevink2',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'kevnki2',	'kevin2kim26@knu.ac.kr',	'2021-04-21 22:07:27',	'Y', null,  null),
-('3c3032ce-21b5-4905-8607-6259d1f4a642',	'kevinkim',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'kevinkim',	'kevinkim2586@knu.ac.kr',	'2021-04-21 21:59:48',	'Y', null,  null),
-('5d88b090-044f-4291-8d71-07cac44337d2',	'kevink',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'kevnki',	'kevinkim26@knu.ac.kr',	'2021-04-21 22:04:39',	'Y', null,  null),
-('6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'alexding',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'alexding',	'alexding@knu.ac.kr',	'2021-04-21 22:09:42',	'Y', null,  null),
-('72cbb603-0594-4cf3-b38b-0fd2719ef963',	'hbjs',	'TrKPCKB8swPI4J3RdDepk7r7YwWmQLd9NWU7T6ztcDoAivkw6/DKN74VrsW02WkVI6eNmdZ9R/Y65ER+rnrA7Q==',	'hbjs',	'asdf@asdf.com',	'2021-04-18 16:28:40',	'Y', null,  null),
-('85a67213-dbf1-41cd-bafb-50b1fd1ef188',	'kevinki',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'kevinki',	'kevinkim256@knu.ac.kr',	'2021-04-21 22:02:32',	'Y', null,  null),
-('e27b8491-77bd-4652-8eae-b1d07f1224da',	'kevinkim2222',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'kevin2323',	'kevinkim2586@gmail.com',	'2021-04-21 21:27:27',	'Y', null,  null);
+INSERT INTO `user` (`user_id`, `user_name`, `password`, `display_name`, `mail_address`, `date_create`, `is_active`, `medal_id`, `user_thumbnail`) VALUES
+('1aa6a6ea-f52b-4496-b560-5dba4a9aad1c',	'test',	'TrKPCKB8swPI4J3RdDepk7r7YwWmQLd9NWU7T6ztcDoAivkw6/DKN74VrsW02WkVI6eNmdZ9R/Y65ER+rnrA7Q==',	'test',	'asdf@asdf.com',	'2021-04-18 16:28:20',	'Y',	NULL,	NULL),
+('276f73f9-8dbd-4a38-8344-331d6c5c51d1',	'kevink2',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'kevnki2',	'kevin2kim26@knu.ac.kr',	'2021-04-21 22:07:27',	'Y',	NULL,	NULL),
+('3c3032ce-21b5-4905-8607-6259d1f4a642',	'kevinkim',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'kevinkim',	'kevinkim2586@knu.ac.kr',	'2021-04-21 21:59:48',	'Y',	NULL,	NULL),
+('5d88b090-044f-4291-8d71-07cac44337d2',	'kevink',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'kevnki',	'kevinkim26@knu.ac.kr',	'2021-04-21 22:04:39',	'Y',	NULL,	NULL),
+('6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'alexding',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'alexding',	'alexding@knu.ac.kr',	'2021-04-21 22:09:42',	'Y',	NULL,	NULL),
+('72cbb603-0594-4cf3-b38b-0fd2719ef963',	'hbjs',	'TrKPCKB8swPI4J3RdDepk7r7YwWmQLd9NWU7T6ztcDoAivkw6/DKN74VrsW02WkVI6eNmdZ9R/Y65ER+rnrA7Q==',	'hbjs',	'asdf@asdf.com',	'2021-04-18 16:28:40',	'Y',	NULL,	NULL),
+('85a67213-dbf1-41cd-bafb-50b1fd1ef188',	'kevinki',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'kevinki',	'kevinkim256@knu.ac.kr',	'2021-04-21 22:02:32',	'Y',	NULL,	NULL),
+('e27b8491-77bd-4652-8eae-b1d07f1224da',	'kevinkim2222',	'g7uqO+Sp1P/IhhM/7erHhhgQSgVElxH82k89uJi/56braHp9Na4SRC7R9F/NEjfjcgngSLGMayUTaUy8Mi1Ufg==',	'kevin2323',	'kevinkim2586@gmail.com',	'2021-04-21 21:27:27',	'Y',	NULL,	NULL);
+
+TRUNCATE `user_medal_info`;
+INSERT INTO `user_medal_info` (`medal_id`, `description`) VALUES
+(1,	'동메달, 댓글 3회이상 등록'),
+(2,	'은메달, 댓글 10회이상 등록'),
+(3,	'금메달, 댓글 50회이상 등록');
 
 TRUNCATE `user_role`;
 INSERT INTO `user_role` (`user_id`, `user_role_group_id`) VALUES
@@ -92,7 +98,7 @@ INSERT INTO `user_role_group` (`user_role_group_id`, `name`, `description`) VALU
 TRUNCATE `user_token`;
 INSERT INTO `user_token` (`user_token_id`, `user_id`, `date_create`, `access_point`) VALUES
 ('164e03db-6bcc-44a1-b1a6-bd2b4a3ad135',	'85a67213-dbf1-41cd-bafb-50b1fd1ef188',	'2021-04-22 15:14:28',	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'),
-('7cd01cb3-21b9-471b-94a9-a77982b8f6b2',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-04-20 13:26:44',	'insomnia/2021.2.2'),
-('c5467364-d47c-4529-b2f8-dbe6d8469852',	'3c3032ce-21b5-4905-8607-6259d1f4a642',	'2021-04-22 15:07:02',	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36');
+('c5467364-d47c-4529-b2f8-dbe6d8469852',	'3c3032ce-21b5-4905-8607-6259d1f4a642',	'2021-04-22 15:07:02',	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'),
+('ca5ee68e-2477-4057-ac7f-aef5e115e539',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-05-10 22:05:43',	'insomnia/2021.2.2');
 
--- 2021-04-22 09:54:48
+-- 2021-05-10 13:41:49

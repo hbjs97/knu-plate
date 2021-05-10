@@ -276,16 +276,30 @@ CREATE TABLE `user` (
   `mail_address` varchar(255) NOT NULL COMMENT '학교 메일',
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `is_active` varchar(1) NOT NULL DEFAULT 'Y',
-  `medal_list` varchar(255) DEFAULT NULL,
+  `medal_id` int(11) DEFAULT NULL,
   `user_thumbnail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `display_name` (`display_name`),
   UNIQUE KEY `user_name` (`user_name`),
-  KEY `FK_user_file_folder` (`medal_list`),
   KEY `FK_user_file_folder_2` (`user_thumbnail`),
-  CONSTRAINT `FK_user_file_folder` FOREIGN KEY (`medal_list`) REFERENCES `file_folder` (`file_folder_id`),
-  CONSTRAINT `FK_user_file_folder_2` FOREIGN KEY (`user_thumbnail`) REFERENCES `file_folder` (`file_folder_id`)
+  KEY `FK_user_file_folder` (`medal_id`) USING BTREE,
+  CONSTRAINT `FK_user_file_folder_2` FOREIGN KEY (`user_thumbnail`) REFERENCES `file_folder` (`file_folder_id`),
+  CONSTRAINT `FK_user_user_medal_info` FOREIGN KEY (`medal_id`) REFERENCES `user_medal_info` (`medal_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_medal_info`
+--
+
+DROP TABLE IF EXISTS `user_medal_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_medal_info` (
+  `medal_id` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`medal_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -369,4 +383,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-01 17:47:40
+-- Dump completed on 2021-05-10 22:41:14
