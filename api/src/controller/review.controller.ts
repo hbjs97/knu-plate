@@ -5,6 +5,7 @@ import { getMallById } from './mall.controller';
 import { menu } from '../models/menu';
 import { menu_list } from '../models/menu_list';
 import { PER_PAGE } from '../lib/constant';
+import { user } from '../models/user';
 
 export async function enrollReview(
   reviewData: reviewAttributes,
@@ -97,12 +98,7 @@ export async function getReviewBuId(
 export async function getReviewListByMallId(
   mall_id: number,
   cursor: number
-): Promise<review[] | string> {
-  const theMall = await getMallById(mall_id);
-  if (typeof theMall == 'string') {
-    return theMall;
-  }
-
+): Promise<(review & { user?: user })[]> {
   const reviewList = await review.findAll({
     where: {
       mall_id: mall_id,

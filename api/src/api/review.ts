@@ -1,6 +1,10 @@
 import { Request, Response, Router } from 'express';
 import { isArray } from 'lodash';
-import { fileUploadReturnUrl } from '../controller/file.controller';
+import {
+  fileUploadReturnUrl,
+  getFileListFromFileFolder,
+} from '../controller/file.controller';
+import { getMallById } from '../controller/mall.controller';
 import {
   enrollReview,
   getReviewListByMallId,
@@ -8,7 +12,10 @@ import {
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { reviewAttributes } from '../models/review';
+import { reviewExpand, userExpand } from '../lib/type';
+import { file } from '../models/file';
+import { review, reviewAttributes } from '../models/review';
+import { user, userAttributes } from '../models/user';
 
 const router = Router();
 
@@ -153,11 +160,35 @@ router.get(
       return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
     }
 
-    const reviewList = await getReviewListByMallId(mall_id, cursor);
-    if (typeof reviewList == 'string') {
-      return res.status(INTERNAL_ERROR).json({ error: reviewList });
+    const theMall = await getMallById(mall_id);
+    if (typeof theMall == 'string') {
+      return theMall;
     }
-    res.status(OK).json(reviewList);
+
+    const reviewList: (review & {
+      user?: user;
+    })[] = await getReviewListByMallId(mall_id, cursor);
+
+    const fileAttachedReviewList = await Promise.all(
+      reviewList.map(async (v: review & { user?: userAttributes }) => {
+        const result: reviewExpand = v.get({
+          plain: true,
+        });
+        result.review_image = result.review_image
+          ? await getFileListFromFileFolder(<string>result.review_image)
+          : result.review_image!;
+        result.user = {
+          ...result.user,
+          user_thumbnail: result.user?.user_thumbnail
+            ? await getFileListFromFileFolder(
+                <string>result.user?.user_thumbnail
+              )
+            : result.user?.user_thumbnail!,
+        };
+        return result;
+      })
+    );
+    res.status(OK).json(fileAttachedReviewList);
   })
 );
 
