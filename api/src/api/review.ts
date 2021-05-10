@@ -12,7 +12,7 @@ import {
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { reviewExpand, userExpand } from '../lib/type';
+import { reviewExpand } from '../lib/type';
 import { file } from '../models/file';
 import { review, reviewAttributes } from '../models/review';
 import { user, userAttributes } from '../models/user';

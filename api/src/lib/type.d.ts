@@ -35,7 +35,7 @@ export interface mallExpand extends mallAttributes {
 }
 
 export interface userExpand extends userAttributes {
-  user_thumbnail: string | file[];
+  user_thumbnail?: string | file[];
 }
 
 export interface reviewExpand {

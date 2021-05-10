@@ -3,6 +3,7 @@ import { isArray } from 'lodash';
 import {
   fileUploadReturnUrl,
   getFileFolderById,
+  getFileListFromFileFolder,
 } from '../controller/file.controller';
 import { deleteFileFolderDevelop } from '../controller/file.develop.controller';
 import {
@@ -29,6 +30,7 @@ import {
   REG_ENG_NUM_KR,
 } from '../lib/constant';
 import { DB } from '../lib/sequelize';
+import { userExpand } from '../lib/type';
 import { user } from '../models/user';
 
 const router = Router();
@@ -73,8 +75,11 @@ router.get(
     if (typeof theUser == 'string') {
       return res.status(BAD_REQUEST).json({ error: 'user not founded' });
     }
-    const result = theUser.get({ plain: true });
+    const result: userExpand = theUser.get({ plain: true });
     delete result.password;
+    result.user_thumbnail = result.user_thumbnail
+      ? await getFileListFromFileFolder(<string>result.user_thumbnail)
+      : result.user_thumbnail!;
 
     res.status(OK).json({
       ...result,
