@@ -111,6 +111,14 @@ export async function getReviewListByMallId(
       },
       is_active: 'Y',
     },
+    include: [
+      {
+        association: 'user',
+        attributes: {
+          exclude: ['password'],
+        },
+      },
+    ],
     limit: PER_PAGE,
   });
 
