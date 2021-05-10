@@ -96,7 +96,7 @@ export async function getReviewBuId(
 
 export async function getReviewListByMallId(
   mall_id: number,
-  pageNumber: number
+  cursor: number
 ): Promise<review[] | string> {
   const theMall = await getMallById(mall_id);
   if (typeof theMall == 'string') {
@@ -105,16 +105,10 @@ export async function getReviewListByMallId(
 
   const reviewList = await review.findAll({
     where: {
-      [Op.and]: [
-        {
-          mall_id: mall_id,
-        },
-        {
-          mall_id: {
-            [Op.gt]: pageNumber,
-          },
-        },
-      ],
+      mall_id: mall_id,
+      review_id: {
+        [Op.gt]: cursor,
+      },
       is_active: 'Y',
     },
     limit: PER_PAGE,

@@ -124,7 +124,7 @@ router.post(
  * /api/review:
  *  get:
  *    tags: [리뷰]
- *    summary: 리뷰 등록
+ *    summary: 리뷰 조회
  *    parameters:
  *      - in: query
  *        type: number
@@ -134,7 +134,7 @@ router.post(
  *      - in: query
  *        type: number
  *        required: false
- *        name: page
+ *        name: cursor
  *        description: 페이지 인덱스
  *    responses:
  *      200:
@@ -148,12 +148,12 @@ router.get(
   '/',
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = Number(req.query.mall_id);
-    const pageNumber = Number(req.query.page) || 0;
+    const cursor = Number(req.query.cursor) || 0;
     if (!mall_id) {
       return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
     }
 
-    const reviewList = await getReviewListByMallId(mall_id, pageNumber);
+    const reviewList = await getReviewListByMallId(mall_id, cursor);
     if (typeof reviewList == 'string') {
       return res.status(INTERNAL_ERROR).json({ error: reviewList });
     }
