@@ -142,7 +142,7 @@ router.post(
  *        type: number
  *        required: false
  *        name: cursor
- *        description: 페이지 인덱스
+ *        description: 현재 페이지 마지막 인덱스
  *    responses:
  *      200:
  *        description: success
