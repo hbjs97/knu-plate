@@ -1,8 +1,12 @@
 import { Request, Response, Router } from 'express';
+import { isArray } from 'lodash';
+import { fileUploadReturnUrl } from '../controller/file.controller';
 import {
   displayNameDuplicateChecker,
+  getUserByIdExceptPassword,
   insertUser,
   loginProcess,
+  setUserByModel,
   userDuplicateChecker,
   userNameDuplicateChecker,
   userValidator,
@@ -52,6 +56,11 @@ const router = Router();
  *        required: true
  *        name: mail_address
  *        description: 메일 주소
+ *      - in: formData
+ *        type: file
+ *        required: false
+ *        name: user_thumbnail
+ *        description: 썸네일
  *    responses:
  *      200:
  *        description: success
@@ -136,13 +145,44 @@ router.post(
     // verification
 
     // insert into db
-    const theUser = await insertUser(userInfo);
-    if (typeof theUser == 'string') {
-      return res.status(INTERNAL_ERROR).json({ error: theUser });
-    }
-    delete theUser.password;
+    try {
+      const transactionResult = await DB.transaction(async (transaction) => {
+        const theUser = await insertUser(userInfo, transaction);
+        if (typeof theUser == 'string') {
+          return res.status(INTERNAL_ERROR).json({ error: theUser });
+        }
 
-    res.status(OK).json(theUser);
+        if (req.files && !isArray(req.files) && req.files.user_thumbnail) {
+          if (req.files.user_thumbnail.length > 1) {
+            throw new Error('only one user_thumbnail can be registered');
+          }
+          const url = await fileUploadReturnUrl(
+            theUser.user_id!,
+            req.files.user_thumbnail,
+            transaction
+          );
+          if (typeof url == 'string') {
+            throw new Error(url);
+          }
+
+          theUser.user_thumbnail = url.file_folder_id;
+          const thumbnailUpdatedUser = await setUserByModel(
+            theUser,
+            theUser.get({ plain: true }),
+            transaction
+          );
+          if (typeof thumbnailUpdatedUser == 'string') {
+            throw new Error('user_thumbnail update fail');
+          }
+        }
+
+        return await getUserByIdExceptPassword(theUser.user_id!, transaction);
+      });
+
+      res.status(OK).json(transactionResult);
+    } catch (error) {
+      res.status(INTERNAL_ERROR).json({ error: error.message });
+    }
   })
 );
 

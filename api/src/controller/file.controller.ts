@@ -14,15 +14,9 @@ export async function fileUploadReturnUrl(
   fileList: Express.Multer.File[],
   transaction?: Transaction
 ): Promise<string | file_folder> {
-  // if (NODE_ENV != 'production') {
   return await fileUploadReturnUrlDevelop(uploader, fileList, transaction);
-  // }
-
-  return 'pass';
 
   // TODO: production file upload logic
-
-  // return { folder: folder.file_folder_id, files: filesResult };
 }
 
 export async function getFileFolderById(

@@ -41,62 +41,57 @@ export async function userDuplicateChecker(
 }
 
 export async function insertUser(
-  userInfo: userAttributes
-): Promise<userAttributes | string> {
-  try {
-    return await DB.transaction(async (transaction) => {
-      const theUser = await user.create(
-        {
-          user_id: uuidV4(),
-          ...userInfo,
-          medal_id: 3,
-          is_active: 'Y',
-        },
-        { transaction }
-      );
-      if (!theUser) {
-        throw new Error('user create fail');
-      }
-
-      const roleData = await setRoleToUser(
-        {
-          user_id: theUser.user_id!,
-        },
-        transaction
-      );
-
-      const mailAuthModel: mail_authAttributes = {
-        user_id: theUser.user_id,
-        date_expire: dayjs().add(EXPIRE_AUTH_MAIL, 'minute').toDate(),
-        auth_code: uuidV4().split('-')[0],
-      };
-
-      const enrolledMailAuth = await mail_auth.create(mailAuthModel, {
-        transaction,
-      });
-      if (!enrolledMailAuth) {
-        throw new Error('mail auth create fail');
-      }
-
-      if (roleData != 'ok') {
-        throw new Error(roleData);
-      }
-
-      const result = await user.findOne({
-        where: {
-          user_id: theUser.user_id,
-        },
-        transaction,
-      });
-      if (!result) {
-        throw new Error('create fail');
-      }
-
-      return result;
-    });
-  } catch (error) {
-    return error.message;
+  userInfo: userAttributes,
+  transaction: Transaction
+): Promise<user | string> {
+  const theUser = await user.create(
+    {
+      user_id: uuidV4(),
+      ...userInfo,
+      medal_id: 3,
+      is_active: 'Y',
+    },
+    { transaction }
+  );
+  if (!theUser) {
+    return 'user create fail';
   }
+
+  const roleData = await setRoleToUser(
+    {
+      user_id: theUser.user_id!,
+    },
+    transaction
+  );
+
+  const mailAuthModel: mail_authAttributes = {
+    user_id: theUser.user_id,
+    date_expire: dayjs().add(EXPIRE_AUTH_MAIL, 'minute').toDate(),
+    auth_code: uuidV4().split('-')[0],
+  };
+
+  const enrolledMailAuth = await mail_auth.create(mailAuthModel, {
+    transaction,
+  });
+  if (!enrolledMailAuth) {
+    return 'mail auth create fail';
+  }
+
+  if (roleData != 'ok') {
+    return roleData;
+  }
+
+  const result = await user.findOne({
+    where: {
+      user_id: theUser.user_id,
+    },
+    transaction,
+  });
+  if (!result) {
+    return 'create fail';
+  }
+
+  return result;
 }
 
 export async function userValidator(
