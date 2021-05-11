@@ -72,9 +72,9 @@ INSERT INTO `user` (`user_id`, `user_name`, `password`, `display_name`, `mail_ad
 
 TRUNCATE `user_medal_info`;
 INSERT INTO `user_medal_info` (`medal_id`, `description`) VALUES
-(1,	'동메달, 댓글 3회이상 등록'),
+(3,	'동메달, 기본'),
 (2,	'은메달, 댓글 10회이상 등록'),
-(3,	'금메달, 댓글 50회이상 등록');
+(1,	'금메달, 댓글 50회이상 등록');
 
 TRUNCATE `user_role`;
 INSERT INTO `user_role` (`user_id`, `user_role_group_id`) VALUES
