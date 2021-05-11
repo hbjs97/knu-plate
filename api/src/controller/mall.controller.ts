@@ -90,7 +90,8 @@ export async function getAddressListFromKakaoMapApi(
 }
 
 export async function enrollMall(
-  mallModel: mallAttributes
+  mallModel: mallAttributes,
+  transaction?: Transaction
 ): Promise<mall | string> {
   const duplicateMallChecker = await mall.findAll({
     where: {
@@ -120,11 +121,11 @@ export async function enrollMall(
 
   mallModel.gate_location = getNearestGateFromMall(mallModel);
 
-  const enrolledMall = await mall.create(mallModel);
+  const enrolledMall = await mall.create(mallModel, { transaction });
   if (!enrolledMall) {
     return 'create mall fail';
   }
-  return await getMallById(enrolledMall.mall_id!);
+  return await getMallById(enrolledMall.mall_id!, transaction);
 }
 
 export async function getMallById(

@@ -1,4 +1,6 @@
 import { Request, Response, Router } from 'express';
+import { isArray } from 'lodash';
+import { fileUploadReturnUrl } from '../controller/file.controller';
 import {
   deleteMall,
   enrollMall,
@@ -120,15 +122,33 @@ router.post(
       user_id: req.body._user_id,
     };
 
-    const enrolledMall = await enrollMall(mallData);
-    if (typeof enrolledMall == 'string') {
-      return res.status(INTERNAL_ERROR).json({ error: enrolledMall });
-    }
+    try {
+      const transactionResult = await DB.transaction(async (transaction) => {
+        if (req.files && !isArray(req.files) && req.files.thumbnail) {
+          const url = await fileUploadReturnUrl(
+            req.body._user_id,
+            req.files.thumbnail,
+            transaction
+          );
+          if (typeof url != 'string') {
+            mallData.thumbnail = url.file_folder_id;
+          }
+        }
 
-    res.status(OK).json({
-      ...enrolledMall.get({ plain: true }),
-      date_create: changeModelTimestamp(enrolledMall.date_create!),
-    });
+        const enrolledMall = await enrollMall(mallData, transaction);
+        if (typeof enrolledMall == 'string') {
+          throw new Error(enrolledMall);
+        }
+        return enrolledMall;
+      });
+
+      res.status(OK).json({
+        ...transactionResult.get({ plain: true }),
+        date_create: changeModelTimestamp(transactionResult.date_create!),
+      });
+    } catch (error) {
+      res.status(INTERNAL_ERROR).json({ error: error.message });
+    }
   })
 );
 
