@@ -49,6 +49,7 @@ export async function insertUser(
         {
           user_id: uuidV4(),
           ...userInfo,
+          medal_id: 3,
           is_active: 'Y',
         },
         { transaction }

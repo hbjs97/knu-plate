@@ -104,17 +104,6 @@ export async function enrollReview(
 }
 
 export const updateMedal = {
-  3: async (user_id: string, transaction: Transaction): Promise<string> => {
-    const theUser = await getUserById(user_id);
-    if (typeof theUser == 'string') {
-      return theUser;
-    }
-    await theUser.update({ medal_id: MEDAL_CATEGORY.BRONZE }, { transaction });
-    if (theUser.medal_id != MEDAL_CATEGORY.BRONZE) {
-      return 'medal update fail';
-    }
-    return 'ok';
-  },
   10: async (user_id: string, transaction: Transaction): Promise<string> => {
     const theUser = await getUserById(user_id);
     if (typeof theUser == 'string') {
