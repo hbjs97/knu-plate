@@ -202,38 +202,39 @@ export async function getDetailMall(
   mall_id: number,
   user_id: string
 ): Promise<mallExpand | string> {
-  let expandedMallInfo: null | mallExpand = await mall.findOne({
+  const expandedMallInfo:
+    | null
+    | (mall & {
+        menu?: menu[];
+        my_recommend?: string;
+      }) = await mall.findOne({
     where: {
       mall_id,
       is_active: 'Y',
     },
-    raw: true,
+    include: [
+      {
+        association: 'menus',
+      },
+    ],
   });
   if (!expandedMallInfo) {
     return 'mall not founded';
   }
 
-  expandedMallInfo = {
-    ...expandedMallInfo,
-    menu: await menu.findAll({ where: { mall_id } }),
-  };
-
   const myRecommend = await getMyRecommend(user_id, mall_id);
-  expandedMallInfo =
+  const result =
     typeof myRecommend != 'string'
-      ? (expandedMallInfo = {
-          ...expandedMallInfo,
+      ? {
+          ...expandedMallInfo.get({ plain: true }),
           my_recommend: 'Y',
-        })
-      : (expandedMallInfo = {
-          ...expandedMallInfo,
+        }
+      : {
+          ...expandedMallInfo.get({ plain: true }),
           my_recommend: 'N',
-        });
+        };
 
-  if (!expandedMallInfo) {
-    return 'detailMallInfo not founded';
-  }
-  return expandedMallInfo;
+  return result;
 }
 
 export async function getMyRecommendMallList(

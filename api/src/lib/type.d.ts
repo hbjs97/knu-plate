@@ -29,7 +29,7 @@ export interface addressOutput {
   y?: number;
 }
 
-export interface mallExpand extends mallAttributes {
+export interface mallExpand extends mall {
   menu?: menu[];
   my_recommend?: string;
 }
