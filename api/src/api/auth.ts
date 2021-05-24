@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { isArray } from 'lodash';
+import { includes, isArray } from 'lodash';
 import {
   fileUploadReturnUrl,
   getFileFolderById,
@@ -196,6 +196,12 @@ router.post(
  *        required: false
  *        name: user_thumbnail
  *        description: 썸네일(변경하지 않을 시 입력X, 하나만 첨부가능)
+ *      - in: formData
+ *        type: string
+ *        required: true
+ *        name: force
+ *        default: N
+ *        description: 기존 썸네일 초기화 Y | N
  *    security:
  *      - refresh: []
  *    responses:
@@ -207,6 +213,7 @@ router.patch(
   errorHandler(async (req: Request, res: Response) => {
     const password = req.body.password;
     const display_name = req.body.display_name;
+    const force = req.body.force;
 
     const myInfo = await getUserById(req.body._user_id);
     if (typeof myInfo == 'string') {
@@ -251,26 +258,23 @@ router.patch(
       myInfo.display_name = display_name;
     }
 
+    if (!['Y', 'N'].includes(force)) {
+      return res.status(BAD_REQUEST).json({ error: 'invalid force' });
+    }
+
     try {
       const transactionResult = await DB.transaction(async (transaction) => {
-        if (req.files && !isArray(req.files) && req.files.user_thumbnail) {
+        const prevUserThumbNail = myInfo.user_thumbnail;
+        if (force == 'Y') {
+          myInfo.user_thumbnail = null!;
+        } else if (
+          req.files &&
+          !isArray(req.files) &&
+          req.files.user_thumbnail
+        ) {
           if (req.files.user_thumbnail.length > 1) {
             throw new Error('only one user_thumbnail can be registered');
           }
-          // if (myInfo.user_thumbnail) {
-          //   const fileFolder = await getFileFolderById(myInfo.user_thumbnail);
-          //   if (typeof fileFolder == 'string') {
-          //     throw new Error(fileFolder);
-          //   }
-          //   const deleteFileFolderResult = await deleteFileFolderDevelop(
-          //     myInfo,
-          //     fileFolder,
-          //     transaction
-          //   );
-          //   if (deleteFileFolderResult != 'ok') {
-          //     throw new Error(deleteFileFolderResult);
-          //   }
-          // }
           const url = await fileUploadReturnUrl(
             req.body._user_id,
             req.files.user_thumbnail,
@@ -297,7 +301,15 @@ router.patch(
           throw new Error('display_name update error');
         }
 
-        // TODO: 기존 파일폴더 삭제
+        if (prevUserThumbNail) {
+          const deleteResult = await deleteFileFolderDevelop(
+            prevUserThumbNail,
+            transaction
+          );
+          if (deleteResult != 'ok') {
+            throw new Error(deleteResult);
+          }
+        }
 
         return await getUserByIdExceptPassword(
           updatedUser.user_id!,
@@ -306,7 +318,7 @@ router.patch(
       });
       res.status(OK).json(transactionResult);
     } catch (error) {
-      return res.status(INTERNAL_ERROR).json({ error: error.message });
+      res.status(INTERNAL_ERROR).json({ error: error.message });
     }
   })
 );

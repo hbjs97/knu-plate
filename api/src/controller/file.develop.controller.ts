@@ -68,33 +68,17 @@ export async function fileUploadReturnUrlDevelop(
   }
 }
 
-// export async function deleteFileDevelop(
-//   models: fileAttributes[]
-// ): Promise<string[]> {
-//   try {
-//     const path = '/var/www/html/bucket/' + models[0].original_name;
-
-//     fs.unlinkSync(path);
-
-//     return ['ok'];
-//   } catch (err) {
-//     console.error(err);
-//     return ['error'];
-//   }
-// }
-
 export async function deleteFileFolderDevelop(
-  userModel: user,
-  models: file_folderAttributes,
+  file_folder_id: string,
   transaction?: Transaction
 ): Promise<string> {
   try {
     await Axios({
-      url: 'http://file:4200/' + 'delete/' + models.file_folder_id,
+      url: 'http://file:4200/' + 'delete/' + file_folder_id,
       method: 'delete',
     });
 
-    const fileList = await getFileListFromFileFolder(models.file_folder_id!);
+    const fileList = await getFileListFromFileFolder(file_folder_id!);
     if (typeof fileList == 'string') {
       throw new Error(fileList);
     }
@@ -105,18 +89,12 @@ export async function deleteFileFolderDevelop(
       })
     );
 
-    await userModel.update({ user_thumbnail: null, transaction });
-    if (userModel.user_thumbnail) {
-      throw new Error('user_thumbnail empty fail');
-    }
-
     await file_folder.destroy({
-      where: { file_folder_id: models.file_folder_id },
+      where: { file_folder_id: file_folder_id },
       transaction,
     });
     return 'ok';
   } catch (error) {
-    // console.error(err);
     return error.message;
   }
 }
