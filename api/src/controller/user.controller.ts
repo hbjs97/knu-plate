@@ -226,6 +226,19 @@ export async function getUserByIdExceptPassword(
 export async function getUserByName(user_name: string): Promise<user | string> {
   const theUser = await user.findOne({
     where: { user_name: user_name, is_active: 'Y' },
+    attributes: {
+      exclude: ['password'],
+    },
+    include: [
+      {
+        association: 'file_folder',
+        include: [
+          {
+            association: 'files',
+          },
+        ],
+      },
+    ],
   });
   if (!theUser) {
     return 'user not founded';

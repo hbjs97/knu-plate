@@ -165,30 +165,8 @@ router.get(
       return theMall;
     }
 
-    const reviewList: (review & {
-      user?: user;
-    })[] = await getReviewListByMallId(mall_id, cursor);
-
-    const fileAttachedReviewList = await Promise.all(
-      reviewList.map(async (v: review & { user?: userAttributes }) => {
-        const result: reviewExpand = v.get({
-          plain: true,
-        });
-        result.review_image = result.review_image
-          ? await getFileListFromFileFolder(<string>result.review_image)
-          : result.review_image!;
-        result.user = {
-          ...result.user,
-          user_thumbnail: result.user?.user_thumbnail
-            ? await getFileListFromFileFolder(
-                <string>result.user?.user_thumbnail
-              )
-            : result.user?.user_thumbnail!,
-        };
-        return result;
-      })
-    );
-    res.status(OK).json(fileAttachedReviewList);
+    const reviewList = await getReviewListByMallId(mall_id, cursor);
+    res.status(OK).json(reviewList);
   })
 );
 

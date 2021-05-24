@@ -75,15 +75,15 @@ router.get(
     if (typeof theUser == 'string') {
       return res.status(BAD_REQUEST).json({ error: 'user not founded' });
     }
-    const result: userExpand = theUser.get({ plain: true });
-    delete result.password;
-    result.user_thumbnail = result.user_thumbnail
-      ? await getFileListFromFileFolder(<string>result.user_thumbnail)
-      : result.user_thumbnail!;
+    // const result: userExpand = theUser.get({ plain: true });
+    // delete result.password;
+    // result.user_thumbnail = result.user_thumbnail
+    //   ? await getFileListFromFileFolder(<string>result.user_thumbnail)
+    //   : result.user_thumbnail!;
 
     res.status(OK).json({
-      ...result,
-      date_create: changeModelTimestamp(result.date_create!),
+      ...theUser.get({ plain: true }),
+      date_create: changeModelTimestamp(theUser.date_create!),
     });
   })
 );

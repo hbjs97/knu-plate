@@ -147,7 +147,7 @@ export async function getReviewById(
 export async function getReviewListByMallId(
   mall_id: number,
   cursor: number
-): Promise<(review & { user?: user })[]> {
+): Promise<review[]> {
   const reviewList = await review.findAll({
     where: {
       mall_id: mall_id,
@@ -162,6 +162,14 @@ export async function getReviewListByMallId(
         attributes: {
           exclude: ['password'],
         },
+      },
+      {
+        association: 'file_folder',
+        include: [
+          {
+            association: 'files',
+          },
+        ],
       },
     ],
     limit: PER_PAGE,

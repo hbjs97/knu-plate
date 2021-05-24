@@ -38,7 +38,7 @@ export async function fileUploadReturnUrlDevelop(
     const fileData: file[] = res.data[fileList[0].fieldname].map(
       (v: Express.Multer.File) => {
         return {
-          file_id: uuidV4(),
+          file_id: v.filename,
           path: FILE_SERVER_URL + v.path,
           original_name: v.originalname,
           extension: v.originalname.split('.')[1],
