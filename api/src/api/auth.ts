@@ -75,11 +75,6 @@ router.get(
     if (typeof theUser == 'string') {
       return res.status(BAD_REQUEST).json({ error: 'user not founded' });
     }
-    // const result: userExpand = theUser.get({ plain: true });
-    // delete result.password;
-    // result.user_thumbnail = result.user_thumbnail
-    //   ? await getFileListFromFileFolder(<string>result.user_thumbnail)
-    //   : result.user_thumbnail!;
 
     res.status(OK).json({
       ...theUser.get({ plain: true }),
