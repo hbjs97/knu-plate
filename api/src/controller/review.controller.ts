@@ -162,6 +162,16 @@ export async function getReviewListByMallId(
         attributes: {
           exclude: ['password'],
         },
+        include: [
+          {
+            association: 'file_folder',
+            include: [
+              {
+                association: 'files',
+              },
+            ],
+          },
+        ],
       },
       {
         association: 'file_folder',
