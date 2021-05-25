@@ -301,7 +301,7 @@ router.patch(
           throw new Error('display_name update error');
         }
 
-        if (prevUserThumbNail) {
+        if (force == 'Y' && prevUserThumbNail) {
           const deleteResult = await deleteFileFolderDevelop(
             prevUserThumbNail,
             transaction
