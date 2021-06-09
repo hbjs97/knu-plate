@@ -149,6 +149,7 @@ export async function getReviewListByMallId(
   cursor: number
 ): Promise<review[]> {
   const reviewList = await review.findAll({
+    order: [['review_id', 'DESC']],
     where: {
       mall_id: mall_id,
       review_id: {

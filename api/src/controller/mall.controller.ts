@@ -174,6 +174,7 @@ export async function getMallList(
   }
 
   const mallList = await mall.findAll({
+    order: [['mall_id', 'DESC']],
     where: whereAttribute,
     // TODO: include my_recommand
     limit: PER_PAGE,
@@ -248,6 +249,7 @@ export async function getMyRecommendMallList(
   const mallIdList: number[] = myRecommendList.map((v) => v.mall_id!);
 
   const myRecommendMallList = await mall.findAll({
+    order: [['mall_id', 'DESC']],
     where: {
       [Op.and]: [
         {
