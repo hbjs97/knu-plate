@@ -155,7 +155,7 @@ export async function getMallList(
   whereAttribute = {
     is_active: 'Y',
     mall_id: {
-      [Op.gt]: pageOption.cursor,
+      [Op.lt]: pageOption.cursor,
     },
   };
   if (mallOption.mall_name) {
@@ -257,7 +257,7 @@ export async function getMyRecommendMallList(
         },
         {
           mall_id: {
-            [Op.gt]: cursor,
+            [Op.lt]: cursor,
           },
         },
       ],

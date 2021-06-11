@@ -153,7 +153,7 @@ export async function getReviewListByMallId(
     where: {
       mall_id: mall_id,
       review_id: {
-        [Op.gt]: cursor,
+        [Op.lt]: cursor,
       },
       is_active: 'Y',
     },
