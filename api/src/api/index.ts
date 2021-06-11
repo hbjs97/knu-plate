@@ -10,6 +10,7 @@ import mallRoute from './mall';
 import menuRoute from './menu';
 import reviewRoute from './review';
 import fileRoute from './file';
+import suggestionRoute from './suggestion';
 import { authentication, getUserType } from '../middleware/user.middleware';
 import { uploadFileType } from '../lib/constant';
 import { keys } from 'lodash';
@@ -46,5 +47,6 @@ router.use('/mall', mallRoute);
 router.use('/menu', menuRoute);
 router.use('/review', reviewRoute);
 router.use('/file', fileRoute);
+router.use('/suggestion', suggestionRoute);
 
 export default router;
