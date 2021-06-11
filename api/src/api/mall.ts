@@ -223,7 +223,7 @@ router.get(
   errorHandler(async (req: Request, res: Response) => {
     const mall_name = <string>req.query.mall_name;
     const category_name = <string>req.query.category_name;
-    const cursor = Number(req.query.cursor) || 0;
+    const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
 
     const mallList = await getMallList(
       { mall_name, category_name },
@@ -265,7 +265,7 @@ router.get(
 router.get(
   '/my-recommend',
   errorHandler(async (req: Request, res: Response) => {
-    const cursor = Number(req.query.cursor) || 0;
+    const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
     const myRecommendMallList = await getMyRecommendMallList(
       req.body._user_id,
       cursor

@@ -155,7 +155,7 @@ router.get(
   '/',
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = Number(req.query.mall_id);
-    const cursor = Number(req.query.cursor) || 0;
+    const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
     if (!mall_id) {
       return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
     }
