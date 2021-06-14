@@ -1,6 +1,6 @@
 import { DB } from '../lib/sequelize';
 import { Op, Sequelize, Transaction } from 'sequelize';
-import { menu } from '../models/menu';
+import { menu, menuAttributes } from '../models/menu';
 import { getMallById } from './mall.controller';
 import { menu_list } from '../models/menu_list';
 
@@ -72,4 +72,22 @@ export async function deleteMenu(
   } catch (error) {
     return 'menu delete fail';
   }
+}
+
+export async function updateMenuByModel(
+  menuModel: menuAttributes
+): Promise<menu | string> {
+  await menu.update(menuModel, {
+    where: {
+      menu_id: menuModel.menu_id!,
+    },
+  });
+  const updatedMenu = await getMenuById(menuModel.menu_id!);
+  if (typeof updatedMenu == 'string') {
+    return updatedMenu;
+  }
+  if (updatedMenu.menu_name != menuModel.menu_name) {
+    return 'menu update fail';
+  }
+  return updatedMenu;
 }

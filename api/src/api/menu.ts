@@ -6,6 +6,7 @@ import {
   enrollMenu,
   getMenuById,
   menuDuplicateCheck,
+  updateMenuByModel,
 } from '../controller/menu.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
@@ -119,6 +120,60 @@ router.post(
         };
       })
     );
+  })
+);
+
+/**
+ * @swagger
+ * /api/menu/{menu_id}:
+ *  patch:
+ *    tags: [메뉴]
+ *    summary: 메뉴 수정
+ *    parameters:
+ *      - in: path
+ *        type: number
+ *        required: true
+ *        name: menu_id
+ *        description: 매뉴 아이디
+ *      - in: formData
+ *        type: string
+ *        required: true
+ *        name: menu_name
+ *        description: 매뉴 이름
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.patch(
+  '/:menu_id',
+  errorHandler(async (req: Request, res: Response) => {
+    const menu_id = Number(req.params.menu_id);
+    const menu_name = req.body.menu_name;
+
+    if (!menu_id || !menu_name) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const theMenu = await getMenuById(menu_id);
+    if (typeof theMenu == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: theMenu });
+    }
+    const menuModel = theMenu.get({ plain: true });
+    menuModel.menu_name = menu_name;
+
+    const updatedMenu = await updateMenuByModel(menuModel);
+    if (typeof updatedMenu == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: updatedMenu });
+    }
+
+    res.status(OK).json({
+      ...updatedMenu.get({ plain: true }),
+      date_create: changeModelTimestamp(updatedMenu.date_create!),
+    });
   })
 );
 
