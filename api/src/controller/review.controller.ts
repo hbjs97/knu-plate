@@ -141,6 +141,9 @@ export async function getReviewById(
   if (!theReview) {
     return 'review not founded';
   }
+  if (theReview.is_active != 'Y') {
+    return 'inactive review';
+  }
   return theReview;
 }
 
