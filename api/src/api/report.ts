@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { enrollReport } from '../controller/report.controller';
+import { enrollReport, getReportList } from '../controller/report.controller';
 import { getReviewById } from '../controller/review.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import {
@@ -79,8 +79,8 @@ router.post(
  *      - in: query
  *        type: number
  *        required: false
- *        name: result
- *        description: 처리 결과
+ *        name: category
+ *        description: 특정 카테고리 조회 ['proceeding', 'sanctioned', 'passed']
  *      - in: query
  *        type: number
  *        required: false
@@ -98,6 +98,20 @@ router.get(
   '/',
   errorHandler(async (req: Request, res: Response) => {
     const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
+    const category = <string>req.query.category;
+
+    if (category && !REPORT_PROCESS.includes(category)) {
+      return res.status(BAD_REQUEST).json({ error: 'invalid report process' });
+    }
+
+    const reportList = await getReportList(cursor, category);
+    const result = reportList.map((v) => {
+      return {
+        ...v.get({ plain: true }),
+        date_create: changeModelTimestamp(v.date_create!),
+      };
+    });
+    res.status(OK).json(result);
   })
 );
 

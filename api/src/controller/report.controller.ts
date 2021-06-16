@@ -1,3 +1,5 @@
+import { PER_PAGE } from '../lib/constant';
+import { Op } from '../lib/sequelize';
 import { report, reportAttributes } from '../models/report';
 
 export async function getReportById(
@@ -23,4 +25,38 @@ export async function enrollReport(
   } catch (error) {
     return error.mesasge;
   }
+}
+
+export async function getReportList(
+  cursor: number,
+  result?: string
+): Promise<report[]> {
+  let whereAttribute = {};
+  whereAttribute = {
+    report_id: {
+      [Op.lt]: cursor,
+    },
+  };
+  if (result) {
+    whereAttribute = {
+      ...whereAttribute,
+      result: result,
+    };
+  }
+
+  const reportList = await report.findAll({
+    order: [['report_id', 'DESC']],
+    where: whereAttribute,
+    include: [
+      {
+        association: 'user',
+        attributes: {
+          exclude: ['password'],
+        },
+      },
+    ],
+    limit: PER_PAGE,
+  });
+
+  return reportList;
 }
