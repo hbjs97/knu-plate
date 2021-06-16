@@ -102,3 +102,5 @@ export const MEDAL_CATEGORY = {
   SILVER: 2,
   GOLD: 1,
 };
+
+export const REPORT_PROCESS = ['proceeding', 'sanctioned', 'passed'];
