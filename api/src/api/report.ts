@@ -8,7 +8,9 @@ import {
   OK,
   REPORT_PROCESS,
 } from '../lib/constant';
-import { reportAttributes } from '../models/report';
+import { report, reportAttributes } from '../models/report';
+import { review } from '../models/review';
+import { user } from '../models/user';
 
 const router = Router();
 
@@ -112,6 +114,74 @@ router.get(
       };
     });
     res.status(OK).json(result);
+  })
+);
+
+/**
+ * @swagger
+ * /api/report/{report_id}:
+ *  get:
+ *    tags: [신고]
+ *    summary: 신고 상세 조회
+ *    parameters:
+ *      - in: path
+ *        type: number
+ *        required: true
+ *        name: report_id
+ *        description: 신고 아이디
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/:report_id',
+  errorHandler(async (req: Request, res: Response) => {
+    const report_id = Number(req.params.report_id);
+    if (!report_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const theReport:
+      | null
+      | (report & { user?: user; review?: review }) = await report.findOne({
+      where: {
+        report_id,
+      },
+      include: [
+        {
+          association: 'user',
+          attributes: {
+            exclude: ['password'],
+          },
+        },
+        {
+          association: 'review',
+          include: [
+            {
+              association: 'user',
+              attributes: {
+                exclude: ['password'],
+              },
+            },
+          ],
+        },
+      ],
+    });
+    if (!theReport) {
+      return res.status(INTERNAL_ERROR).json({ error: 'report not founded' });
+    }
+    res.status(OK).json({
+      ...theReport.get({ plain: true }),
+      date_create: changeModelTimestamp(theReport.date_create!),
+      review: {
+        ...theReport.review?.get({ plain: true }),
+        date_create: changeModelTimestamp(theReport.review?.date_create!),
+      },
+    });
   })
 );
 
