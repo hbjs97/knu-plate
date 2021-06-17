@@ -281,9 +281,6 @@ router.patch(
           if (typeof updatedReview == 'string') {
             throw new Error(updatedReview);
           }
-          if (updatedReview.is_active != 'N') {
-            throw new Error('review inactivate fail');
-          }
         }
 
         const updatedReport = await updateReportByModel(
