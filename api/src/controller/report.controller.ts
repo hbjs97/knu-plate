@@ -1,14 +1,17 @@
+import { Transaction } from 'sequelize/types';
 import { PER_PAGE } from '../lib/constant';
 import { Op } from '../lib/sequelize';
 import { report, reportAttributes } from '../models/report';
 
 export async function getReportById(
-  report_id: number
+  report_id: number,
+  transaction?: Transaction
 ): Promise<report | string> {
   const theReport = await report.findOne({
     where: {
       report_id,
     },
+    transaction,
   });
   if (!theReport) {
     return 'report not founded';
@@ -59,4 +62,21 @@ export async function getReportList(
   });
 
   return reportList;
+}
+
+export async function updateReportByModel(
+  reportModel: reportAttributes,
+  transaction: Transaction
+): Promise<report | string> {
+  try {
+    await report.update(reportModel, {
+      where: {
+        report_id: reportModel.report_id!,
+      },
+      transaction,
+    });
+    return await getReportById(reportModel.report_id!, transaction);
+  } catch (error) {
+    return error.message;
+  }
 }
