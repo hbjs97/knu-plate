@@ -287,9 +287,13 @@ export async function setUserByModel(
   model: user,
   data: userAttributes,
   transaction?: Transaction
-): Promise<userAttributes> {
-  await model.update(data, { transaction });
-  return model.get({ plain: true });
+): Promise<userAttributes | string> {
+  try {
+    await model.update(data, { transaction });
+    return model.get({ plain: true });
+  } catch (error) {
+    return error.message;
+  }
 }
 
 export async function logoutProcess(user_id: string): Promise<string> {

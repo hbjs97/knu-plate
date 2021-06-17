@@ -191,3 +191,28 @@ export async function getReviewListByMallId(
 
   return reviewList;
 }
+
+export async function updateReviewByModel(
+  reviewModel: reviewAttributes,
+  transaction: Transaction
+): Promise<review | string> {
+  await review.update(reviewModel, {
+    where: {
+      review_id: reviewModel.review_id!,
+    },
+    transaction,
+  });
+  const inactivatedReview = await review.findOne({
+    where: {
+      review_id: reviewModel.review_id!,
+    },
+    transaction,
+  });
+  if (!inactivatedReview) {
+    return 'review not founded';
+  }
+  if (inactivatedReview?.is_active != 'N') {
+    return 'review inactivate fail';
+  }
+  return inactivatedReview;
+}
