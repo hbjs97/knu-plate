@@ -231,13 +231,12 @@ DROP TABLE IF EXISTS `suggestion`;
 CREATE TABLE `suggestion` (
   `suggestion_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
   `contents` text NOT NULL,
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`suggestion_id`),
   KEY `FK_user_TO_suggestion_1` (`user_id`),
   CONSTRAINT `FK_user_TO_suggestion_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -383,4 +382,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-10 22:41:14
+-- Dump completed on 2021-06-18 23:18:18

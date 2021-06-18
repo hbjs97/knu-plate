@@ -56,12 +56,12 @@ INSERT INTO `review` (`review_id`, `user_id`, `mall_id`, `date_create`, `content
 (2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	2,	'2021-04-19 20:54:49',	'review1',	5,	NULL,	'Y');
 
 TRUNCATE `suggestion`;
-INSERT INTO `suggestion` (`suggestion_id`, `user_id`, `title`, `contents`, `date_create`) VALUES
-(1,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'suggestion title',	'suggestion contents1',	'2021-06-11 22:31:18'),
-(2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'suggestion title2',	'suggestion contents2',	'2021-06-11 22:31:25'),
-(3,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'suggestion title3',	'suggestion contents3',	'2021-06-11 22:31:27'),
-(4,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'suggestion title4',	'suggestion contents4',	'2021-06-11 22:31:29'),
-(5,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'suggestion title5',	'suggestion contents5',	'2021-06-11 22:31:31');
+INSERT INTO `suggestion` (`suggestion_id`, `user_id`, `contents`, `date_create`) VALUES
+(1,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'suggestion contents1',	'2021-06-11 22:31:18'),
+(2,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'suggestion contents2',	'2021-06-11 22:31:25'),
+(3,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'suggestion contents3',	'2021-06-11 22:31:27'),
+(4,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'suggestion contents4',	'2021-06-11 22:31:29'),
+(5,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'suggestion contents5',	'2021-06-11 22:31:31');
 
 TRUNCATE `suggestion_reply`;
 
@@ -107,4 +107,4 @@ INSERT INTO `user_token` (`user_token_id`, `user_id`, `date_create`, `access_poi
 ('9a63c19c-c84c-4783-8287-1092a42cc93b',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-06-11 22:24:22',	'insomnia/2021.3.0'),
 ('c5467364-d47c-4529-b2f8-dbe6d8469852',	'3c3032ce-21b5-4905-8607-6259d1f4a642',	'2021-04-22 15:07:02',	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36');
 
--- 2021-06-11 13:43:48
+-- 2021-06-18 14:18:36
