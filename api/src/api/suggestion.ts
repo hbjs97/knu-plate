@@ -18,11 +18,6 @@ const router = Router();
  *    summary: 건의사항 등록
  *    parameters:
  *      - in: formData
- *        type: string
- *        required: true
- *        name: title
- *        description: 건의사항 제목
- *      - in: formData
  *        type: text
  *        required: true
  *        name: contents
@@ -38,14 +33,12 @@ const router = Router();
 router.post(
   '/',
   errorHandler(async (req: Request, res: Response) => {
-    const title = req.body.title;
     const contents = req.body.contents;
-    if (!title || !contents) {
+    if (!contents) {
       return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
     }
 
     const suggestionModel: suggestionAttributes = {
-      title,
       contents,
       user_id: req.body._user_id,
     };
