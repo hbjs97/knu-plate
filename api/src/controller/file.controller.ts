@@ -8,6 +8,8 @@ import { fileTimestampable } from '../lib/type';
 import { Transaction } from 'sequelize';
 import { DB } from '../lib/sequelize';
 import { fileUploadReturnUrlDevelop } from './file.develop.controller';
+import axios from 'axios';
+import { v4 as uuidV4 } from 'uuid';
 
 export async function fileUploadReturnUrl(
   uploader: string,
@@ -17,6 +19,34 @@ export async function fileUploadReturnUrl(
   return await fileUploadReturnUrlDevelop(uploader, fileList, transaction);
 
   // TODO: production file upload logic
+}
+
+export async function initMallFileFolder(
+  uploader: string,
+  transaction?: Transaction
+): Promise<string | file_folder> {
+  try {
+    const newFileFolder = uuidV4();
+    await axios({
+      url: 'http://file:4200/' + 'upload/' + newFileFolder,
+      method: 'post',
+    });
+
+    const folder = await file_folder.create(
+      {
+        file_folder_id: newFileFolder,
+        type: 'thumbnail',
+      },
+      { transaction }
+    );
+    if (!folder) {
+      throw new Error('file_folder create fail');
+    }
+
+    return folder;
+  } catch (error) {
+    return error.message || 'mall folder init fail';
+  }
 }
 
 export async function getFileFolderById(

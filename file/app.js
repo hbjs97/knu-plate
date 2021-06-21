@@ -48,7 +48,11 @@ app.get("/bucket/:file_folder_id/:file_id", (req, res) => {
 
 app.post("/upload/:file_folder_id", thumbnail.fields(fileList), (req, res) => {
   const files = req.files;
-  console.log(files);
+  if (!files && req.params.file_folder_id) {
+    if (!fs.existsSync("./bucket/" + req.params.file_folder_id)) {
+      fs.mkdirSync("./bucket/" + req.params.file_folder_id);
+    }
+  }
   res.json(files);
 });
 
