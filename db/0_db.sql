@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS `file`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `file` (
   `file_id` varchar(255) NOT NULL,
+  `index` int(11) NOT NULL AUTO_INCREMENT,
   `path` varchar(255) NOT NULL,
   `original_name` varchar(100) NOT NULL,
   `file_folder_id` varchar(255) NOT NULL,
@@ -41,6 +42,7 @@ CREATE TABLE `file` (
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `checksum` varchar(255) DEFAULT NULL COMMENT '사용여부 미확정',
   PRIMARY KEY (`file_id`),
+  UNIQUE KEY `index` (`index`),
   KEY `FK_file_folder_TO_file_1` (`file_folder_id`),
   KEY `FK_user_TO_file_1` (`uploader`),
   CONSTRAINT `FK_file_folder_TO_file_1` FOREIGN KEY (`file_folder_id`) REFERENCES `file_folder` (`file_folder_id`),
@@ -382,4 +384,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-18 23:18:18
+-- Dump completed on 2021-06-23  7:30:56
