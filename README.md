@@ -13,3 +13,7 @@ docker-compose up -d
 ```sh
 docker exec -it knu-plate_db-maria_1 mysqldump --all-databases -utest -ptest --no-data > db/0_db.sql
 ```
+
+## 앱
+### [iOS](https://github.com/KNU-Plate/KNU-Plate-iOS)
+### [Android](https://github.com/KNU-Plate/KNU-Plate-Android)
