@@ -1,4 +1,4 @@
-import { NODE_ENV } from '../lib/config';
+import { AWS_BUCKET_NAME, NODE_ENV, S3 } from '../lib/config';
 import { file_folder } from '../models/file_folder';
 import { file, fileAttributes } from '../models/file';
 import crypto from 'crypto';
@@ -10,6 +10,7 @@ import { DB } from '../lib/sequelize';
 import { fileUploadReturnUrlDevelop } from './file.develop.controller';
 import axios from 'axios';
 import { v4 as uuidV4 } from 'uuid';
+import { ManagedUpload } from 'aws-sdk/clients/s3';
 
 export async function fileUploadReturnUrl(
   uploader: string,
@@ -76,4 +77,18 @@ export async function getFileListFromFileFolder(
   const fileList = await file.findAll({ where: { file_folder_id } });
 
   return fileList;
+}
+
+export async function uploadFileToS3Bucket(
+  file: Express.Multer.File
+): Promise<ManagedUpload.SendData> {
+  const uploadParams = {
+    Bucket: AWS_BUCKET_NAME, // bucket name
+    Body: file.buffer, // buffer
+    Key: file.originalname, // dest
+    ContentType: file.mimetype,
+    ACL: 'public-read-write',
+  };
+
+  return S3.upload(uploadParams).promise();
 }
