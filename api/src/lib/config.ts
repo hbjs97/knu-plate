@@ -1,4 +1,5 @@
 import { isNumber } from 'lodash';
+import aws from 'aws-sdk';
 
 export const JWT_SALT = process.env.JWT_SALT || 'secret';
 export const JWT_EXPIRE_ACCESS = process.env.JWT_EXPIRE_ACCESS || '30m';
@@ -31,3 +32,14 @@ if (!isNumber(PORT)) {
 export const KAKAOAK = process.env.KAKAOAK || '';
 
 export const CRON_AUTH_KEY = process.env.CRON_AUTH_KEY || '';
+
+export const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || '';
+export const AWS_SECRET_KEY = process.env.AWS_SECRET_KEY || '';
+export const AWS_BUCKET_REGION = process.env.AWS_BUCKET_REGION || '';
+export const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME || '';
+
+export const S3 = new aws.S3({
+  accessKeyId: AWS_ACCESS_KEY_ID,
+  secretAccessKey: AWS_SECRET_KEY,
+  region: AWS_BUCKET_REGION,
+});
