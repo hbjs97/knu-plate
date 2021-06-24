@@ -177,6 +177,16 @@ export async function getMallList(
     order: [['mall_id', 'DESC']],
     where: whereAttribute,
     // TODO: include my_recommand
+    include: [
+      {
+        association: 'file_folder',
+        include: [
+          {
+            association: 'files',
+          },
+        ],
+      },
+    ],
     limit: PER_PAGE,
   });
   return mallList;
@@ -203,12 +213,7 @@ export async function getDetailMall(
   mall_id: number,
   user_id: string
 ): Promise<mallExpand | string> {
-  const expandedMallInfo:
-    | null
-    | (mall & {
-        menu?: menu[];
-        my_recommend?: string;
-      }) = await mall.findOne({
+  const expandedMallInfo = await mall.findOne({
     where: {
       mall_id,
       is_active: 'Y',
@@ -216,6 +221,14 @@ export async function getDetailMall(
     include: [
       {
         association: 'menus',
+      },
+      {
+        association: 'file_folder',
+        include: [
+          {
+            association: 'files',
+          },
+        ],
       },
     ],
   });
