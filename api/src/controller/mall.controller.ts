@@ -14,6 +14,8 @@ import { mall, mallAttributes } from '../models/mall';
 import { menu } from '../models/menu';
 import { getMyRecommend, getMyRecommendList } from './my.recommend.controller';
 import { getDistance } from 'geolib';
+import { file } from '../models/file';
+import { review } from '../models/review';
 
 export async function mallValidationChecker(
   mallData: mallAttributes
@@ -325,4 +327,31 @@ export function getNearestGateFromMall(mallData: mallAttributes): string {
     return a.distance < b.distance ? -1 : 1;
   });
   return distanceFromGate[0].name;
+}
+
+export async function getReviewImageListFromMall(
+  mallModel: mallAttributes,
+  cursor: number
+): Promise<file[]> {
+  const reviewList = await review.findAll({
+    where: {
+      mall_id: mallModel.mall_id,
+      is_active: 'Y',
+    },
+  });
+  const reviewImageFileFolderIdList = reviewList.map((v) => {
+    return v.review_image!;
+  });
+
+  const fileList = await file.findAll({
+    order: [['index', 'DESC']],
+    where: {
+      file_folder_id: reviewImageFileFolderIdList,
+      index: {
+        [Op.lt]: cursor,
+      },
+    },
+    limit: PER_PAGE,
+  });
+  return fileList;
 }

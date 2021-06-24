@@ -1,16 +1,15 @@
 import { Request, Response, Router } from 'express';
 import { isArray } from 'lodash';
-import {
-  fileUploadReturnUrl,
-  initMallFileFolder,
-} from '../controller/file.controller';
+import { fileUploadReturnUrl } from '../controller/file.controller';
 import {
   deleteMall,
   enrollMall,
   getAddressListFromKakaoMapApi,
   getDetailMall,
+  getMallById,
   getMallList,
   getMyRecommendMallList,
+  getReviewImageListFromMall,
   mallValidationChecker,
 } from '../controller/mall.controller';
 import {
@@ -342,6 +341,56 @@ router.get(
     }
 
     res.status(OK).json(addressListFromKakaoMapApi);
+  })
+);
+
+/**
+ * @swagger
+ * /api/mall/review-images:
+ *  get:
+ *    tags: [매장]
+ *    summary: 매장 리뷰 이미지 목록 조회
+ *    parameters:
+ *      - in: query
+ *        type: number
+ *        required: true
+ *        name: mall_id
+ *        description: 매장 아이디
+ *      - in: query
+ *        type: number
+ *        required: false
+ *        name: cursor
+ *        description: 현재 페이지 마지막 파일 인덱스 (file.index)
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/review-images',
+  errorHandler(async (req: Request, res: Response) => {
+    const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
+    const mall_id = Number(req.query.mall_id);
+    if (!mall_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const theMall = await getMallById(mall_id);
+    if (typeof theMall == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: theMall });
+    }
+    if (theMall.is_active != 'Y') {
+      return res.status(INTERNAL_ERROR).json({ error: 'inactive mall' });
+    }
+
+    const fileList = await getReviewImageListFromMall(
+      theMall.get({ plain: true }),
+      cursor
+    );
+    res.status(OK).json(fileList);
   })
 );
 
