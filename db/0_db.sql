@@ -47,7 +47,7 @@ CREATE TABLE `file` (
   KEY `FK_user_TO_file_1` (`uploader`),
   CONSTRAINT `FK_file_folder_TO_file_1` FOREIGN KEY (`file_folder_id`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_user_TO_file_1` FOREIGN KEY (`uploader`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,7 +113,7 @@ CREATE TABLE `mall` (
   KEY `FK_file_folder_TO_mall_1` (`thumbnail`) USING BTREE,
   CONSTRAINT `FK_file_folder_TO_mall_1` FOREIGN KEY (`thumbnail`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_user_TO_mall_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,7 +152,7 @@ CREATE TABLE `menu_list` (
   KEY `FK_menu_TO_menu_list_1` (`menu_id`),
   CONSTRAINT `FK_menu_TO_menu_list_1` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`),
   CONSTRAINT `FK_review_TO_menu_list_1` FOREIGN KEY (`review_id`) REFERENCES `review` (`review_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -220,7 +220,7 @@ CREATE TABLE `review` (
   CONSTRAINT `FK_file_folder_TO_review_1` FOREIGN KEY (`review_image`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_mall_TO_review_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`),
   CONSTRAINT `FK_user_TO_review_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -239,27 +239,6 @@ CREATE TABLE `suggestion` (
   KEY `FK_user_TO_suggestion_1` (`user_id`),
   CONSTRAINT `FK_user_TO_suggestion_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `suggestion_reply`
---
-
-DROP TABLE IF EXISTS `suggestion_reply`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `suggestion_reply` (
-  `suggestion_reply_id` int(11) NOT NULL AUTO_INCREMENT,
-  `suggestion_id` int(11) NOT NULL,
-  `user_id` varchar(255) NOT NULL,
-  `reply` text NOT NULL,
-  `is_active` varchar(1) DEFAULT 'Y',
-  PRIMARY KEY (`suggestion_reply_id`),
-  KEY `FK_suggestion_TO_suggestion_reply_1` (`suggestion_id`),
-  KEY `FK_user_TO_suggestion_reply_1` (`user_id`),
-  CONSTRAINT `FK_suggestion_TO_suggestion_reply_1` FOREIGN KEY (`suggestion_id`) REFERENCES `suggestion` (`suggestion_id`),
-  CONSTRAINT `FK_user_TO_suggestion_reply_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -384,4 +363,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-23  7:30:56
+-- Dump completed on 2021-06-25  1:30:25
