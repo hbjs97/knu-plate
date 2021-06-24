@@ -1,4 +1,4 @@
-import { AWS_BUCKET_NAME, NODE_ENV, S3 } from '../lib/config';
+import { AWS_BUCKET_NAME, AWS_S3_URL, NODE_ENV, S3 } from '../lib/config';
 import { file_folder } from '../models/file_folder';
 import { file, fileAttributes } from '../models/file';
 import crypto from 'crypto';
@@ -17,9 +17,50 @@ export async function fileUploadReturnUrl(
   fileList: Express.Multer.File[],
   transaction?: Transaction
 ): Promise<string | file_folder> {
-  return await fileUploadReturnUrlDevelop(uploader, fileList, transaction);
+  // if (NODE_ENV == 'development') {
+  //   return await fileUploadReturnUrlDevelop(uploader, fileList, transaction);
+  // }
 
-  // TODO: production file upload logic
+  try {
+    const newFileFolder = uuidV4();
+    const fileData: fileAttributes[] = fileList.map((file) => {
+      const newFile = uuidV4();
+      const uploadParams = {
+        Bucket: AWS_BUCKET_NAME, // bucket name
+        Body: file.buffer, // buffer
+        Key: `${newFileFolder}/${newFile}`, // dest
+        ContentType: file.mimetype,
+        ACL: 'public-read',
+      };
+
+      S3.upload(uploadParams).promise();
+
+      return {
+        file_id: newFile,
+        path: `${AWS_S3_URL}/${newFileFolder}/${newFile}`,
+        original_name: file.originalname,
+        extension: file.originalname.split('.')[1],
+        size: file.size.toString(),
+        file_folder_id: newFileFolder,
+        uploader: uploader,
+      };
+    });
+    const folder = await file_folder.create(
+      {
+        file_folder_id: newFileFolder,
+        type: fileList[0].fieldname,
+      },
+      { transaction }
+    );
+    if (!folder) {
+      throw new Error('file_folder create fail');
+    }
+
+    await file.bulkCreate(fileData, { transaction });
+    return folder;
+  } catch (error) {
+    return error.message || 'upload fail';
+  }
 }
 
 export async function initMallFileFolder(
