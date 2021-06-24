@@ -63,33 +63,37 @@ export async function fileUploadReturnUrl(
   }
 }
 
-export async function initMallFileFolder(
-  uploader: string,
-  transaction?: Transaction
-): Promise<string | file_folder> {
-  try {
-    const newFileFolder = uuidV4();
-    await axios({
-      url: 'http://file:4200/' + 'upload/' + newFileFolder,
-      method: 'post',
-    });
+// export async function initMallFileFolder(
+//   uploader: string,
+//   transaction?: Transaction
+// ): Promise<string | file_folder> {
+//   try {
+//     const newFileFolder = uuidV4();
+//     const uploadParams = {
+//       Bucket: AWS_BUCKET_NAME,
+//       Body: '',
+//       Key: `${newFileFolder}/`,
+//       ACL: 'public-read',
+//     };
 
-    const folder = await file_folder.create(
-      {
-        file_folder_id: newFileFolder,
-        type: 'thumbnail',
-      },
-      { transaction }
-    );
-    if (!folder) {
-      throw new Error('file_folder create fail');
-    }
+//     S3.upload(uploadParams).promise();
 
-    return folder;
-  } catch (error) {
-    return error.message || 'mall folder init fail';
-  }
-}
+//     const folder = await file_folder.create(
+//       {
+//         file_folder_id: newFileFolder,
+//         type: 'thumbnail',
+//       },
+//       { transaction }
+//     );
+//     if (!folder) {
+//       throw new Error('file_folder create fail');
+//     }
+
+//     return folder;
+//   } catch (error) {
+//     return error.message || 'mall folder init fail';
+//   }
+// }
 
 export async function getFileFolderById(
   file_folder_id: string

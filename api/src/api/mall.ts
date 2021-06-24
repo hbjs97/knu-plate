@@ -136,17 +136,18 @@ router.post(
           if (typeof url != 'string') {
             mallData.thumbnail = url.file_folder_id;
           }
-        } else {
-          // init blank file directroy
-          const mallUrl = await initMallFileFolder(
-            req.body._user_id,
-            transaction
-          );
-          if (typeof mallUrl == 'string') {
-            throw new Error(mallUrl);
-          }
-          mallData.thumbnail = mallUrl.file_folder_id;
         }
+        // else {
+        //   // init blank file directroy
+        //   const mallUrl = await initMallFileFolder(
+        //     req.body._user_id,
+        //     transaction
+        //   );
+        //   if (typeof mallUrl == 'string') {
+        //     throw new Error(mallUrl);
+        //   }
+        //   mallData.thumbnail = mallUrl.file_folder_id;
+        // }
 
         const enrolledMall = await enrollMall(mallData, transaction);
         if (typeof enrolledMall == 'string') {
