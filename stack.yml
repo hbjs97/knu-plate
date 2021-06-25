@@ -3,7 +3,7 @@ version: "3.2"
 volumes:
   # db-maria_data_knu-plate:
   api_node_modules_knu-plate:
-  file_node_modules_knu-plate:
+  # file_node_modules_knu-plate:
   smtp_node_modules_knu-plate:
 
 services:
@@ -20,21 +20,21 @@ services:
   #   env_file:
   #     - .env
 
-  file:
-    build:
-      context: .
-      dockerfile: file.Dockerfile
-    image: hbjs97/knu-plate-file
-    ports:
-      - 4200:4200
-      - 9359:9359
-    env_file:
-      - .env
-    volumes:
-      - ./file:/var/www/html
-      - file_node_modules_knu-plate:/var/www/html/node_modules
-    restart: always
-    command: bash -c "npm install && npm run start"
+  # file:
+  #   build:
+  #     context: .
+  #     dockerfile: file.Dockerfile
+  #   image: hbjs97/knu-plate-file
+  #   ports:
+  #     - 4200:4200
+  #     - 9359:9359
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./file:/var/www/html
+  #     - file_node_modules_knu-plate:/var/www/html/node_modules
+  #   restart: always
+  #   command: bash -c "npm install && npm run start"
 
   api:
     build:
