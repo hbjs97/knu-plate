@@ -43,3 +43,11 @@ export async function getNoticeList(cursor: number): Promise<notice[]> {
   });
   return noticeList;
 }
+
+export async function deleteNotice(noticeModel: notice): Promise<string> {
+  const deletedNotice = await noticeModel.update({ is_active: 'N' });
+  if (deletedNotice.is_active != 'N') {
+    return 'notice delete fail';
+  }
+  return 'ok';
+}

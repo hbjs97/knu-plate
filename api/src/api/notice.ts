@@ -1,5 +1,10 @@
 import { Request, Response, Router } from 'express';
-import { enrollNotice, getNoticeList } from '../controller/notice.controller';
+import {
+  deleteNotice,
+  enrollNotice,
+  getNoticeById,
+  getNoticeList,
+} from '../controller/notice.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
@@ -155,6 +160,48 @@ router.get(
     res.status(OK).json({
       ...theNotice.get({ plain: true }),
     });
+  })
+);
+
+/**
+ * @swagger
+ * /api/notice/{notice_id}:
+ *  delete:
+ *    tags: [공지]
+ *    summary: 공지 삭제
+ *    parameters:
+ *      - in: path
+ *        type: number
+ *        required: true
+ *        name: notice_id
+ *        description: 공지 아이디
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.delete(
+  '/:notice_id',
+  errorHandler(async (req: Request, res: Response) => {
+    const notice_id = Number(req.params.notice_id);
+    if (!notice_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const theNotice = await getNoticeById(notice_id);
+    if (typeof theNotice == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: theNotice });
+    }
+
+    const deleteResult = await deleteNotice(theNotice);
+    if (deleteResult != 'ok') {
+      return res.status(INTERNAL_ERROR).json({ error: deleteResult });
+    }
+
+    res.status(OK).json({ result: 'success' });
   })
 );
 
