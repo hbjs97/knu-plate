@@ -47,7 +47,7 @@ CREATE TABLE `file` (
   KEY `FK_user_TO_file_1` (`uploader`),
   CONSTRAINT `FK_file_folder_TO_file_1` FOREIGN KEY (`file_folder_id`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_user_TO_file_1` FOREIGN KEY (`uploader`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,7 +113,7 @@ CREATE TABLE `mall` (
   KEY `FK_file_folder_TO_mall_1` (`thumbnail`) USING BTREE,
   CONSTRAINT `FK_file_folder_TO_mall_1` FOREIGN KEY (`thumbnail`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_user_TO_mall_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,7 +133,7 @@ CREATE TABLE `menu` (
   PRIMARY KEY (`menu_id`),
   KEY `FK_mall_TO_menu_1` (`mall_id`),
   CONSTRAINT `FK_menu_mall` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,7 +152,7 @@ CREATE TABLE `menu_list` (
   KEY `FK_menu_TO_menu_list_1` (`menu_id`),
   CONSTRAINT `FK_menu_TO_menu_list_1` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`),
   CONSTRAINT `FK_review_TO_menu_list_1` FOREIGN KEY (`review_id`) REFERENCES `review` (`review_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -176,6 +176,25 @@ CREATE TABLE `my_recommend` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `notice`
+--
+
+DROP TABLE IF EXISTS `notice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `notice` (
+  `notice_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) NOT NULL,
+  `date_create` datetime NOT NULL DEFAULT current_timestamp(),
+  `title` varchar(255) NOT NULL,
+  `contents` text NOT NULL,
+  PRIMARY KEY (`notice_id`) USING BTREE,
+  KEY `FK_user_TO_notice_1` (`user_id`) USING BTREE,
+  CONSTRAINT `FK_user_TO_notice_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `report`
 --
 
@@ -194,7 +213,7 @@ CREATE TABLE `report` (
   KEY `FK_review_TO_report_1` (`review_id`) USING BTREE,
   CONSTRAINT `FK_review_TO_report_1` FOREIGN KEY (`review_id`) REFERENCES `review` (`review_id`),
   CONSTRAINT `FK_user_TO_report_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -220,7 +239,7 @@ CREATE TABLE `review` (
   CONSTRAINT `FK_file_folder_TO_review_1` FOREIGN KEY (`review_image`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_mall_TO_review_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`),
   CONSTRAINT `FK_user_TO_review_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -238,7 +257,7 @@ CREATE TABLE `suggestion` (
   PRIMARY KEY (`suggestion_id`),
   KEY `FK_user_TO_suggestion_1` (`user_id`),
   CONSTRAINT `FK_user_TO_suggestion_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -363,4 +382,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-25  1:30:25
+-- Dump completed on 2021-06-26 10:51:12
