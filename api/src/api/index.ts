@@ -12,6 +12,7 @@ import reviewRoute from './review';
 import fileRoute from './file';
 import suggestionRoute from './suggestion';
 import reportRoute from './report';
+import noticeRoute from './notice';
 import { authentication, getUserType } from '../middleware/user.middleware';
 import { uploadFileType } from '../lib/constant';
 import { keys } from 'lodash';
@@ -50,5 +51,6 @@ router.use('/review', reviewRoute);
 router.use('/file', fileRoute);
 router.use('/suggestion', suggestionRoute);
 router.use('/report', reportRoute);
+router.use('/notice', noticeRoute);
 
 export default router;
