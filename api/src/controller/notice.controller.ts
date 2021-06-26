@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import { PER_PAGE } from '../lib/constant';
 import { Op } from '../lib/sequelize';
 import { notice, noticeAttributes } from '../models/notice';
@@ -44,10 +45,28 @@ export async function getNoticeList(cursor: number): Promise<notice[]> {
   return noticeList;
 }
 
-export async function deleteNotice(noticeModel: notice): Promise<string> {
-  const deletedNotice = await noticeModel.update({ is_active: 'N' });
+export async function deleteNotice(theNotice: notice): Promise<string> {
+  const deletedNotice = await theNotice.update({ is_active: 'N' });
   if (deletedNotice.is_active != 'N') {
     return 'notice delete fail';
   }
   return 'ok';
+}
+
+export async function updateNotice(
+  noticeModel: noticeAttributes
+): Promise<notice | string> {
+  await notice.update(noticeModel, {
+    where: {
+      notice_id: noticeModel.notice_id,
+    },
+  });
+  const theNotice = await getNoticeById(noticeModel.notice_id!);
+  if (typeof theNotice == 'string') {
+    return theNotice;
+  }
+  if (!isEqual(noticeModel, theNotice.get({ plain: true }))) {
+    return 'notice update fail';
+  }
+  return theNotice;
 }

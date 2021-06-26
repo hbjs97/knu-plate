@@ -4,6 +4,7 @@ import {
   enrollNotice,
   getNoticeById,
   getNoticeList,
+  updateNotice,
 } from '../controller/notice.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
@@ -159,6 +160,67 @@ router.get(
 
     res.status(OK).json({
       ...theNotice.get({ plain: true }),
+    });
+  })
+);
+
+/**
+ * @swagger
+ * /api/notice/{notice_id}:
+ *  patch:
+ *    tags: [공지]
+ *    summary: 공지 수정
+ *    parameters:
+ *      - in: path
+ *        type: number
+ *        required: true
+ *        name: notice_id
+ *        description: 공지 아이디
+ *      - in: formData
+ *        type: string
+ *        required: false
+ *        name: title
+ *        description: 제목
+ *      - in: formData
+ *        type: text
+ *        required: false
+ *        name: contents
+ *        description: 내용
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.patch(
+  '/:notice_id',
+  errorHandler(async (req: Request, res: Response) => {
+    const notice_id = Number(req.params.notice_id);
+    if (!notice_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const theNotice = await getNoticeById(notice_id);
+    if (typeof theNotice == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: theNotice });
+    }
+
+    const noticeModel: noticeAttributes = theNotice.get({ plain: true });
+    noticeModel.title = req.body.title ? req.body.title : noticeModel.title;
+    noticeModel.contents = req.body.contents
+      ? req.body.contents
+      : noticeModel.contents;
+
+    const updatedNotice = await updateNotice(noticeModel);
+    if (typeof updatedNotice == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: updatedNotice });
+    }
+
+    res.status(OK).json({
+      ...updatedNotice.get({ plain: true }),
+      date_create: changeModelTimestamp(updatedNotice.date_create!),
     });
   })
 );
