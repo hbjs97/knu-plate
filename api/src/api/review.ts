@@ -3,13 +3,18 @@ import { isArray } from 'lodash';
 import { fileUploadReturnUrl } from '../controller/file.controller';
 import { getMallById } from '../controller/mall.controller';
 import {
+  deleteReview,
   enrollReview,
+  getReviewById,
   getReviewListByMallId,
 } from '../controller/review.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
 import { reviewAttributes } from '../models/review';
+import { user } from '../models/user';
+import { user_role } from '../models/user_role';
+import { user_role_group } from '../models/user_role_group';
 
 const router = Router();
 
@@ -178,6 +183,74 @@ router.get(
       myReview == 'Y' ? req.body._user_id : null
     );
     res.status(OK).json(reviewList);
+  })
+);
+
+/**
+ * @swagger
+ * /api/review/{review_id}:
+ *  delete:
+ *    tags: [리뷰]
+ *    summary: 리뷰 삭제
+ *    parameters:
+ *      - in: path
+ *        type: number
+ *        required: true
+ *        name: review_id
+ *        description: 리뷰 아이디
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.delete(
+  '/:review_id',
+  errorHandler(async (req: Request, res: Response) => {
+    const review_id = Number(req.params.review_id);
+    if (!review_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const theReview = await getReviewById(review_id);
+    if (typeof theReview == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: theReview });
+    }
+
+    const theUserRole:
+      | null
+      | (user_role & {
+          user_role_group?: user_role_group;
+        }) = await user_role.findOne({
+      where: {
+        user_id: req.body._user_id,
+      },
+      include: [
+        {
+          association: 'user_role_group',
+        },
+      ],
+    });
+    if (!theUserRole || !theUserRole.user_role_group) {
+      return res.status(INTERNAL_ERROR).json({ error: `get user's role fail` });
+    }
+    if (
+      theUserRole.user_role_group.name != 'ADMIN' &&
+      theReview.user_id != req.body._user_id
+    ) {
+      return res
+        .status(INTERNAL_ERROR)
+        .json({ error: 'not have delete permission to the review' });
+    }
+
+    const deleteResult = await deleteReview(theReview);
+    if (deleteResult != 'ok') {
+      return res.status(INTERNAL_ERROR).json({ error: deleteResult });
+    }
+
+    res.status(OK).json({ result: 'success' });
   })
 );
 

@@ -225,3 +225,11 @@ export async function updateReviewByModel(
   }
   return inactivatedReview;
 }
+
+export async function deleteReview(theReview: review): Promise<string> {
+  const deletedReview = await theReview.update({ is_active: 'N' });
+  if (deletedReview.is_active != 'N') {
+    return 'review delete fail';
+  }
+  return 'ok';
+}
