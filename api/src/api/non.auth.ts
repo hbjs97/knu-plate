@@ -238,7 +238,16 @@ router.post(
     if (typeof result == 'string') {
       return res.status(INTERNAL_ERROR).json({ error: result });
     }
-    res.status(OK).json(result);
+
+    const theUserExceptPassword = {
+      ...theUser.get({ plain: true }),
+    };
+    delete theUserExceptPassword.password;
+
+    res.status(OK).json({
+      ...result,
+      user: theUserExceptPassword,
+    });
   })
 );
 

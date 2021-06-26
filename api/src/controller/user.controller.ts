@@ -113,7 +113,6 @@ export async function userValidator(
   if (theUser.password != password) {
     return 'invalid password';
   }
-  delete theUser.password;
   return theUser;
 }
 
