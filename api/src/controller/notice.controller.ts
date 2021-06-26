@@ -1,3 +1,5 @@
+import { PER_PAGE } from '../lib/constant';
+import { Op } from '../lib/sequelize';
 import { notice, noticeAttributes } from '../models/notice';
 
 export async function getNoticeById(
@@ -26,4 +28,18 @@ export async function enrollNotice(
     return 'notice create fail';
   }
   return await getNoticeById(enrolledNotice.notice_id!);
+}
+
+export async function getNoticeList(cursor: number): Promise<notice[]> {
+  const noticeList = await notice.findAll({
+    order: [['notice_id', 'DESC']],
+    where: {
+      is_active: 'Y',
+      notice_id: {
+        [Op.lt]: cursor,
+      },
+    },
+    limit: PER_PAGE,
+  });
+  return noticeList;
 }

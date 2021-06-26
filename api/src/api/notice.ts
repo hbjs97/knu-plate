@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { enrollNotice } from '../controller/notice.controller';
+import { enrollNotice, getNoticeList } from '../controller/notice.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
@@ -56,6 +56,41 @@ router.post(
       ...enrolledNotice.get({ plain: true }),
       date_create: changeModelTimestamp(enrolledNotice.date_create!),
     });
+  })
+);
+
+/**
+ * @swagger
+ * /api/notice:
+ *  get:
+ *    tags: [공지]
+ *    summary: 공지 목록 조회
+ *    parameters:
+ *      - in: query
+ *        type: number
+ *        required: false
+ *        name: cursor
+ *        description: 현재 페이지 마지막 인덱스
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/',
+  errorHandler(async (req: Request, res: Response) => {
+    const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
+    const noticeList = await getNoticeList(cursor);
+    const result = noticeList.map((v) => {
+      return {
+        ...v.get({ plain: true }),
+        date_create: changeModelTimestamp(v.date_create!),
+      };
+    });
+    res.status(OK).json(result);
   })
 );
 
