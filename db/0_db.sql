@@ -188,6 +188,7 @@ CREATE TABLE `notice` (
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `title` varchar(255) NOT NULL,
   `contents` text NOT NULL,
+  `is_active` VARCHAR(1) NULL DEFAULT 'Y'
   PRIMARY KEY (`notice_id`) USING BTREE,
   KEY `FK_user_TO_notice_1` (`user_id`) USING BTREE,
   CONSTRAINT `FK_user_TO_notice_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
