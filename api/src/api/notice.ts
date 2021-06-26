@@ -3,7 +3,7 @@ import { enrollNotice, getNoticeList } from '../controller/notice.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { noticeAttributes } from '../models/notice';
+import { notice, noticeAttributes } from '../models/notice';
 
 const router = Router();
 
@@ -91,6 +91,70 @@ router.get(
       };
     });
     res.status(OK).json(result);
+  })
+);
+
+/**
+ * @swagger
+ * /api/notice/{notice_id}:
+ *  get:
+ *    tags: [공지]
+ *    summary: 공지 상세 조회
+ *    parameters:
+ *      - in: path
+ *        type: number
+ *        required: true
+ *        name: notice_id
+ *        description: 공지 아이디
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/:notice_id',
+  errorHandler(async (req: Request, res: Response) => {
+    const notice_id = Number(req.params.notice_id);
+    if (!notice_id) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
+    }
+
+    const theNotice = await notice.findOne({
+      where: {
+        notice_id,
+      },
+      include: [
+        {
+          association: 'user',
+          attributes: {
+            exclude: ['password'],
+          },
+          include: [
+            {
+              association: 'file_folder',
+              include: [
+                {
+                  association: 'files',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    if (!theNotice) {
+      return res.status(INTERNAL_ERROR).json({ error: 'notice not founded' });
+    }
+    if (theNotice.is_active != 'Y') {
+      return res.status(INTERNAL_ERROR).json({ error: 'inactive notice' });
+    }
+
+    res.status(OK).json({
+      ...theNotice.get({ plain: true }),
+    });
   })
 );
 
