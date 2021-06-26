@@ -149,17 +149,26 @@ export async function getReviewById(
 
 export async function getReviewListByMallId(
   mall_id: number,
-  cursor: number
+  cursor: number,
+  user_id?: string
 ): Promise<review[]> {
+  let whereAttribute = {};
+  whereAttribute = {
+    mall_id: mall_id,
+    review_id: {
+      [Op.lt]: cursor,
+    },
+    is_active: 'Y',
+  };
+  if (user_id) {
+    whereAttribute = {
+      ...whereAttribute,
+      user_id: user_id,
+    };
+  }
   const reviewList = await review.findAll({
     order: [['review_id', 'DESC']],
-    where: {
-      mall_id: mall_id,
-      review_id: {
-        [Op.lt]: cursor,
-      },
-      is_active: 'Y',
-    },
+    where: whereAttribute,
     include: [
       {
         association: 'user',
