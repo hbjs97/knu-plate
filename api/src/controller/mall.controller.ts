@@ -16,6 +16,7 @@ import { getMyRecommend, getMyRecommendList } from './my.recommend.controller';
 import { getDistance } from 'geolib';
 import { file } from '../models/file';
 import { review } from '../models/review';
+import { isEqual } from 'lodash';
 
 export async function mallValidationChecker(
   mallData: mallAttributes
@@ -354,4 +355,26 @@ export async function getReviewImageListFromMall(
     limit: PER_PAGE,
   });
   return fileList;
+}
+
+export async function updateMall(
+  mallModel: mallAttributes,
+  transaction?: Transaction
+): Promise<mall | string> {
+  await mall.update(mallModel, {
+    where: {
+      mall_id: mallModel.mall_id,
+    },
+    transaction,
+  });
+  const theMall = await getMallById(mallModel.mall_id!, transaction);
+  if (typeof theMall == 'string') {
+    return theMall;
+  }
+
+  if (!isEqual(mallModel, theMall.get({ plain: true }))) {
+    return 'mall thumbnail update fail';
+  }
+
+  return theMall;
 }

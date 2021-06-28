@@ -12,13 +12,17 @@ import {
 } from '../lib/constant';
 import { user } from '../models/user';
 import { getUserById } from './user.controller';
+import { mall } from '../models/mall';
 
 export async function enrollReview(
   reviewData: reviewAttributes,
   menu_info: { menu_id: number; is_like: string }[],
-  transaction: Transaction
+  transaction: Transaction,
+  theMall?: mall | string
 ): Promise<review | string> {
-  const theMall = await getMallById(reviewData.mall_id!);
+  if (!theMall) {
+    theMall = await getMallById(reviewData.mall_id!);
+  }
   if (typeof theMall == 'string') {
     return theMall;
   }

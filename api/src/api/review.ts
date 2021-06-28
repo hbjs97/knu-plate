@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { isArray } from 'lodash';
 import { fileUploadReturnUrl } from '../controller/file.controller';
-import { getMallById } from '../controller/mall.controller';
+import { getMallById, updateMall } from '../controller/mall.controller';
 import {
   deleteReview,
   enrollReview,
@@ -92,6 +92,14 @@ router.post(
       user_id: req.body._user_id,
     };
 
+    const theMall = await getMallById(mall_id);
+    if (typeof theMall == 'string') {
+      return theMall;
+    }
+    if (theMall.is_active != 'Y') {
+      return 'inactive mall';
+    }
+
     try {
       const result = await DB.transaction(async (transaction) => {
         if (req.files && !isArray(req.files) && req.files.review_image) {
@@ -102,13 +110,24 @@ router.post(
           );
           if (typeof url != 'string') {
             reviewModel.review_image = url.file_folder_id;
+            if (!theMall.thumbnail) {
+              theMall.thumbnail = url.file_folder_id;
+              const updatedMall = await updateMall(
+                theMall.get({ plain: true }),
+                transaction
+              );
+              if (typeof updatedMall == 'string') {
+                throw new Error(updatedMall);
+              }
+            }
           }
         }
 
         const enrolledReview = await enrollReview(
           reviewModel,
           menu_info,
-          transaction
+          transaction,
+          theMall
         );
         if (typeof enrolledReview == 'string') {
           throw new Error(enrolledReview);
