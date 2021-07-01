@@ -1,9 +1,11 @@
 import { Request, Response, Router } from 'express';
 import { isArray } from 'lodash';
 import { fileUploadReturnUrl } from '../controller/file.controller';
+import { sendUsernameToUsermail } from '../controller/mail.auth.controller';
 import {
   displayNameDuplicateChecker,
   getUserByIdExceptPassword,
+  getUserByMailAddress,
   insertUser,
   loginProcess,
   setUserByModel,
@@ -250,6 +252,47 @@ router.post(
     });
   })
 );
+
+/**
+ * @swagger
+ * /api/search/username:
+ *  post:
+ *    tags: [회원 - 인증]
+ *    summary: 아이디 찾기
+ *    parameters:
+ *      - in: formData
+ *        type: string
+ *        required: true
+ *        name: address
+ *        description: 가입시 입력한 메일 앞부분(@ 이하 제외)
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      404:
+ *        description: not found
+ *      500:
+ *        description: internal error
+ */
+router.post(
+  '/search/username',
+  errorHandler(async (req: Request, res: Response) => {
+    const address = req.body.address;
+    if(!address) {
+      return res.status(BAD_REQUEST).json({error : 'input value is empty'});
+    }
+
+    const sendResult = await sendUsernameToUsermail(address);
+    if(sendResult != 'ok') {
+      return res.status(INTERNAL_ERROR).json({error: sendResult});
+    }
+
+    res.status(OK).json({result: 'success'});
+  })
+);
+
+
 
 /**
  * @swagger

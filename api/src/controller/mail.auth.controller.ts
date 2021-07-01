@@ -4,7 +4,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { EXPIRE_AUTH_MAIL, USER_ROLE_GROUP } from '../lib/constant';
 import { DB } from '../lib/sequelize';
 import { mail_auth } from '../models/mail_auth';
-import { getUserById } from './user.controller';
+import { getUserById, getUserByMailAddress } from './user.controller';
 import { DEV_SMTP_SERVER } from '../lib/config';
 import { user_role } from '../models/user_role';
 
@@ -48,7 +48,7 @@ export async function sendAuthMailByUserId(user_id: string): Promise<string> {
 
 export async function sendAuthCodeToUserMail(
   targetMailAddress: string,
-  authenticationCode: string
+  mailContents: string
 ): Promise<string> {
   try {
     await axios({
@@ -58,7 +58,7 @@ export async function sendAuthCodeToUserMail(
       headers: { 'Content-Type': 'application/json' },
       data: {
         targetMailAddress,
-        authenticationCode,
+        mailContents,
       },
     });
     return 'ok';
@@ -126,6 +126,28 @@ export async function userMailCodeAuthentication(
 
       return 'ok';
     });
+  } catch (error) {
+    return error.message;
+  }
+}
+
+export async function sendUsernameToUsermail(mail_address: string): Promise<string> {
+  const theUser = await getUserByMailAddress(mail_address + '@knu.ac.kr');
+  if(typeof theUser == 'string') {
+    return theUser;
+  }
+  try {
+    await axios({
+      // url: DEV_SMTP_SERVER + '/api/send-mail',
+      url: DEV_SMTP_SERVER,
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      data: {
+        targetMailAddress: theUser.mail_address,
+        mailContents: theUser.user_name,
+      },
+    });
+    return 'ok';
   } catch (error) {
     return error.message;
   }

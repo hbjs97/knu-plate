@@ -331,3 +331,20 @@ export async function displayNameDuplicateChecker(
   }
   return false;
 }
+
+export async function getUserByMailAddress(mail_address: string): Promise<string | user> {
+  const theUser = await user.findOne({
+    where: {
+      mail_address,
+      is_active: 'Y',
+    },
+    attributes: {
+      exclude: ['password'],
+    },
+  });
+  if(!theUser) {
+    return 'user not founded';
+  }
+
+  return theUser;
+}
