@@ -263,6 +263,45 @@ router.post(
  *      - in: formData
  *        type: string
  *        required: true
+ *        name: mail_address
+ *        description: 가입시 입력한 메일 앞부분(@ 이하 제외)
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      404:
+ *        description: not found
+ *      500:
+ *        description: internal error
+ */
+router.post(
+  '/search/username',
+  errorHandler(async (req: Request, res: Response) => {
+    const mail_address = req.body.mail_address;
+    if(!mail_address) {
+      return res.status(BAD_REQUEST).json({error : 'input value is empty'});
+    }
+
+    const sendResult = await sendUsernameToUsermail(mail_address);
+    if(sendResult != 'ok') {
+      return res.status(INTERNAL_ERROR).json({error: sendResult});
+    }
+
+    res.status(OK).json({result: 'success'});
+  })
+);
+
+/**
+ * @swagger
+ * /api/search/password:
+ *  post:
+ *    tags: [회원 - 인증]
+ *    summary: 비밀번호 찾기
+ *    parameters:
+ *      - in: formData
+ *        type: string
+ *        required: true
  *        name: address
  *        description: 가입시 입력한 메일 앞부분(@ 이하 제외)
  *    responses:
