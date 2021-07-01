@@ -283,7 +283,12 @@ router.post(
       return res.status(BAD_REQUEST).json({error : 'input value is empty'});
     }
 
-    const sendResult = await sendUsernameToUsermail(mail_address);
+    const theUser = await getUserByMailAddress(mail_address + '@knu.ac.kr');
+    if(typeof theUser == 'string') {
+      return res.status(INTERNAL_ERROR).json({error: theUser});
+    }
+
+    const sendResult = await sendUsernameToUsermail(theUser.mail_address, theUser.user_name);
     if(sendResult != 'ok') {
       return res.status(INTERNAL_ERROR).json({error: sendResult});
     }
@@ -291,46 +296,6 @@ router.post(
     res.status(OK).json({result: 'success'});
   })
 );
-
-/**
- * @swagger
- * /api/search/password:
- *  post:
- *    tags: [회원 - 인증]
- *    summary: 비밀번호 찾기
- *    parameters:
- *      - in: formData
- *        type: string
- *        required: true
- *        name: address
- *        description: 가입시 입력한 메일 앞부분(@ 이하 제외)
- *    responses:
- *      200:
- *        description: success
- *      400:
- *        description: bad request
- *      404:
- *        description: not found
- *      500:
- *        description: internal error
- */
-router.post(
-  '/search/username',
-  errorHandler(async (req: Request, res: Response) => {
-    const address = req.body.address;
-    if(!address) {
-      return res.status(BAD_REQUEST).json({error : 'input value is empty'});
-    }
-
-    const sendResult = await sendUsernameToUsermail(address);
-    if(sendResult != 'ok') {
-      return res.status(INTERNAL_ERROR).json({error: sendResult});
-    }
-
-    res.status(OK).json({result: 'success'});
-  })
-);
-
 
 
 /**

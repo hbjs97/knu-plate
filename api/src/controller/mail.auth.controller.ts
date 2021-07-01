@@ -131,11 +131,7 @@ export async function userMailCodeAuthentication(
   }
 }
 
-export async function sendUsernameToUsermail(mail_address: string): Promise<string> {
-  const theUser = await getUserByMailAddress(mail_address + '@knu.ac.kr');
-  if(typeof theUser == 'string') {
-    return theUser;
-  }
+export async function sendToUsermail(mail_address: string, contents: string): Promise<string> {
   try {
     await axios({
       // url: DEV_SMTP_SERVER + '/api/send-mail',
@@ -143,8 +139,8 @@ export async function sendUsernameToUsermail(mail_address: string): Promise<stri
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       data: {
-        targetMailAddress: theUser.mail_address,
-        mailContents: theUser.user_name,
+        targetMailAddress: mail_address,
+        mailContents: contents,
       },
     });
     return 'ok';
