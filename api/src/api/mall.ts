@@ -28,6 +28,7 @@ import {
   REG_MOBILE_PHONE,
 } from '../lib/constant';
 import { DB } from '../lib/sequelize';
+import { authentication, getUserType } from '../middleware/user.middleware';
 import { mallAttributes } from '../models/mall';
 
 const router = Router();
@@ -84,6 +85,8 @@ const router = Router();
  */
 router.post(
   '/',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const mall_name = req.body.mall_name;
     const contact = req.body.contact;
@@ -187,6 +190,8 @@ router.post(
  */
 router.post(
   '/recommend/:mall_id',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = Number(req.params.mall_id);
     if (!mall_id) {
@@ -452,6 +457,8 @@ router.get(
  */
 router.delete(
   '/recommend/:mall_id',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = Number(req.params.mall_id);
     if (!mall_id) {
@@ -491,6 +498,8 @@ router.delete(
  */
 router.delete(
   '/:mall_id',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = Number(req.params.mall_id);
     if (!mall_id) {

@@ -5,6 +5,7 @@ import {
 } from '../controller/suggestion.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
+import { authentication, getUserType } from '../middleware/user.middleware';
 import { suggestion, suggestionAttributes } from '../models/suggestion';
 import { user } from '../models/user';
 
@@ -32,6 +33,8 @@ const router = Router();
  */
 router.post(
   '/',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const contents = req.body.contents;
     if (!contents) {

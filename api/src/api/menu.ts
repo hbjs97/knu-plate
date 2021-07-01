@@ -11,6 +11,7 @@ import {
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
+import { authentication, getUserType } from '../middleware/user.middleware';
 
 const router = Router();
 
@@ -43,6 +44,8 @@ const router = Router();
  */
 router.post(
   '/',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = Number(req.body.mall_id);
     const menu_name: string[] = [];
@@ -150,6 +153,8 @@ router.post(
  */
 router.patch(
   '/:menu_id',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const menu_id = Number(req.params.menu_id);
     const menu_name = req.body.menu_name;
@@ -199,6 +204,8 @@ router.patch(
  */
 router.delete(
   '/:menu_id',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const menu_id = Number(req.params.menu_id);
     if (!menu_id) {

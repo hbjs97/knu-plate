@@ -18,6 +18,7 @@ import {
   REPORT_PROCESS,
 } from '../lib/constant';
 import { DB } from '../lib/sequelize';
+import { authentication, getUserType } from '../middleware/user.middleware';
 import { report, reportAttributes } from '../models/report';
 import { review } from '../models/review';
 import { user } from '../models/user';
@@ -51,6 +52,8 @@ const router = Router();
  */
 router.post(
   '/',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const review_id = Number(req.body.review_id);
     const reason = req.body.reason;
@@ -222,6 +225,8 @@ router.get(
  */
 router.patch(
   '/:report_id',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const report_id = Number(req.params.report_id);
     const result = req.body.result;

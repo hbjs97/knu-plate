@@ -31,6 +31,7 @@ import {
 } from '../lib/constant';
 import { DB } from '../lib/sequelize';
 import { userExpand } from '../lib/type';
+import { authentication, getUserType } from '../middleware/user.middleware';
 import { user } from '../models/user';
 
 const router = Router();
@@ -99,7 +100,10 @@ router.get(
  *      500:
  *        description: internal error
  */
-router.delete('/unregister', async (req: Request, res: Response) => {
+router.delete('/unregister', 
+errorHandler(authentication),
+  errorHandler(getUserType),
+async (req: Request, res: Response) => {
   // if (!req.body._token_id) {
   //   return res.status(BAD_REQUEST).json({ error: 'refresh token is empty' });
   // }
@@ -131,6 +135,8 @@ router.delete('/unregister', async (req: Request, res: Response) => {
  */
 router.post(
   '/logout',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const result = await logoutProcess(req.body._user_id);
     if (result != 'ok') {
@@ -154,6 +160,8 @@ router.post(
  */
 router.post(
   '/refresh',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const theUser = await getUserById(req.body._user_id);
     if (typeof theUser == 'string') {
@@ -210,6 +218,8 @@ router.post(
  */
 router.patch(
   '/modify',
+  errorHandler(authentication),
+  errorHandler(getUserType),
   errorHandler(async (req: Request, res: Response) => {
     const password = req.body.password;
     const display_name = req.body.display_name;

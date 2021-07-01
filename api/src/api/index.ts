@@ -39,8 +39,8 @@ router.use(
 router.use('/', nonAuthRoute);
 
 // middleware
-router.use(errorHandler(authentication));
-router.use(errorHandler(getUserType));
+// router.use(errorHandler(authentication));
+// router.use(errorHandler(getUserType));
 
 // authRouters
 router.use('/auth', authRoute);
