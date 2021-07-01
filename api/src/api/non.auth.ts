@@ -1,11 +1,12 @@
 import { Request, Response, Router } from 'express';
 import { isArray } from 'lodash';
 import { fileUploadReturnUrl } from '../controller/file.controller';
-import { sendUsernameToUsermail } from '../controller/mail.auth.controller';
+import { sendToUsermail } from '../controller/mail.auth.controller';
 import {
   displayNameDuplicateChecker,
   getUserByIdExceptPassword,
   getUserByMailAddress,
+  getUserByName,
   insertUser,
   loginProcess,
   setUserByModel,
@@ -28,6 +29,7 @@ import {
 } from '../lib/constant';
 import { DB } from '../lib/sequelize';
 import { userAttributes } from '../models/user';
+import { v4 as uuidV4 } from 'uuid';
 
 const router = Router();
 
@@ -288,7 +290,7 @@ router.post(
       return res.status(INTERNAL_ERROR).json({error: theUser});
     }
 
-    const sendResult = await sendUsernameToUsermail(theUser.mail_address, theUser.user_name);
+    const sendResult = await sendToUsermail(theUser.mail_address!, theUser.user_name!);
     if(sendResult != 'ok') {
       return res.status(INTERNAL_ERROR).json({error: sendResult});
     }
@@ -296,6 +298,78 @@ router.post(
     res.status(OK).json({result: 'success'});
   })
 );
+
+/**
+ * @swagger
+ * /api/search/password:
+ *  post:
+ *    tags: [회원 - 인증]
+ *    summary: 비밀번호 찾기
+ *    parameters:
+ *      - in: formData
+ *        type: string
+ *        required: true
+ *        name: user_name
+ *        description: user_name(로그인시 입력하는 이름)
+ *      - in: formData
+ *        type: string
+ *        required: true
+ *        name: mail_address
+ *        description: 가입시 입력한 메일 앞부분(@ 이하 제외)
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      404:
+ *        description: not found
+ *      500:
+ *        description: internal error
+ */
+router.post(
+  '/search/password',
+  errorHandler(async (req: Request, res: Response) => {
+    const user_name = req.body.user_name;
+    const mail_address = req.body.mail_address;
+    if(!user_name || !mail_address) {
+      return res.status(BAD_REQUEST).json({error : 'input value is empty'});
+    }
+
+    const theUser = await getUserByName(user_name);
+    if(typeof theUser == 'string') {
+      return res.status(INTERNAL_ERROR).json({error: theUser});
+    }
+    if(theUser.mail_address != mail_address+'@knu.ac.kr') {
+      return res.status(BAD_REQUEST).json({error: 'mismatched mail address'});
+    }
+
+    const newPassword = uuidV4().split('-')[0];
+    try {
+      await DB.transaction(async (transaction) => {
+        const updatedUser = await setUserByModel(theUser, {
+          ...theUser.get({plain:true}),
+          password: encrypt_password(newPassword),
+        }, transaction);
+        if(typeof updatedUser == 'string') {
+          throw new Error(updatedUser);
+        }
+        if(updatedUser.password != encrypt_password(newPassword)) {
+          throw new Error('password update fail');
+        }
+        
+        const sendResult = await sendToUsermail(theUser.mail_address!, newPassword);
+        if(sendResult != 'ok') {
+          throw new Error(sendResult);
+        }
+      });
+  
+      res.status(OK).json({result: 'success'});
+    } catch(error) {
+      res.status(INTERNAL_ERROR).json({error: error.message});
+    }
+  })
+);
+
 
 
 /**
