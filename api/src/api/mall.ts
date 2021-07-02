@@ -23,6 +23,7 @@ import {
 } from '../lib/common';
 import {
   BAD_REQUEST,
+  GATE_INFO,
   INTERNAL_ERROR,
   OK,
   REG_MOBILE_PHONE,
@@ -224,6 +225,11 @@ router.post(
  *        name: category_name
  *        description: 카테고리 이름
  *      - in: query
+ *        type: string
+ *        required: false
+ *        name: gate_location
+*        description: NORTH | MAIN | WEST | EAST
+ *      - in: query
  *        type: number
  *        required: false
  *        name: cursor
@@ -241,10 +247,18 @@ router.get(
   errorHandler(async (req: Request, res: Response) => {
     const mall_name = <string>req.query.mall_name;
     const category_name = <string>req.query.category_name;
+    let gate_location = <string>req.query.gate_location;
     const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
 
+    if(gate_location) {
+      if(!Object.keys(GATE_INFO).includes(gate_location)) {
+        return res.status(BAD_REQUEST).json({error: 'invalid gate_location info'});
+      }
+      gate_location = GATE_INFO[<keyof typeof GATE_INFO>gate_location].name;
+    }
+
     const mallList = await getMallList(
-      { mall_name, category_name },
+      { mall_name, category_name, gate_location },
       { cursor }
     );
     if (typeof mallList == 'string') {

@@ -149,6 +149,7 @@ export async function getMallList(
   mallOption: {
     mall_name?: string;
     category_name?: string;
+    gate_location?: string;
   },
   pageOption: {
     cursor: number;
@@ -173,6 +174,12 @@ export async function getMallList(
     whereAttribute = {
       ...whereAttribute,
       category_name: mallOption.category_name,
+    };
+  }
+  if (mallOption.gate_location) {
+    whereAttribute = {
+      ...whereAttribute,
+      gate_location: mallOption.gate_location,
     };
   }
 
