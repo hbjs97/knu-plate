@@ -27,10 +27,14 @@ import {
   INTERNAL_ERROR,
   OK,
   REG_MOBILE_PHONE,
+  UNAUTHORIZED,
 } from '../lib/constant';
 import { DB } from '../lib/sequelize';
+import { verificationToken } from '../lib/type';
 import { authentication, getUserType } from '../middleware/user.middleware';
 import { mallAttributes } from '../models/mall';
+import jwt from 'jsonwebtoken';
+import { JWT_SALT } from '../lib/config';
 
 const router = Router();
 
@@ -228,7 +232,7 @@ router.post(
  *        type: string
  *        required: false
  *        name: gate_location
-*        description: NORTH | MAIN | WEST | EAST
+ *        description: NORTH | MAIN | WEST | EAST
  *      - in: query
  *        type: number
  *        required: false
@@ -250,9 +254,11 @@ router.get(
     let gate_location = <string>req.query.gate_location;
     const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
 
-    if(gate_location) {
-      if(!Object.keys(GATE_INFO).includes(gate_location)) {
-        return res.status(BAD_REQUEST).json({error: 'invalid gate_location info'});
+    if (gate_location) {
+      if (!Object.keys(GATE_INFO).includes(gate_location)) {
+        return res
+          .status(BAD_REQUEST)
+          .json({ error: 'invalid gate_location info' });
       }
       gate_location = GATE_INFO[<keyof typeof GATE_INFO>gate_location].name;
     }
@@ -441,7 +447,28 @@ router.get(
       return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
     }
 
-    const detailMall = await getDetailMall(mall_id, req.body._user_id);
+    if (req.headers.authorization) {
+      const token = <string>req.headers.authorization;
+      if (!token.includes('Bearer ')) {
+        return res.status(UNAUTHORIZED).json({ error: 'invalid token type' });
+      }
+      const checkedToken = token.replace('Bearer ', '');
+
+      const verifyToken: verificationToken | string = jwt.verify(
+        checkedToken,
+        JWT_SALT
+      );
+      if (typeof verifyToken == 'string') {
+        return res.status(UNAUTHORIZED).json({ error: 'token verify fail' });
+      }
+
+      req.body._user_id = verifyToken.user_id;
+    }
+
+    const detailMall = await getDetailMall(
+      mall_id,
+      req.body._user_id ? req.body._user_id : null
+    );
     if (typeof detailMall == 'string') {
       return res.status(BAD_REQUEST).json({ error: detailMall });
     }

@@ -10,7 +10,6 @@ import {
   MEDAL_CATEGORY_OBJECT,
   PER_PAGE,
 } from '../lib/constant';
-import { user } from '../models/user';
 import { getUserById } from './user.controller';
 import { mall } from '../models/mall';
 

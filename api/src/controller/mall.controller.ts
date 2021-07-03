@@ -221,9 +221,11 @@ export async function deleteMall(mall_id: number): Promise<string> {
 
 export async function getDetailMall(
   mall_id: number,
-  user_id: string
+  user_id?: string
 ): Promise<mallExpand | string> {
-  const expandedMallInfo = await mall.findOne({
+  const expandedMallInfo:
+    | null
+    | (mall & { menu?: menu[]; my_recommend?: string }) = await mall.findOne({
     where: {
       mall_id,
       is_active: 'Y',
@@ -246,19 +248,21 @@ export async function getDetailMall(
     return 'mall not founded';
   }
 
-  const myRecommend = await getMyRecommend(user_id, mall_id);
-  const result =
-    typeof myRecommend != 'string'
-      ? {
-          ...expandedMallInfo.get({ plain: true }),
-          my_recommend: 'Y',
-        }
-      : {
-          ...expandedMallInfo.get({ plain: true }),
-          my_recommend: 'N',
-        };
-
-  return result;
+  if (user_id) {
+    const myRecommend = await getMyRecommend(user_id, mall_id);
+    const mallInfoAttachedMyRecommend =
+      typeof myRecommend != 'string'
+        ? {
+            ...expandedMallInfo.get({ plain: true }),
+            my_recommend: 'Y',
+          }
+        : {
+            ...expandedMallInfo.get({ plain: true }),
+            my_recommend: 'N',
+          };
+    return mallInfoAttachedMyRecommend;
+  }
+  return expandedMallInfo;
 }
 
 export async function getMyRecommendMallList(
