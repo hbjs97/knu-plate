@@ -1,11 +1,24 @@
 import { NextFunction, Request, Response } from 'express';
-import { BAD_REQUEST, UNAUTHORIZED } from '../lib/constant';
+import {
+  AUTHORITY_TYPE_LIST,
+  BAD_REQUEST,
+  INTERNAL_ERROR,
+  PERMISSION_LIST,
+  UNAUTHORIZED,
+} from '../lib/constant';
 import jwt from 'jsonwebtoken';
 import { JWT_SALT } from '../lib/config';
 import { getUserById } from '../controller/user.controller';
 import { verificationToken } from '../lib/type';
 import { getUserRoleByUserID } from '../controller/user.role.controller';
 import { user_token } from '../models/user_token';
+import {
+  user_role_authority,
+  user_role_authorityAttributes,
+} from '../models/user_role_authority';
+import { errorHandler } from '../lib/common';
+import { user_role } from '../models/user_role';
+import { isArray } from 'lodash';
 
 export async function authentication(
   req: Request,
@@ -68,3 +81,69 @@ export async function getUserType(
 
   next();
 }
+
+export async function getUserRole(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const userRole = await user_role.findOne({
+    where: {
+      user_id: req.body._user_id,
+    },
+  });
+
+  if (!userRole || !userRole.user_role_group_id) {
+    return res.status(INTERNAL_ERROR).json({ error: `user doesn't has role` });
+  }
+
+  const roleList = await user_role_authority.findAll({
+    where: {
+      user_role_group_id: userRole.user_role_group_id,
+    },
+    attributes: {
+      exclude: ['user_role_authority_id', 'user_role_group_id'],
+    },
+  });
+
+  req.body._user_role = roleList.map((v) => v.get({ plain: true }));
+
+  next();
+}
+
+export const hasUserAccessRouter = async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const roleList: user_role_authority[] = req.body._user_role;
+
+  if (!isArray(roleList)) {
+    throw new Error('user role is not setting');
+  }
+
+  const requestMethod = <keyof typeof PERMISSION_LIST>req.method;
+  const permissionOfCRUD = <keyof user_role_authorityAttributes>(
+    PERMISSION_LIST[requestMethod]
+  );
+
+  const result = roleList.some((role: user_role_authority) => {
+    const authType =
+      AUTHORITY_TYPE_LIST[<keyof typeof AUTHORITY_TYPE_LIST>role.name];
+    if (authType && authType.match) {
+      return authType.match.some((permission: string[]) => {
+        return (
+          permission[0].toUpperCase() == requestMethod &&
+          (permission[1] == req.baseUrl || permission[1] == req.originalUrl) &&
+          role[permissionOfCRUD] == 'Y'
+        );
+      });
+    }
+  });
+
+  if (result) {
+    next();
+  } else {
+    throw new Error('authorization error');
+  }
+};
