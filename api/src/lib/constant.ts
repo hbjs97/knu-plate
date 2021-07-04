@@ -104,3 +104,92 @@ export const MEDAL_CATEGORY = {
 };
 
 export const REPORT_PROCESS = ['proceeding', 'sanctioned', 'passed'];
+
+export const PERMISSION_LIST = {
+  GET: 'read_permission',
+  POST: 'create_permission',
+  PATCH: 'update_permission',
+  DELETE: 'delete_permission',
+};
+
+export const USER_COMMON_AUTORITY = [
+  ['GET', '/api/auth'],
+  ['POST', '/api/auth/logout'],
+  ['POST', '/api/auth/refresh'],
+  ['DELETE', '/api/auth/unregister'],
+];
+
+export const AUTHORITY_TYPE_LIST = {
+  mail_auth: {
+    description: '메일인증 권한',
+    match: [
+      ['POST', '/api/mail-auth/issuance'],
+      ['PATCH', '/api/mail-auth/verification'],
+    ],
+  },
+  mall: {
+    description: '매장 권한',
+    match: [
+      ['GET', '/api/mall'],
+      ['GET', '/api/mall/my-recommend'],
+      ['GET', '/api/mall/address'],
+      ['GET', '/api/mall/review-images'],
+      ['POST', '/api/mall'],
+      ['POST', '/api/mall/recommend'],
+      ['DELETE', '/api/mall'],
+      ['DELETE', '/api/mall/recommend'],
+    ],
+  },
+  menu: {
+    description: '메뉴 권한',
+    match: [
+      ['POST', '/api/menu'],
+      ['PATCH', '/api/menu'],
+      ['DELETE', '/api/menu'],
+    ],
+  },
+  notice: {
+    description: '공지 권한',
+    match: [
+      ['GET', '/api/notice'],
+      ['POST', '/api/notice'],
+      ['PATCH', '/api/notice'],
+      ['DELETE', '/api/notice'],
+    ],
+  },
+  report: {
+    description: '신고 권한',
+    match: [
+      ['GET', '/api/report'],
+      ['POST', '/api/report'],
+      ['PATCH', '/api/report'],
+    ],
+  },
+  review: {
+    description: '리뷰 권한',
+    match: [
+      ['GET', '/api/review'],
+      ['POST', '/api/review'],
+      ['DELETE', '/api/review'],
+    ],
+  },
+  suggestion: {
+    description: '건의사항 권한',
+    match: [
+      ['GET', '/api/suggestion'],
+      ['POST', '/api/suggestion'],
+    ],
+  },
+  admin_user: {
+    description: '관리자 권한',
+    match: [...USER_COMMON_AUTORITY, ['PATCH', '/api/auth/modify']],
+  },
+  non_auth_user: {
+    description: '메일 비인증 사용자 권한',
+    match: [...USER_COMMON_AUTORITY],
+  },
+  auth_user: {
+    description: '메일 인증 사용자 권한',
+    match: [...USER_COMMON_AUTORITY, ['PATCH', '/api/auth/modify']],
+  },
+};
