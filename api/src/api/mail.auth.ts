@@ -7,7 +7,12 @@ import { getUserRoleByUserID } from '../controller/user.role.controller';
 import { errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { authentication, getUserType } from '../middleware/user.middleware';
+import {
+  authentication,
+  getUserRole,
+  getUserType,
+  hasUserAccessRouter,
+} from '../middleware/user.middleware';
 
 const router = Router();
 /**
@@ -30,6 +35,8 @@ router.post(
   '/issuance',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const userRole = await getUserRoleByUserID(req.body._user_id);
     if (userRole == 'not founded') {
@@ -78,6 +85,8 @@ router.patch(
   '/verification',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const authCode = req.body.auth_code;
     if (!authCode) {

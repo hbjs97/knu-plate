@@ -9,7 +9,12 @@ import {
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { authentication, getUserType } from '../middleware/user.middleware';
+import {
+  authentication,
+  getUserRole,
+  getUserType,
+  hasUserAccessRouter,
+} from '../middleware/user.middleware';
 import { notice, noticeAttributes } from '../models/notice';
 
 const router = Router();
@@ -43,6 +48,8 @@ router.post(
   '/',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const title = req.body.title;
     const contents = req.body.contents;
@@ -201,6 +208,8 @@ router.patch(
   '/:notice_id',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const notice_id = Number(req.params.notice_id);
     if (!notice_id) {
@@ -254,6 +263,8 @@ router.delete(
   '/:notice_id',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const notice_id = Number(req.params.notice_id);
     if (!notice_id) {

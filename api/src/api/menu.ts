@@ -11,7 +11,12 @@ import {
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { authentication, getUserType } from '../middleware/user.middleware';
+import {
+  authentication,
+  getUserRole,
+  getUserType,
+  hasUserAccessRouter,
+} from '../middleware/user.middleware';
 
 const router = Router();
 
@@ -46,6 +51,8 @@ router.post(
   '/',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = Number(req.body.mall_id);
     const menu_name: string[] = [];
@@ -155,6 +162,8 @@ router.patch(
   '/:menu_id',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const menu_id = Number(req.params.menu_id);
     const menu_name = req.body.menu_name;
@@ -206,6 +215,8 @@ router.delete(
   '/:menu_id',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const menu_id = Number(req.params.menu_id);
     if (!menu_id) {

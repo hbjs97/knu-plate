@@ -30,8 +30,12 @@ import {
   REG_ENG_NUM_KR,
 } from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { userExpand } from '../lib/type';
-import { authentication, getUserType } from '../middleware/user.middleware';
+import {
+  authentication,
+  getUserRole,
+  getUserType,
+  hasUserAccessRouter,
+} from '../middleware/user.middleware';
 import { user } from '../models/user';
 
 const router = Router();
@@ -48,8 +52,8 @@ const router = Router();
  *      - in: query
  *        type: string
  *        required: false
- *        name: name
- *        description: 이름으로 조회. 공백일 때 본인 정보 조회.
+ *        name: user_name
+ *        description: 이름으로 조회. 공백일 때 본인 정보 조회. +210704 토큰필수.
  *    responses:
  *      200:
  *        description: success
@@ -60,19 +64,23 @@ const router = Router();
  */
 router.get(
   '/',
+  errorHandler(authentication),
+  errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
-    let userName = <string>req.query.name;
-    if (!userName) {
+    let user_name = <string>req.query.user_name;
+    if (!user_name) {
       const theUser = await user.findOne({
         where: { user_id: req.body._user_id, is_active: 'Y' },
       });
       if (!theUser) {
         return res.status(BAD_REQUEST).json({ error: 'user not founded' });
       }
-      userName = <string>theUser.user_name;
+      user_name = <string>theUser.user_name;
     }
 
-    const theUser = await getUserByName(userName);
+    const theUser = await getUserByName(user_name);
     if (typeof theUser == 'string') {
       return res.status(BAD_REQUEST).json({ error: 'user not founded' });
     }
@@ -100,22 +108,22 @@ router.get(
  *      500:
  *        description: internal error
  */
-router.delete('/unregister', 
-errorHandler(authentication),
+router.delete(
+  '/unregister',
+  errorHandler(authentication),
   errorHandler(getUserType),
-async (req: Request, res: Response) => {
-  // if (!req.body._token_id) {
-  //   return res.status(BAD_REQUEST).json({ error: 'refresh token is empty' });
-  // }
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
+  async (req: Request, res: Response) => {
+    const result = await deleteUser(req.body._user_id);
 
-  const result = await deleteUser(req.body._user_id);
+    if (result != 'ok') {
+      return res.status(INTERNAL_ERROR).json({ error: result });
+    }
 
-  if (result != 'ok') {
-    return res.status(INTERNAL_ERROR).json({ error: result });
+    res.status(OK).json({ success: 'inactive' });
   }
-
-  res.status(OK).json({ success: 'inactive' });
-});
+);
 
 /**
  * @swagger
@@ -137,6 +145,8 @@ router.post(
   '/logout',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const result = await logoutProcess(req.body._user_id);
     if (result != 'ok') {
@@ -162,6 +172,8 @@ router.post(
   '/refresh',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const theUser = await getUserById(req.body._user_id);
     if (typeof theUser == 'string') {
@@ -220,6 +232,8 @@ router.patch(
   '/modify',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const password = req.body.password;
     const display_name = req.body.display_name;

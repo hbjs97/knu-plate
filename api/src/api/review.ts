@@ -11,7 +11,12 @@ import {
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { authentication, getUserType } from '../middleware/user.middleware';
+import {
+  authentication,
+  getUserRole,
+  getUserType,
+  hasUserAccessRouter,
+} from '../middleware/user.middleware';
 import { reviewAttributes } from '../models/review';
 import { user } from '../models/user';
 import { user_role } from '../models/user_role';
@@ -70,6 +75,8 @@ router.post(
   '/',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = req.body.mall_id;
     const menu_info = JSON.parse(req.body.menu_info);
@@ -232,6 +239,8 @@ router.delete(
   '/:review_id',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const review_id = Number(req.params.review_id);
     if (!review_id) {

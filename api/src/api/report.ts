@@ -18,7 +18,12 @@ import {
   REPORT_PROCESS,
 } from '../lib/constant';
 import { DB } from '../lib/sequelize';
-import { authentication, getUserType } from '../middleware/user.middleware';
+import {
+  authentication,
+  getUserRole,
+  getUserType,
+  hasUserAccessRouter,
+} from '../middleware/user.middleware';
 import { report, reportAttributes } from '../models/report';
 import { review } from '../models/review';
 import { user } from '../models/user';
@@ -54,6 +59,8 @@ router.post(
   '/',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const review_id = Number(req.body.review_id);
     const reason = req.body.reason;
@@ -111,6 +118,10 @@ router.post(
  */
 router.get(
   '/',
+  errorHandler(authentication),
+  errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
     const category = <string>req.query.category;
@@ -152,6 +163,10 @@ router.get(
  */
 router.get(
   '/:report_id',
+  errorHandler(authentication),
+  errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const report_id = Number(req.params.report_id);
     if (!report_id) {
@@ -227,6 +242,8 @@ router.patch(
   '/:report_id',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const report_id = Number(req.params.report_id);
     const result = req.body.result;

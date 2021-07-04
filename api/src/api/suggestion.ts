@@ -5,7 +5,12 @@ import {
 } from '../controller/suggestion.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
 import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
-import { authentication, getUserType } from '../middleware/user.middleware';
+import {
+  authentication,
+  getUserRole,
+  getUserType,
+  hasUserAccessRouter,
+} from '../middleware/user.middleware';
 import { suggestion, suggestionAttributes } from '../models/suggestion';
 import { user } from '../models/user';
 
@@ -35,6 +40,8 @@ router.post(
   '/',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const contents = req.body.contents;
     if (!contents) {
@@ -79,6 +86,10 @@ router.post(
  */
 router.get(
   '/',
+  errorHandler(authentication),
+  errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
     const suggestionList = await getSuggestionList(cursor);
@@ -114,6 +125,10 @@ router.get(
  */
 router.get(
   '/:suggestion_id',
+  errorHandler(authentication),
+  errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const suggestion_id = Number(req.params.suggestion_id);
     if (!suggestion_id) {

@@ -31,7 +31,12 @@ import {
 } from '../lib/constant';
 import { DB } from '../lib/sequelize';
 import { verificationToken } from '../lib/type';
-import { authentication, getUserType } from '../middleware/user.middleware';
+import {
+  authentication,
+  getUserRole,
+  getUserType,
+  hasUserAccessRouter,
+} from '../middleware/user.middleware';
 import { mallAttributes } from '../models/mall';
 import jwt from 'jsonwebtoken';
 import { JWT_SALT } from '../lib/config';
@@ -92,6 +97,8 @@ router.post(
   '/',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const mall_name = req.body.mall_name;
     const contact = req.body.contact;
@@ -144,18 +151,6 @@ router.post(
             mallData.thumbnail = url.file_folder_id;
           }
         }
-        // else {
-        //   // init blank file directroy
-        //   const mallUrl = await initMallFileFolder(
-        //     req.body._user_id,
-        //     transaction
-        //   );
-        //   if (typeof mallUrl == 'string') {
-        //     throw new Error(mallUrl);
-        //   }
-        //   mallData.thumbnail = mallUrl.file_folder_id;
-        // }
-
         const enrolledMall = await enrollMall(mallData, transaction);
         if (typeof enrolledMall == 'string') {
           throw new Error(enrolledMall);
@@ -197,6 +192,8 @@ router.post(
   '/recommend/:mall_id',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = Number(req.params.mall_id);
     if (!mall_id) {
@@ -500,6 +497,8 @@ router.delete(
   '/recommend/:mall_id',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = Number(req.params.mall_id);
     if (!mall_id) {
@@ -541,6 +540,8 @@ router.delete(
   '/:mall_id',
   errorHandler(authentication),
   errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const mall_id = Number(req.params.mall_id);
     if (!mall_id) {
