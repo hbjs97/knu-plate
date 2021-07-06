@@ -24,6 +24,27 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `test2` /*!40100 DEFAULT CHARACTER SET 
 USE `test2`;
 
 --
+-- Table structure for table `dashboard`
+--
+
+DROP TABLE IF EXISTS `dashboard`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dashboard` (
+  `dashboard_id` int(11) NOT NULL AUTO_INCREMENT,
+  `year` year(4) NOT NULL,
+  `month` int(2) NOT NULL,
+  `date` int(2) NOT NULL,
+  `report_count` int(11) NOT NULL,
+  `suggestion_count` int(11) NOT NULL,
+  `mall_count` int(11) NOT NULL,
+  `review_count` int(11) NOT NULL,
+  `user_count` int(11) NOT NULL,
+  PRIMARY KEY (`dashboard_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `file`
 --
 
@@ -47,7 +68,7 @@ CREATE TABLE `file` (
   KEY `FK_user_TO_file_1` (`uploader`),
   CONSTRAINT `FK_file_folder_TO_file_1` FOREIGN KEY (`file_folder_id`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_user_TO_file_1` FOREIGN KEY (`uploader`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -83,7 +104,7 @@ CREATE TABLE `mail_auth` (
   PRIMARY KEY (`mail_auth_id`),
   KEY `FK_user_TO_mail_auth_1` (`user_id`),
   CONSTRAINT `FK_user_TO_mail_auth_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,7 +134,7 @@ CREATE TABLE `mall` (
   KEY `FK_file_folder_TO_mall_1` (`thumbnail`) USING BTREE,
   CONSTRAINT `FK_file_folder_TO_mall_1` FOREIGN KEY (`thumbnail`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_user_TO_mall_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,7 +173,7 @@ CREATE TABLE `menu_list` (
   KEY `FK_menu_TO_menu_list_1` (`menu_id`),
   CONSTRAINT `FK_menu_TO_menu_list_1` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`),
   CONSTRAINT `FK_review_TO_menu_list_1` FOREIGN KEY (`review_id`) REFERENCES `review` (`review_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -188,11 +209,11 @@ CREATE TABLE `notice` (
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `title` varchar(255) NOT NULL,
   `contents` text NOT NULL,
-  `is_active` VARCHAR(1) NULL DEFAULT 'Y'
+  `is_active` varchar(1) DEFAULT 'Y',
   PRIMARY KEY (`notice_id`) USING BTREE,
   KEY `FK_user_TO_notice_1` (`user_id`) USING BTREE,
   CONSTRAINT `FK_user_TO_notice_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -240,7 +261,7 @@ CREATE TABLE `review` (
   CONSTRAINT `FK_file_folder_TO_review_1` FOREIGN KEY (`review_image`) REFERENCES `file_folder` (`file_folder_id`),
   CONSTRAINT `FK_mall_TO_review_1` FOREIGN KEY (`mall_id`) REFERENCES `mall` (`mall_id`),
   CONSTRAINT `FK_user_TO_review_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -258,7 +279,7 @@ CREATE TABLE `suggestion` (
   PRIMARY KEY (`suggestion_id`),
   KEY `FK_user_TO_suggestion_1` (`user_id`),
   CONSTRAINT `FK_user_TO_suggestion_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -338,7 +359,7 @@ CREATE TABLE `user_role_authority` (
   PRIMARY KEY (`user_role_authority_id`,`user_role_group_id`),
   KEY `FK_user_role_group_TO_user_role_authority_1` (`user_role_group_id`),
   CONSTRAINT `FK_user_role_group_TO_user_role_authority_1` FOREIGN KEY (`user_role_group_id`) REFERENCES `user_role_group` (`user_role_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=308 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -383,4 +404,4 @@ CREATE TABLE `user_token` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-26 10:51:12
+-- Dump completed on 2021-07-06 19:02:46
