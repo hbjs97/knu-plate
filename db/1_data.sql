@@ -7,14 +7,22 @@ SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 SET NAMES utf8mb4;
 
+TRUNCATE `dashboard`;
+INSERT INTO `dashboard` (`dashboard_id`, `year`, `month`, `date`, `report_count`, `suggestion_count`, `mall_count`, `review_count`, `user_count`) VALUES
+(2,	'2021',	7,	4,	3,	5,	1,	2,	1),
+(3,	'2021',	7,	5,	4,	7,	3,	6,	6),
+(4,	'2021',	7,	6,	5,	12,	18,	22,	11);
+
 TRUNCATE `file`;
 INSERT INTO `file` (`file_id`, `index`, `path`, `original_name`, `file_folder_id`, `uploader`, `size`, `extension`, `date_create`, `checksum`) VALUES
+('01d41cc8-b31a-4703-a48e-3f21735bab29',	35,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/d1503fb3-553f-4256-9a71-6c6cea8bb180/01d41cc8-b31a-4703-a48e-3f21735bab29',	'F40D534C-E844-4F4B-B894-C33ECD1A20B8.jpeg',	'd1503fb3-553f-4256-9a71-6c6cea8bb180',	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'1164811',	'jpeg',	'2021-07-05 15:58:03',	NULL),
 ('0537f3b7-a83a-4c30-b2b5-fd67d071fc31',	7,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/e90cd533-b915-4194-8fd4-d4887d4e56fb/0537f3b7-a83a-4c30-b2b5-fd67d071fc31',	'cron.png',	'e90cd533-b915-4194-8fd4-d4887d4e56fb',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'5395',	'png',	'2021-06-28 09:37:57',	NULL),
 ('2dff6214-c04d-4ddf-801b-44b956b581fe',	9,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/eda463ef-79c6-4901-80ad-d57edc99d472/2dff6214-c04d-4ddf-801b-44b956b581fe',	'cron.png',	'eda463ef-79c6-4901-80ad-d57edc99d472',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'5395',	'png',	'2021-06-28 09:38:20',	NULL),
 ('36a12652-e137-499a-b81e-293d9c04e80f',	13,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/bbca0459-2390-438d-bffa-18f30579e3cf/36a12652-e137-499a-b81e-293d9c04e80f',	'container.jpg',	'bbca0459-2390-438d-bffa-18f30579e3cf',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'25718',	'jpg',	'2021-06-28 09:42:04',	NULL),
 ('4021659d-f20d-48f5-8fdf-10481279a0ec',	1,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/f42abdfe-fba5-4bda-b49b-2bf8e778e849/4021659d-f20d-48f5-8fdf-10481279a0ec',	'docker_swarm.png',	'f42abdfe-fba5-4bda-b49b-2bf8e778e849',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'123625',	'png',	'2021-06-26 10:14:26',	NULL),
 ('487744f0-144d-4c53-bb85-a7589f42a791',	4,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/a7c927db-eab2-44d8-a780-173bd8192bab/487744f0-144d-4c53-bb85-a7589f42a791',	'container.jpg',	'a7c927db-eab2-44d8-a780-173bd8192bab',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'25718',	'jpg',	'2021-06-28 09:37:48',	NULL),
 ('4c07cee1-0178-4e31-9a8d-33305ef80c26',	6,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/e90cd533-b915-4194-8fd4-d4887d4e56fb/4c07cee1-0178-4e31-9a8d-33305ef80c26',	'container.jpg',	'e90cd533-b915-4194-8fd4-d4887d4e56fb',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'25718',	'jpg',	'2021-06-28 09:37:57',	NULL),
+('4ef8bccc-6c24-4ef2-862c-6bb1c1d84972',	31,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/87e8588f-e3c3-439f-82cf-6eeda72787fd/4ef8bccc-6c24-4ef2-862c-6bb1c1d84972',	'9A01624D-450E-408C-95FC-2C2DD9F3BF46.jpeg',	'87e8588f-e3c3-439f-82cf-6eeda72787fd',	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'887980',	'jpeg',	'2021-07-05 15:55:09',	NULL),
 ('6b34eff9-0955-4778-9dfa-8064c98a1f76',	15,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/3b83a642-1bbd-4a2c-ae7a-6403703c9983/6b34eff9-0955-4778-9dfa-8064c98a1f76',	'663D41DA-847C-448E-B1FF-A2087FCCCF3C.jpeg',	'3b83a642-1bbd-4a2c-ae7a-6403703c9983',	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'880028',	'jpeg',	'2021-06-28 17:15:53',	NULL),
 ('6d4570a5-3570-418d-b9e0-7f046be84935',	22,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/b2211ab2-6720-478d-abfe-0f888a6d11a0/6d4570a5-3570-418d-b9e0-7f046be84935',	'container.jpg',	'b2211ab2-6720-478d-abfe-0f888a6d11a0',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'25718',	'jpg',	'2021-07-04 21:21:53',	NULL),
 ('77f1c022-0213-4173-ab38-41b9ae8d42dc',	18,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/58294a66-b75b-4332-b180-f1d8336e570b/77f1c022-0213-4173-ab38-41b9ae8d42dc',	'container.jpg',	'58294a66-b75b-4332-b180-f1d8336e570b',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'25718',	'jpg',	'2021-07-04 21:04:15',	NULL),
@@ -22,13 +30,17 @@ INSERT INTO `file` (`file_id`, `index`, `path`, `original_name`, `file_folder_id
 ('8347b057-f92e-4566-a110-3e5d02e17b7d',	16,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/f5a04b21-425a-4afd-ba3d-144e3cc8ef2b/8347b057-f92e-4566-a110-3e5d02e17b7d',	'8B78FC0F-64CA-4CCD-B327-48AC145D6423.jpeg',	'f5a04b21-425a-4afd-ba3d-144e3cc8ef2b',	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'1467717',	'jpeg',	'2021-07-01 12:07:10',	NULL),
 ('88e05b79-c528-496d-81e4-231666c02f90',	2,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/f42abdfe-fba5-4bda-b49b-2bf8e778e849/88e05b79-c528-496d-81e4-231666c02f90',	'bitbucket.png',	'f42abdfe-fba5-4bda-b49b-2bf8e778e849',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'10551',	'png',	'2021-06-26 10:14:26',	NULL),
 ('901f9a14-6d5d-4801-bde5-241d3f7e79d8',	10,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/ac32cb81-981f-437f-a853-61d5f56bb7f0/901f9a14-6d5d-4801-bde5-241d3f7e79d8',	'container.jpg',	'ac32cb81-981f-437f-a853-61d5f56bb7f0',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'25718',	'jpg',	'2021-06-28 09:40:58',	NULL),
+('9aba2462-5eda-415c-a8a7-45a189e8e53b',	32,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/3dcf8fc7-23ae-41b6-87b5-8a2b5bf8fc89/9aba2462-5eda-415c-a8a7-45a189e8e53b',	'42822AE4-6CFF-4465-B476-A25255F693BB.jpeg',	'3dcf8fc7-23ae-41b6-87b5-8a2b5bf8fc89',	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'1064961',	'jpeg',	'2021-07-05 15:55:35',	NULL),
 ('9b32b5dd-9c1e-496b-83fb-0f26d4957777',	17,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/01c8dbe9-4884-44fd-ab8a-244cfc83ece4/9b32b5dd-9c1e-496b-83fb-0f26d4957777',	'container.jpg',	'01c8dbe9-4884-44fd-ab8a-244cfc83ece4',	'7dcc0400-3fb6-44cb-b951-cd9220527070',	'25718',	'jpg',	'2021-07-03 16:21:43',	NULL),
 ('9d2f3324-0621-4fef-8d89-f68ee8209229',	12,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/2f98a9a2-3b4e-40e9-b377-510092f7a57d/9d2f3324-0621-4fef-8d89-f68ee8209229',	'container.jpg',	'2f98a9a2-3b4e-40e9-b377-510092f7a57d',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'25718',	'jpg',	'2021-06-28 09:41:53',	NULL),
 ('a9ce1ef9-192e-42b1-9a81-ba8a518813f0',	21,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/321ff655-bfc7-4cba-8992-215d6529ad5d/a9ce1ef9-192e-42b1-9a81-ba8a518813f0',	'cron.png',	'321ff655-bfc7-4cba-8992-215d6529ad5d',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'5395',	'png',	'2021-07-04 21:05:24',	NULL),
+('ac2ab434-7c93-4fed-b260-86940570479d',	34,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/0d2f6d11-6b89-487a-b797-92e27598c212/ac2ab434-7c93-4fed-b260-86940570479d',	'2506412C-CDB1-401C-8D06-146A326AAB8F.jpeg',	'0d2f6d11-6b89-487a-b797-92e27598c212',	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'595986',	'jpeg',	'2021-07-05 15:56:18',	NULL),
 ('b13c6ad3-143a-46fa-9c2f-ec5d3d4920ce',	8,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/eda463ef-79c6-4901-80ad-d57edc99d472/b13c6ad3-143a-46fa-9c2f-ec5d3d4920ce',	'container.jpg',	'eda463ef-79c6-4901-80ad-d57edc99d472',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'25718',	'jpg',	'2021-06-28 09:38:20',	NULL),
 ('b3d5f4de-365d-4ab4-9ed1-9ab8d7c07183',	20,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/321ff655-bfc7-4cba-8992-215d6529ad5d/b3d5f4de-365d-4ab4-9ed1-9ab8d7c07183',	'container.jpg',	'321ff655-bfc7-4cba-8992-215d6529ad5d',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'25718',	'jpg',	'2021-07-04 21:05:24',	NULL),
 ('b652ddd4-b57d-4b29-9bf6-d65432eb7e27',	5,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/a7c927db-eab2-44d8-a780-173bd8192bab/b652ddd4-b57d-4b29-9bf6-d65432eb7e27',	'cron.png',	'a7c927db-eab2-44d8-a780-173bd8192bab',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'5395',	'png',	'2021-06-28 09:37:48',	NULL),
 ('b8e46de1-c968-46a1-a6ea-9ca58533f2f5',	19,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/58294a66-b75b-4332-b180-f1d8336e570b/b8e46de1-c968-46a1-a6ea-9ca58533f2f5',	'cron.png',	'58294a66-b75b-4332-b180-f1d8336e570b',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'5395',	'png',	'2021-07-04 21:04:15',	NULL),
+('d15900ac-a658-483a-9500-37d834b47bf0',	33,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/a134603c-600c-42eb-b5d2-e310cefb1d48/d15900ac-a658-483a-9500-37d834b47bf0',	'8B81AE9D-F716-42F6-BD32-1F04ADE09845.jpeg',	'a134603c-600c-42eb-b5d2-e310cefb1d48',	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'966952',	'jpeg',	'2021-07-05 15:56:01',	NULL),
+('df44f53d-3a46-4648-a28b-dbeb3b380f82',	25,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/a76720ce-60ac-410e-902e-342d29b91dbb/df44f53d-3a46-4648-a28b-dbeb3b380f82',	'834882EC-F30E-4459-9C17-FF9B3AD4CD5A.jpeg',	'a76720ce-60ac-410e-902e-342d29b91dbb',	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'788769',	'jpeg',	'2021-07-05 15:49:57',	NULL),
 ('e54c564c-2de7-4da7-a8e6-a2ec297df78b',	14,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/bbca0459-2390-438d-bffa-18f30579e3cf/e54c564c-2de7-4da7-a8e6-a2ec297df78b',	'cron.png',	'bbca0459-2390-438d-bffa-18f30579e3cf',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'5395',	'png',	'2021-06-28 09:42:04',	NULL),
 ('e80128d0-9781-47c3-98d1-6783ae9d0b31',	23,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/b2211ab2-6720-478d-abfe-0f888a6d11a0/e80128d0-9781-47c3-98d1-6783ae9d0b31',	'cron.png',	'b2211ab2-6720-478d-abfe-0f888a6d11a0',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'5395',	'png',	'2021-07-04 21:21:53',	NULL),
 ('f80de88a-9403-4c86-9754-86d49342e6f6',	3,	'https://hbjs-kuchelin-guide.s3.ap-northeast-2.amazonaws.com/4423d22b-50b7-4429-ac28-b4d0cbcf7fbc/f80de88a-9403-4c86-9754-86d49342e6f6',	'jenkins.png',	'4423d22b-50b7-4429-ac28-b4d0cbcf7fbc',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'77771',	'png',	'2021-06-26 11:56:24',	NULL);
@@ -36,15 +48,21 @@ INSERT INTO `file` (`file_id`, `index`, `path`, `original_name`, `file_folder_id
 TRUNCATE `file_folder`;
 INSERT INTO `file_folder` (`file_folder_id`, `date_create`, `type`) VALUES
 ('01c8dbe9-4884-44fd-ab8a-244cfc83ece4',	'2021-07-03 16:21:43',	'user_thumbnail'),
+('0d2f6d11-6b89-487a-b797-92e27598c212',	'2021-07-05 15:56:18',	'thumbnail'),
 ('2f98a9a2-3b4e-40e9-b377-510092f7a57d',	'2021-06-28 09:41:53',	'review_image'),
 ('321ff655-bfc7-4cba-8992-215d6529ad5d',	'2021-07-04 21:05:24',	'review_image'),
 ('3b83a642-1bbd-4a2c-ae7a-6403703c9983',	'2021-06-28 17:15:53',	'user_thumbnail'),
+('3dcf8fc7-23ae-41b6-87b5-8a2b5bf8fc89',	'2021-07-05 15:55:35',	'thumbnail'),
 ('4423d22b-50b7-4429-ac28-b4d0cbcf7fbc',	'2021-06-26 11:56:24',	'user_thumbnail'),
 ('58294a66-b75b-4332-b180-f1d8336e570b',	'2021-07-04 21:04:15',	'review_image'),
+('87e8588f-e3c3-439f-82cf-6eeda72787fd',	'2021-07-05 15:55:09',	'thumbnail'),
+('a134603c-600c-42eb-b5d2-e310cefb1d48',	'2021-07-05 15:56:01',	'thumbnail'),
+('a76720ce-60ac-410e-902e-342d29b91dbb',	'2021-07-05 15:49:57',	'thumbnail'),
 ('a7c927db-eab2-44d8-a780-173bd8192bab',	'2021-06-28 09:37:48',	'review_image'),
 ('ac32cb81-981f-437f-a853-61d5f56bb7f0',	'2021-06-28 09:40:58',	'review_image'),
 ('b2211ab2-6720-478d-abfe-0f888a6d11a0',	'2021-07-04 21:21:53',	'review_image'),
 ('bbca0459-2390-438d-bffa-18f30579e3cf',	'2021-06-28 09:42:04',	'review_image'),
+('d1503fb3-553f-4256-9a71-6c6cea8bb180',	'2021-07-05 15:58:03',	'thumbnail'),
 ('e90cd533-b915-4194-8fd4-d4887d4e56fb',	'2021-06-28 09:37:57',	'review_image'),
 ('eda463ef-79c6-4901-80ad-d57edc99d472',	'2021-06-28 09:38:20',	'review_image'),
 ('f42abdfe-fba5-4bda-b49b-2bf8e778e849',	'2021-06-26 10:14:26',	'thumbnail'),
@@ -74,7 +92,16 @@ INSERT INTO `mall` (`mall_id`, `user_id`, `date_create`, `mall_name`, `contact`,
 (7,	'3c3032ce-21b5-4905-8607-6259d1f4a642',	'2021-06-24 14:24:46',	'써브웨이 대구경북대북문',	NULL,	'세계 음식',	'대구 북구 산격동 1335-4',	35.8930999909325,	128.60945479841425,	NULL,	NULL,	0,	'Y',	'북문'),
 (8,	'3c3032ce-21b5-4905-8607-6259d1f4a642',	'2021-06-24 15:24:00',	'끝소 경북대직영점',	NULL,	'한식',	'대구 북구 산격동 1308-6',	35.8947388667741,	128.610887840566,	NULL,	NULL,	0,	'Y',	'북문'),
 (9,	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-06-26 10:14:26',	'할리스 경북대북문점',	NULL,	'카페',	'대구 북구 산격동 1393-11',	35.8926839682366,	128.608759752586,	'f42abdfe-fba5-4bda-b49b-2bf8e778e849',	NULL,	0,	'Y',	'북문'),
-(10,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-06-28 17:14:08',	'낭만놀이',	NULL,	'카페',	'대구 북구 산격동 1309-15',	35.8944296913021,	128.609751944204,	NULL,	NULL,	0,	'Y',	'북문');
+(10,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-06-28 17:14:08',	'낭만놀이',	NULL,	'카페',	'대구 북구 산격동 1309-15',	35.8944296913021,	128.609751944204,	NULL,	NULL,	0,	'Y',	'북문'),
+(11,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-05 15:48:34',	'왕추찜닭 본점',	NULL,	'한식',	'대구 북구 대현동 257-15',	35.8880982778814,	128.603152145921,	NULL,	NULL,	0,	'Y',	'서문'),
+(12,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-05 15:49:57',	'베를린버거',	NULL,	'양식',	'대구 북구 산격동 1327-13',	35.893524742002,	128.608960606417,	'a76720ce-60ac-410e-902e-342d29b91dbb',	NULL,	0,	'Y',	'북문'),
+(13,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-05 15:55:09',	'앞치마입는남자',	NULL,	'양식',	'대구 북구 산격동 1312-10',	35.8950310545585,	128.609393112425,	'87e8588f-e3c3-439f-82cf-6eeda72787fd',	NULL,	0,	'Y',	'북문'),
+(14,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-05 15:55:35',	'태산분식',	NULL,	'세계 음식',	'대구 북구 산격동 1265-20',	35.89685820446493,	128.61116668971306,	'3dcf8fc7-23ae-41b6-87b5-8a2b5bf8fc89',	NULL,	0,	'Y',	'북문'),
+(15,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-05 15:56:01',	'고니식탁',	NULL,	'한식',	'대구 북구 산격동 1393-13',	35.892601279566,	128.608474570478,	'a134603c-600c-42eb-b5d2-e310cefb1d48',	NULL,	0,	'Y',	'북문'),
+(16,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-05 15:56:18',	'마사',	NULL,	'일식',	'대구 북구 산격동 1414-1',	35.8924458015572,	128.607164628631,	'0d2f6d11-6b89-487a-b797-92e27598c212',	NULL,	0,	'Y',	'북문'),
+(17,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-05 15:58:03',	'나이스샤워 경대북문점',	NULL,	'일식',	'대구 북구 산격동 1397-42',	35.8933932198759,	128.607746375079,	'd1503fb3-553f-4256-9a71-6c6cea8bb180',	NULL,	0,	'Y',	'북문'),
+(18,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-05 22:10:28',	'정선생 경북대점',	NULL,	'술집',	'대구 북구 산격동 1397-15',	35.8926322130062,	128.607779713339,	NULL,	NULL,	0,	'Y',	'북문'),
+(19,	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-06 11:45:50',	'한신포차 경북대점',	NULL,	'술집',	'대구 북구 산격동 1313-4',	35.8938102617378,	128.609038370788,	NULL,	NULL,	0,	'Y',	'북문');
 
 TRUNCATE `menu`;
 INSERT INTO `menu` (`menu_id`, `mall_id`, `menu_name`, `like`, `dislike`, `date_create`) VALUES
@@ -219,13 +246,13 @@ INSERT INTO `user_role` (`user_id`, `user_role_group_id`) VALUES
 ('1aa6a6ea-f52b-4496-b560-5dba4a9aad1c',	2),
 ('20f46525-f8e4-4251-b72e-35040c25bdc4',	2),
 ('276f73f9-8dbd-4a38-8344-331d6c5c51d1',	2),
-('3c3032ce-21b5-4905-8607-6259d1f4a642',	2),
 ('5d88b090-044f-4291-8d71-07cac44337d2',	2),
-('6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	2),
 ('7dcc0400-3fb6-44cb-b951-cd9220527070',	2),
 ('85a67213-dbf1-41cd-bafb-50b1fd1ef188',	2),
 ('b0d8b17b-e1de-4a45-98e3-635d424cf549',	2),
 ('e27b8491-77bd-4652-8eae-b1d07f1224da',	2),
+('3c3032ce-21b5-4905-8607-6259d1f4a642',	3),
+('6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	3),
 ('72cbb603-0594-4cf3-b38b-0fd2719ef963',	3);
 
 TRUNCATE `user_role_authority`;
@@ -264,9 +291,9 @@ INSERT INTO `user_role_group` (`user_role_group_id`, `name`, `description`) VALU
 TRUNCATE `user_token`;
 INSERT INTO `user_token` (`user_token_id`, `user_id`, `date_create`, `access_point`) VALUES
 ('164e03db-6bcc-44a1-b1a6-bd2b4a3ad135',	'85a67213-dbf1-41cd-bafb-50b1fd1ef188',	'2021-04-22 15:14:28',	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'),
+('4d76850f-57e5-4824-896d-f86660b5eca8',	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-06 15:49:53',	'KNU_Plate_iOS/1.0 (kevinkim.KNU-Plate-iOS; build:1; iOS 14.6.0) Alamofire/5.4.2'),
 ('608cc4ca-2882-4b84-a672-d562d3aa06e2',	'b0d8b17b-e1de-4a45-98e3-635d424cf549',	'2021-07-01 15:18:03',	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'),
-('88fde5b1-393d-4f98-a8b2-b34badc8ddcf',	'3c3032ce-21b5-4905-8607-6259d1f4a642',	'2021-06-28 17:10:10',	'PostmanRuntime/7.28.1'),
-('eaa5aeef-9d34-417e-a88c-ff9cff8353b0',	'6a8cb443-39ad-499c-9f9f-5959ef4ae1a8',	'2021-07-02 18:16:34',	'PostmanRuntime/7.28.1'),
-('ee364887-1496-4867-aead-b7a381a2a686',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-07-04 21:21:06',	'insomnia/2021.3.0');
+('6fcb9946-2713-4b32-8a66-a30277bd1cdb',	'72cbb603-0594-4cf3-b38b-0fd2719ef963',	'2021-07-06 18:46:45',	'insomnia/2021.3.0'),
+('88fde5b1-393d-4f98-a8b2-b34badc8ddcf',	'3c3032ce-21b5-4905-8607-6259d1f4a642',	'2021-06-28 17:10:10',	'PostmanRuntime/7.28.1');
 
--- 2021-07-04 12:26:46
+-- 2021-07-06 10:42:45
