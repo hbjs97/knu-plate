@@ -1,3 +1,4 @@
+import { dashboardAttributes } from '../models/dashboard';
 import { file } from '../models/file';
 import { mallAttributes } from '../models/mall';
 import { menu } from '../models/menu';
@@ -48,4 +49,12 @@ export interface reviewExpand {
   review_image?: string | file[];
   is_active?: string;
   user?: userExpand;
+}
+
+export interface dashboardDayToDay extends dashboardAttributes {
+  dtd_report?: number;
+  dtd_suggestion?: number;
+  dtd_mall?: number;
+  dtd_review?: number;
+  dtd_user?: number;
 }

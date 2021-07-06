@@ -13,6 +13,7 @@ import fileRoute from './file';
 import suggestionRoute from './suggestion';
 import reportRoute from './report';
 import noticeRoute from './notice';
+import dashboardRoute from './dashboard';
 import { authentication, getUserType } from '../middleware/user.middleware';
 import { uploadFileType } from '../lib/constant';
 import { keys } from 'lodash';
@@ -37,6 +38,7 @@ router.use(
 
 // nonAuthRouters
 router.use('/', nonAuthRoute);
+router.use('/dashboard', dashboardRoute);
 
 // middleware
 // router.use(errorHandler(authentication));
