@@ -13,6 +13,12 @@ import { report } from '../models/report';
 import { review } from '../models/review';
 import { suggestion } from '../models/suggestion';
 import { user } from '../models/user';
+import {
+  authentication,
+  getUserRole,
+  getUserType,
+  hasUserAccessRouter,
+} from '../middleware/user.middleware';
 
 const router = Router();
 
@@ -32,6 +38,7 @@ const router = Router();
  */
 router.post(
   '/',
+  // errorHandler(cronAuthentication),
   errorHandler(async (req: Request, res: Response) => {
     const today = new Date();
     const year = today.getFullYear();
@@ -136,6 +143,10 @@ router.post(
  */
 router.get(
   '/',
+  errorHandler(authentication),
+  errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const range = Number(req.query.range) || 1;
     if (range < 1 || range > 7) {
