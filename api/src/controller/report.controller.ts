@@ -1,5 +1,5 @@
 import { Transaction } from 'sequelize/types';
-import { PER_PAGE } from '../lib/constant';
+import { PER_PAGE, REPORT_PROCESS } from '../lib/constant';
 import { Op } from '../lib/sequelize';
 import { report, reportAttributes } from '../models/report';
 
@@ -79,4 +79,19 @@ export async function updateReportByModel(
   } catch (error) {
     return error.message;
   }
+}
+
+export async function getReportStatus(): Promise<{
+  proceeding: number;
+  done: number;
+}> {
+  const allReportsCount = await report.findAll();
+  const proceedingReports = allReportsCount.filter(
+    (v) => v.result == REPORT_PROCESS[0]
+  );
+  const doneCount = allReportsCount.length - proceedingReports.length;
+  return {
+    proceeding: proceedingReports.length,
+    done: doneCount,
+  };
 }

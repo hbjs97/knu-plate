@@ -3,6 +3,7 @@ import {
   enrollReport,
   getReportById,
   getReportList,
+  getReportStatus,
   updateReportByModel,
 } from '../controller/report.controller';
 import {
@@ -138,6 +139,32 @@ router.get(
       };
     });
     res.status(OK).json(result);
+  })
+);
+
+/**
+ * @swagger
+ * /api/report:
+ *  get:
+ *    tags: [신고]
+ *    summary: 신고 현황 조회
+ *    responses:
+ *      200:
+ *        description: success
+ *      400:
+ *        description: bad request
+ *      500:
+ *        description: internal error
+ */
+router.get(
+  '/status',
+  errorHandler(authentication),
+  errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
+  errorHandler(async (req: Request, res: Response) => {
+    const reportStatus = await getReportStatus();
+    res.status(OK).json(reportStatus);
   })
 );
 
