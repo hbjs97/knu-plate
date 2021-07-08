@@ -190,7 +190,16 @@ router.post(
     if (typeof token == 'string') {
       return res.status(INTERNAL_ERROR).json({ error: token });
     }
-    res.status(OK).json(token);
+
+    const theUserExceptPassword = {
+      ...theUser.get({ plain: true }),
+    };
+    delete theUserExceptPassword.password;
+
+    res.status(OK).json({
+      ...token,
+      user: theUserExceptPassword,
+    });
   })
 );
 
