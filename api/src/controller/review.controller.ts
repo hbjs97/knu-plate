@@ -151,13 +151,11 @@ export async function getReviewById(
 }
 
 export async function getReviewListByMallId(
-  mall_id: number,
   cursor: number,
   user_id?: string
 ): Promise<review[]> {
   let whereAttribute = {};
   whereAttribute = {
-    mall_id: mall_id,
     review_id: {
       [Op.lt]: cursor,
     },
