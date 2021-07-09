@@ -9,8 +9,9 @@ import {
   getReviewListByMallId,
 } from '../controller/review.controller';
 import { changeModelTimestamp, errorHandler } from '../lib/common';
-import { BAD_REQUEST, INTERNAL_ERROR, OK } from '../lib/constant';
+import { BAD_REQUEST, INTERNAL_ERROR, OK, UNAUTHORIZED } from '../lib/constant';
 import { DB } from '../lib/sequelize';
+import { verificationToken } from '../lib/type';
 import {
   authentication,
   getUserRole,
@@ -21,6 +22,8 @@ import { reviewAttributes } from '../models/review';
 import { user } from '../models/user';
 import { user_role } from '../models/user_role';
 import { user_role_group } from '../models/user_role_group';
+import jwt from 'jsonwebtoken';
+import { JWT_SALT } from '../lib/config';
 
 const router = Router();
 
@@ -204,6 +207,24 @@ router.get(
     const theMall = await getMallById(mall_id);
     if (typeof theMall == 'string') {
       return theMall;
+    }
+
+    if (req.headers.authorization) {
+      const token = <string>req.headers.authorization;
+      if (!token.includes('Bearer ')) {
+        return res.status(UNAUTHORIZED).json({ error: 'invalid token type' });
+      }
+      const checkedToken = token.replace('Bearer ', '');
+
+      const verifyToken: verificationToken | string = jwt.verify(
+        checkedToken,
+        JWT_SALT
+      );
+      if (typeof verifyToken == 'string') {
+        return res.status(UNAUTHORIZED).json({ error: 'token verify fail' });
+      }
+
+      req.body._user_id = verifyToken.user_id;
     }
 
     const reviewList = await getReviewListByMallId(
