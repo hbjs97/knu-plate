@@ -262,7 +262,10 @@ export async function getDetailMall(
           };
     return mallInfoAttachedMyRecommend;
   }
-  return expandedMallInfo;
+  return {
+    ...expandedMallInfo.get({ plain: true }),
+    my_recommend: 'N',
+  };
 }
 
 export async function getMyRecommendMallList(
