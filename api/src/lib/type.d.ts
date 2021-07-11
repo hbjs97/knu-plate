@@ -33,6 +33,7 @@ export interface addressOutput {
 export interface mallExpand extends mall {
   menu?: menu[];
   my_recommend?: string;
+  reviewCount?: number;
 }
 
 export interface userExpand extends userAttributes {

@@ -248,22 +248,32 @@ export async function getDetailMall(
     return 'mall not founded';
   }
 
+  const reviewsCount = await review.findAndCountAll({
+    where: {
+      mall_id,
+      is_active: 'Y',
+    },
+  });
+
   if (user_id) {
     const myRecommend = await getMyRecommend(user_id, mall_id);
     const mallInfoAttachedMyRecommend =
       typeof myRecommend != 'string'
         ? {
             ...expandedMallInfo.get({ plain: true }),
+            reviewCount: reviewsCount.count,
             my_recommend: 'Y',
           }
         : {
             ...expandedMallInfo.get({ plain: true }),
+            reviewCount: reviewsCount.count,
             my_recommend: 'N',
           };
     return mallInfoAttachedMyRecommend;
   }
   return {
     ...expandedMallInfo.get({ plain: true }),
+    reviewCount: reviewsCount.count,
     my_recommend: 'N',
   };
 }
