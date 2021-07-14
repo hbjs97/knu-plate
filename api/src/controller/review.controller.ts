@@ -152,7 +152,8 @@ export async function getReviewById(
 
 export async function getReviewListByMallId(
   cursor: number,
-  user_id?: string
+  user_id?: string,
+  mall_id?: number
 ): Promise<review[]> {
   let whereAttribute = {};
   whereAttribute = {
@@ -165,6 +166,12 @@ export async function getReviewListByMallId(
     whereAttribute = {
       ...whereAttribute,
       user_id: user_id,
+    };
+  }
+  if (mall_id) {
+    whereAttribute = {
+      ...whereAttribute,
+      mall_id: mall_id,
     };
   }
   const reviewList = await review.findAll({

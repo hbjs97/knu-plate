@@ -167,6 +167,11 @@ router.post(
  *      - in: query
  *        type: number
  *        required: false
+ *        name: mall_id
+ *        description: 매장 아이디, 내 리뷰 목록 조회 시 입력하지 말 것
+ *      - in: query
+ *        type: number
+ *        required: false
  *        name: cursor
  *        description: 현재 페이지 마지막 인덱스
  *      - in: query
@@ -185,6 +190,7 @@ router.post(
 router.get(
   '/',
   errorHandler(async (req: Request, res: Response) => {
+    const mall_id = Number(req.query.mall_id);
     const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
     const myReview = <string>req.query.myReview;
 
@@ -196,6 +202,16 @@ router.get(
       return res
         .status(BAD_REQUEST)
         .json({ error: 'invalid myReview parameter' });
+    }
+
+    if (myReview == 'N') {
+      if (!mall_id) {
+        return res.status(BAD_REQUEST).json({ error: 'mall_id is empty' });
+      }
+    } else {
+      if (mall_id) {
+        return res.status(BAD_REQUEST).json({ error: 'invalid input value' });
+      }
     }
 
     if (req.headers.authorization) {
@@ -218,7 +234,8 @@ router.get(
 
     const reviewList = await getReviewListByMallId(
       cursor,
-      myReview == 'Y' ? req.body._user_id : null
+      myReview == 'Y' ? req.body._user_id : null,
+      mall_id
     );
     res.status(OK).json(reviewList);
   })
