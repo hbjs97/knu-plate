@@ -299,6 +299,10 @@ router.get(
  */
 router.get(
   '/my-recommend',
+  errorHandler(authentication),
+  errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
     const myRecommendMallList = await getMyRecommendMallList(
