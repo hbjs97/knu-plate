@@ -303,6 +303,16 @@ export async function getMyRecommendMallList(
       ],
       is_active: 'Y',
     },
+    include: [
+      {
+        association: 'file_folder',
+        include: [
+          {
+            association: 'files',
+          },
+        ],
+      },
+    ],
     limit: PER_PAGE,
   });
 
