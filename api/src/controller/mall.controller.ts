@@ -82,7 +82,7 @@ export async function getAddressListFromKakaoMapApi(
         size: PER_PAGE,
         x: CENTER_POSITION.longitude,
         y: CENTER_POSITION.latitude,
-        radius: CENTER_RANGE
+        radius: CENTER_RANGE,
       },
     });
     return {
@@ -284,10 +284,10 @@ export async function getDetailMall(
 export async function getMyRecommendMallList(
   user_id: string,
   cursor: number
-): Promise<mall[] | string> {
+): Promise<mall[]> {
   const myRecommendList = await getMyRecommendList(user_id);
   if (typeof myRecommendList == 'string') {
-    return myRecommendList;
+    return [];
   }
   const mallIdList: number[] = myRecommendList.map((v) => v.mall_id!);
 
