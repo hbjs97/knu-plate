@@ -80,6 +80,9 @@ export async function getAddressListFromKakaoMapApi(
         query: keyword,
         page: pageNumber,
         size: PER_PAGE,
+        x: CENTER_POSITION.longitude,
+        y: CENTER_POSITION.latitude,
+        radius: CENTER_RANGE
       },
     });
     return {
