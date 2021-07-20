@@ -85,6 +85,11 @@ const router = Router();
  *        required: false
  *        name: thumbnail
  *        description: 썸네일
+ *      - in: formData
+ *        type: number
+ *        required: true
+ *        name: kakao_mall_id
+ *        description: 카카오 매장 아이디
  *    responses:
  *      200:
  *        description: success
@@ -106,8 +111,16 @@ router.post(
     const address = req.body.address;
     const latitude = req.body.latitude;
     const longitude = req.body.longitude;
+    const kakao_mall_id = req.body.kakao_mall_id;
 
-    if (!mall_name || !category_name || !address || !latitude || !longitude) {
+    if (
+      !mall_name ||
+      !category_name ||
+      !address ||
+      !latitude ||
+      !longitude ||
+      !kakao_mall_id
+    ) {
       return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
     }
     if (contact) {
@@ -124,6 +137,7 @@ router.post(
       category_name,
       longitude,
       latitude,
+      kakao_mall_id,
     });
     if (resultValidator != 'ok') {
       return res.status(INTERNAL_ERROR).json({ error: resultValidator });
@@ -137,6 +151,7 @@ router.post(
       latitude,
       longitude,
       user_id: req.body._user_id,
+      kakao_mall_id,
     };
 
     try {

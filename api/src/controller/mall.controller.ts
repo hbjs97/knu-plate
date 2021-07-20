@@ -36,7 +36,8 @@ export async function mallValidationChecker(
       (v.address_name == mallData.address ||
         v.road_address_name == mallData.address) &&
       v.x == mallData.longitude &&
-      v.y == mallData.latitude
+      v.y == mallData.latitude &&
+      v.id == mallData.kakao_mall_id
     ) {
       return true;
     }
