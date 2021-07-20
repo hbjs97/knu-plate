@@ -332,7 +332,9 @@ export async function displayNameDuplicateChecker(
   return false;
 }
 
-export async function getUserByMailAddress(mail_address: string): Promise<string | user> {
+export async function getUserByMailAddress(
+  mail_address: string
+): Promise<string | user> {
   const theUser = await user.findOne({
     where: {
       mail_address,
@@ -342,7 +344,7 @@ export async function getUserByMailAddress(mail_address: string): Promise<string
       exclude: ['password'],
     },
   });
-  if(!theUser) {
+  if (!theUser) {
     return 'user not founded';
   }
 

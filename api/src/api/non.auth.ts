@@ -7,6 +7,7 @@ import {
   getUserByIdExceptPassword,
   getUserByMailAddress,
   getUserByName,
+  getUserById,
   insertUser,
   loginProcess,
   setUserByModel,
@@ -153,7 +154,7 @@ router.post(
       const transactionResult = await DB.transaction(async (transaction) => {
         const theUser = await insertUser(userInfo, transaction);
         if (typeof theUser == 'string') {
-          return res.status(INTERNAL_ERROR).json({ error: theUser });
+          throw new Error(theUser);
         }
 
         if (req.files && !isArray(req.files) && req.files.user_thumbnail) {
@@ -180,10 +181,31 @@ router.post(
           }
         }
 
-        return await getUserByIdExceptPassword(theUser.user_id!, transaction);
+        const theUserExceptPassword = await getUserByIdExceptPassword(
+          theUser.user_id!,
+          transaction
+        );
+        if (typeof theUserExceptPassword == 'string') {
+          throw new Error(theUserExceptPassword);
+        }
+
+        return theUserExceptPassword;
       });
 
-      res.status(OK).json(transactionResult);
+      const theUser = await getUserById(transactionResult.user_id!);
+      if (typeof theUser == 'string') {
+        throw new Error(theUser);
+      }
+
+      const token = await loginProcess(theUser, req.get('User-Agent'));
+      if (typeof token == 'string') {
+        throw new Error(token);
+      }
+
+      res.status(OK).json({
+        ...token,
+        user: transactionResult.get({ plain: true }),
+      });
     } catch (error) {
       res.status(INTERNAL_ERROR).json({ error: error.message });
     }
@@ -281,21 +303,24 @@ router.post(
   '/search/username',
   errorHandler(async (req: Request, res: Response) => {
     const mail_address = req.body.mail_address;
-    if(!mail_address) {
-      return res.status(BAD_REQUEST).json({error : 'input value is empty'});
+    if (!mail_address) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
     }
 
     const theUser = await getUserByMailAddress(mail_address + '@knu.ac.kr');
-    if(typeof theUser == 'string') {
-      return res.status(INTERNAL_ERROR).json({error: theUser});
+    if (typeof theUser == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: theUser });
     }
 
-    const sendResult = await sendToUsermail(theUser.mail_address!, theUser.user_name!);
-    if(sendResult != 'ok') {
-      return res.status(INTERNAL_ERROR).json({error: sendResult});
+    const sendResult = await sendToUsermail(
+      theUser.mail_address!,
+      theUser.user_name!
+    );
+    if (sendResult != 'ok') {
+      return res.status(INTERNAL_ERROR).json({ error: sendResult });
     }
 
-    res.status(OK).json({result: 'success'});
+    res.status(OK).json({ result: 'success' });
   })
 );
 
@@ -331,46 +356,51 @@ router.post(
   errorHandler(async (req: Request, res: Response) => {
     const user_name = req.body.user_name;
     const mail_address = req.body.mail_address;
-    if(!user_name || !mail_address) {
-      return res.status(BAD_REQUEST).json({error : 'input value is empty'});
+    if (!user_name || !mail_address) {
+      return res.status(BAD_REQUEST).json({ error: 'input value is empty' });
     }
 
     const theUser = await getUserByName(user_name);
-    if(typeof theUser == 'string') {
-      return res.status(INTERNAL_ERROR).json({error: theUser});
+    if (typeof theUser == 'string') {
+      return res.status(INTERNAL_ERROR).json({ error: theUser });
     }
-    if(theUser.mail_address != mail_address+'@knu.ac.kr') {
-      return res.status(BAD_REQUEST).json({error: 'mismatched mail address'});
+    if (theUser.mail_address != mail_address + '@knu.ac.kr') {
+      return res.status(BAD_REQUEST).json({ error: 'mismatched mail address' });
     }
 
     const newPassword = uuidV4().split('-')[0];
     try {
       await DB.transaction(async (transaction) => {
-        const updatedUser = await setUserByModel(theUser, {
-          ...theUser.get({plain:true}),
-          password: encrypt_password(newPassword),
-        }, transaction);
-        if(typeof updatedUser == 'string') {
+        const updatedUser = await setUserByModel(
+          theUser,
+          {
+            ...theUser.get({ plain: true }),
+            password: encrypt_password(newPassword),
+          },
+          transaction
+        );
+        if (typeof updatedUser == 'string') {
           throw new Error(updatedUser);
         }
-        if(updatedUser.password != encrypt_password(newPassword)) {
+        if (updatedUser.password != encrypt_password(newPassword)) {
           throw new Error('password update fail');
         }
-        
-        const sendResult = await sendToUsermail(theUser.mail_address!, newPassword);
-        if(sendResult != 'ok') {
+
+        const sendResult = await sendToUsermail(
+          theUser.mail_address!,
+          newPassword
+        );
+        if (sendResult != 'ok') {
           throw new Error(sendResult);
         }
       });
-  
-      res.status(OK).json({result: 'success'});
-    } catch(error) {
-      res.status(INTERNAL_ERROR).json({error: error.message});
+
+      res.status(OK).json({ result: 'success' });
+    } catch (error) {
+      res.status(INTERNAL_ERROR).json({ error: error.message });
     }
   })
 );
-
-
 
 /**
  * @swagger
