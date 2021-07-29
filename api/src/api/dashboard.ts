@@ -39,6 +39,10 @@ const router = Router();
 router.post(
   '/',
   // errorHandler(cronAuthentication),
+  errorHandler(authentication),
+  errorHandler(getUserType),
+  errorHandler(getUserRole),
+  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const today = new Date();
     const year = today.getFullYear();
