@@ -117,6 +117,7 @@ export const USER_COMMON_AUTORITY = [
   ['POST', '/api/auth/logout'],
   ['POST', '/api/auth/refresh'],
   ['DELETE', '/api/auth/unregister'],
+  ['PATCH', '/api/auth/modify'],
 ];
 
 export const AUTHORITY_TYPE_LIST = {
@@ -182,7 +183,7 @@ export const AUTHORITY_TYPE_LIST = {
   },
   admin_user: {
     description: '관리자 권한',
-    match: [...USER_COMMON_AUTORITY, ['PATCH', '/api/auth/modify']],
+    match: [...USER_COMMON_AUTORITY],
   },
   non_auth_user: {
     description: '메일 비인증 사용자 권한',
@@ -190,7 +191,7 @@ export const AUTHORITY_TYPE_LIST = {
   },
   auth_user: {
     description: '메일 인증 사용자 권한',
-    match: [...USER_COMMON_AUTORITY, ['PATCH', '/api/auth/modify']],
+    match: [...USER_COMMON_AUTORITY],
   },
   dashboard: {
     description: '대시보드 권한',
