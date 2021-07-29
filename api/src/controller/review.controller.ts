@@ -12,6 +12,7 @@ import {
 } from '../lib/constant';
 import { getUserById } from './user.controller';
 import { mall } from '../models/mall';
+import { reduce } from 'lodash';
 
 export async function enrollReview(
   reviewData: reviewAttributes,
@@ -43,7 +44,7 @@ export async function enrollReview(
 
   const enrolledReview = await review.create(reviewData, { transaction });
   if (!enrolledReview) {
-    throw new Error('review create fail');
+    return 'review create fail';
   }
   const menuListArray = menuList.map((v) => {
     return {
@@ -61,20 +62,23 @@ export async function enrollReview(
   const reviewList = await review.findAll({
     where: {
       mall_id: reviewData.mall_id,
+      is_active: 'Y',
     },
     attributes: ['evaluate'],
     transaction,
   });
 
-  let sumOfEvaluate = 0;
-  reviewList.forEach((v) => {
-    sumOfEvaluate += v.evaluate!;
-  });
+  const average = reviewList.length
+    ? reduce(
+        reviewList,
+        (sum, review) => {
+          return sum + review.evaluate!;
+        },
+        0
+      ) / reviewList.length
+    : 0;
 
-  await theMall.update(
-    { evaluate_average: sumOfEvaluate / reviewList.length },
-    { transaction }
-  );
+  await theMall.update({ evaluate_average: average }, { transaction });
 
   await Promise.all(
     menu_info.map(async (v) => {
@@ -234,8 +238,14 @@ export async function updateReviewByModel(
   return inactivatedReview;
 }
 
-export async function deleteReview(theReview: review): Promise<string> {
-  const deletedReview = await theReview.update({ is_active: 'N' });
+export async function deleteReview(
+  theReview: review,
+  transaction?: Transaction
+): Promise<string> {
+  const deletedReview = await theReview.update(
+    { is_active: 'N' },
+    { transaction }
+  );
   if (deletedReview.is_active != 'N') {
     return 'review delete fail';
   }

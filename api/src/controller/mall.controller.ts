@@ -16,7 +16,7 @@ import { getMyRecommend, getMyRecommendList } from './my.recommend.controller';
 import { getDistance } from 'geolib';
 import { file } from '../models/file';
 import { review } from '../models/review';
-import { isEqual } from 'lodash';
+import { isEqual, reduce } from 'lodash';
 
 export async function mallValidationChecker(
   mallData: mallAttributes
@@ -415,4 +415,59 @@ export async function updateMall(
   }
 
   return theMall;
+}
+
+export async function updateMallEvaluate(
+  mall_id: number,
+  transaction?: Transaction
+): Promise<mall | string> {
+  const theMall: null | (mall & { reviews?: review[] }) = await mall.findOne({
+    where: {
+      mall_id,
+    },
+    include: [
+      {
+        association: 'reviews',
+        where: {
+          is_active: 'Y',
+        },
+      },
+    ],
+    transaction,
+  });
+  if (!theMall) {
+    return 'mall not founded';
+  }
+  if (theMall.is_active != 'Y') {
+    return 'inactive mall';
+  }
+
+  const average = theMall.reviews
+    ? reduce(
+        theMall.reviews,
+        (sum, review) => {
+          return sum + review.evaluate!;
+        },
+        0
+      ) / theMall.reviews.length
+    : 0;
+  await mall.update(
+    {
+      ...theMall.get({ plain: true }),
+      evaluate_average: average,
+    },
+    {
+      where: {
+        mall_id: theMall.mall_id,
+      },
+      transaction,
+    }
+  );
+
+  const updatedMall = await getMallById(theMall.mall_id!, transaction);
+  if (typeof updatedMall == 'string') {
+    return updatedMall;
+  }
+
+  return updatedMall;
 }

@@ -1,7 +1,11 @@
 import { Request, Response, Router } from 'express';
 import { isArray } from 'lodash';
 import { fileUploadReturnUrl } from '../controller/file.controller';
-import { getMallById, updateMall } from '../controller/mall.controller';
+import {
+  getMallById,
+  updateMall,
+  updateMallEvaluate,
+} from '../controller/mall.controller';
 import {
   deleteReview,
   enrollReview,
@@ -304,12 +308,25 @@ router.delete(
         .json({ error: 'not have delete permission to the review' });
     }
 
-    const deleteResult = await deleteReview(theReview);
-    if (deleteResult != 'ok') {
-      return res.status(INTERNAL_ERROR).json({ error: deleteResult });
-    }
+    try {
+      await DB.transaction(async (transaction) => {
+        const deleteResult = await deleteReview(theReview, transaction);
+        if (deleteResult != 'ok') {
+          throw new Error(deleteResult);
+        }
 
-    res.status(OK).json({ result: 'success' });
+        const updatedMall = await updateMallEvaluate(
+          theReview.mall_id!,
+          transaction
+        );
+        if (typeof updatedMall == 'string') {
+          throw new Error(updatedMall);
+        }
+      });
+      res.status(OK).json({ result: 'success' });
+    } catch (error) {
+      res.status(INTERNAL_ERROR).json({ error: error.message });
+    }
   })
 );
 
