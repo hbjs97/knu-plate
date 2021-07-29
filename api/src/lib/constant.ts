@@ -195,6 +195,9 @@ export const AUTHORITY_TYPE_LIST = {
   },
   dashboard: {
     description: '대시보드 권한',
-    match: [['GET', '/api/dashboard']],
+    match: [
+      ['GET', '/api/dashboard'],
+      ['POST', '/api/dashboard'],
+    ],
   },
 };

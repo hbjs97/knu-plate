@@ -5,6 +5,7 @@ import {
   INTERNAL_ERROR,
   PERMISSION_LIST,
   UNAUTHORIZED,
+  USER_ROLE_GROUP,
 } from '../lib/constant';
 import jwt from 'jsonwebtoken';
 import { JWT_SALT } from '../lib/config';
@@ -16,9 +17,9 @@ import {
   user_role_authority,
   user_role_authorityAttributes,
 } from '../models/user_role_authority';
-import { errorHandler } from '../lib/common';
 import { user_role } from '../models/user_role';
 import { isArray } from 'lodash';
+import { user_role_group } from '../models/user_role_group';
 
 export async function authentication(
   req: Request,
@@ -87,10 +88,19 @@ export async function getUserRole(
   res: Response,
   next: NextFunction
 ) {
-  const userRole = await user_role.findOne({
+  const userRole:
+    | null
+    | (user_role & {
+        user_role_group?: user_role_group;
+      }) = await user_role.findOne({
     where: {
       user_id: req.body._user_id,
     },
+    include: [
+      {
+        association: 'user_role_group',
+      },
+    ],
   });
 
   if (!userRole || !userRole.user_role_group_id) {
@@ -106,6 +116,7 @@ export async function getUserRole(
     },
   });
 
+  req.body._user_role_group_id = userRole.user_role_group?.user_role_group_id;
   req.body._user_role = roleList.map((v) => v.get({ plain: true }));
 
   next();
@@ -144,6 +155,10 @@ export const hasUserAccessRouter = async function (
   if (result) {
     next();
   } else {
-    throw new Error('authorization error');
+    if (req.body._user_role_group_id == USER_ROLE_GROUP.NON_AUTH_USER) {
+      throw new Error('authorization error non_auth_user');
+    } else {
+      throw new Error('authorization error');
+    }
   }
 };
