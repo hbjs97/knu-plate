@@ -158,7 +158,7 @@ export async function getReviewListByMallId(
   cursor: number,
   user_id?: string,
   mall_id?: number
-): Promise<{ rows: review[]; count: number }> {
+): Promise<review[]> {
   let whereAttribute = {};
   whereAttribute = {
     review_id: {
@@ -178,7 +178,7 @@ export async function getReviewListByMallId(
       mall_id: mall_id,
     };
   }
-  const reviewList = await review.findAndCountAll({
+  const reviewList = await review.findAll({
     order: [['review_id', 'DESC']],
     where: whereAttribute,
     include: [
@@ -207,7 +207,6 @@ export async function getReviewListByMallId(
         ],
       },
     ],
-    distinct: true,
     limit: PER_PAGE,
   });
 
