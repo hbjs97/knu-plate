@@ -284,7 +284,7 @@ router.get(
     }
     const result = mallList.map((v) => {
       return {
-        ...v.get({ plain: true }),
+        ...v,
         date_create: changeModelTimestamp(v.date_create!),
       };
     });

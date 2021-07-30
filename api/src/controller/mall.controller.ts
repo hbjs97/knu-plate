@@ -158,7 +158,7 @@ export async function getMallList(
   pageOption: {
     cursor: number;
   }
-): Promise<mall[]> {
+): Promise<(mallAttributes & { reviewCount?: number })[]> {
   let whereAttribute = {};
   whereAttribute = {
     is_active: 'Y',
@@ -187,7 +187,9 @@ export async function getMallList(
     };
   }
 
-  const mallList = await mall.findAll({
+  const includeReviewsMallList: (mall & {
+    reviews?: review[];
+  })[] = await mall.findAll({
     order: [['mall_id', 'DESC']],
     where: whereAttribute,
     // TODO: include my_recommand
@@ -200,9 +202,29 @@ export async function getMallList(
           },
         ],
       },
+      {
+        association: 'reviews',
+        where: { is_active: 'Y' },
+        attributes: ['review_id'],
+      },
     ],
     limit: PER_PAGE,
   });
+
+  const mallList: (mallAttributes & {
+    reviewCount?: number;
+  })[] = includeReviewsMallList.map((v) => {
+    const reviewCount = v.reviews ? v.reviews.length : 0;
+    const theMall: mallAttributes & { reviews?: review[] } = {
+      ...v.get({ plain: true }),
+    };
+    delete theMall.reviews;
+    return {
+      ...theMall,
+      reviewCount: reviewCount,
+    };
+  });
+
   return mallList;
 }
 
