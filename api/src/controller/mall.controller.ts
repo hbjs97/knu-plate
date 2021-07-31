@@ -206,6 +206,7 @@ export async function getMallList(
         association: 'reviews',
         where: { is_active: 'Y' },
         attributes: ['review_id'],
+        required: false,
       },
     ],
     limit: PER_PAGE,
