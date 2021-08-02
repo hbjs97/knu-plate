@@ -308,14 +308,16 @@ export async function getDetailMall(
 export async function getMyRecommendMallList(
   user_id: string,
   cursor: number
-): Promise<mall[]> {
+): Promise<(mallAttributes & { reviewCount?: number })[]> {
   const myRecommendList = await getMyRecommendList(user_id);
   if (typeof myRecommendList == 'string') {
     return [];
   }
   const mallIdList: number[] = myRecommendList.map((v) => v.mall_id!);
 
-  const myRecommendMallList = await mall.findAll({
+  const includeReviewsMyRecommendMallList: (mall & {
+    reviews?: review[];
+  })[] = await mall.findAll({
     order: [['mall_id', 'DESC']],
     where: {
       [Op.and]: [
@@ -339,11 +341,31 @@ export async function getMyRecommendMallList(
           },
         ],
       },
+      {
+        association: 'reviews',
+        where: { is_active: 'Y' },
+        attributes: ['review_id'],
+        required: false,
+      },
     ],
     limit: PER_PAGE,
   });
 
-  return myRecommendMallList;
+  const mallList: (mallAttributes & {
+    reviewCount?: number;
+  })[] = includeReviewsMyRecommendMallList.map((v) => {
+    const reviewCount = v.reviews ? v.reviews.length : 0;
+    const theMall: mallAttributes & { reviews?: review[] } = {
+      ...v.get({ plain: true }),
+    };
+    delete theMall.reviews;
+    return {
+      ...theMall,
+      reviewCount: reviewCount,
+    };
+  });
+
+  return mallList;
 }
 
 export function getDistanceFromCenter(from: {
