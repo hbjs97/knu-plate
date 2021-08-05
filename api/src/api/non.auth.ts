@@ -314,15 +314,15 @@ router.post(
       return res.status(INTERNAL_ERROR).json({ error: theUser });
     }
 
-    const sendResult = await sendToUsermail(
-      theUser.mail_address!,
-      theUser.user_name!
-    );
-    if (sendResult != 'ok') {
-      return res.status(INTERNAL_ERROR).json({ error: sendResult });
-    }
+    // const sendResult = await sendToUsermail(
+    //   theUser.mail_address!,
+    //   theUser.user_name!
+    // );
+    // if (sendResult != 'ok') {
+    //   return res.status(INTERNAL_ERROR).json({ error: sendResult });
+    // }
 
-    res.status(OK).json({ result: 'success' });
+    res.status(OK).json(theUser);
   })
 );
 
