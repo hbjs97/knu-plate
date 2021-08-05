@@ -77,12 +77,12 @@ const router = Router();
 router.post(
   '/signup',
   errorHandler(async (req: Request, res: Response) => {
-    const userInfo: userAttributes = {};
-
-    userInfo.user_name = req.body.user_name.trim();
-    userInfo.display_name = req.body.display_name.trim();
-    userInfo.password = encrypt_password(String(req.body.password.trim()));
-    userInfo.mail_address = req.body.mail_address;
+    const userInfo: userAttributes = {
+      user_name: req.body.user_name.trim(),
+      display_name: req.body.display_name.trim(),
+      password: encrypt_password(String(req.body.password.trim())),
+      mail_address: req.body.mail_address,
+    };
 
     // user_name
     if (!userInfo.user_name) {
@@ -146,6 +146,8 @@ router.post(
           error: 'incorrect mail_address format',
         });
       }
+    } else {
+      return res.status(BAD_REQUEST).json({ error: 'mail_address is empty' });
     }
     // verification
 
