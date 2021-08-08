@@ -476,6 +476,7 @@ export async function updateMallEvaluate(
         where: {
           is_active: 'Y',
         },
+        required: false,
       },
     ],
     transaction,
