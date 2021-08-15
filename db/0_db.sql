@@ -295,7 +295,7 @@ CREATE TABLE `user` (
   `user_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL COMMENT 'encryped_password',
   `display_name` varchar(255) NOT NULL COMMENT '이름 - 중복불가',
-  `mail_address` varchar(255) NOT NULL COMMENT '학교 메일',
+  `mail_address` varchar(255) DEFAULT NULL COMMENT '학교 메일',
   `date_create` datetime NOT NULL DEFAULT current_timestamp(),
   `is_active` varchar(1) NOT NULL DEFAULT 'Y',
   `medal_id` int(11) DEFAULT NULL,
