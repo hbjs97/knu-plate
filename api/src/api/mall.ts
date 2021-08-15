@@ -314,15 +314,30 @@ router.get(
  */
 router.get(
   '/my-recommend',
-  errorHandler(authentication),
-  errorHandler(getUserType),
-  errorHandler(getUserRole),
-  errorHandler(hasUserAccessRouter),
   errorHandler(async (req: Request, res: Response) => {
     const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
+
+    if (req.headers.authorization) {
+      const token = <string>req.headers.authorization;
+      if (!token.includes('Bearer ')) {
+        return res.status(UNAUTHORIZED).json({ error: 'invalid token type' });
+      }
+      const checkedToken = token.replace('Bearer ', '');
+
+      const verifyToken: verificationToken | string = jwt.verify(
+        checkedToken,
+        JWT_SALT
+      );
+      if (typeof verifyToken == 'string') {
+        return res.status(UNAUTHORIZED).json({ error: 'token verify fail' });
+      }
+
+      req.body._user_id = verifyToken.user_id;
+    }
+
     const myRecommendMallList = await getMyRecommendMallList(
-      req.body._user_id,
-      cursor
+      cursor,
+      req.body._user_id || null
     );
     if (typeof myRecommendMallList == 'string') {
       return res.status(INTERNAL_ERROR).json({ error: myRecommendMallList });
@@ -481,10 +496,7 @@ router.get(
       req.body._user_id = verifyToken.user_id;
     }
 
-    const detailMall = await getDetailMall(
-      mall_id,
-      req.body._user_id ? req.body._user_id : null
-    );
+    const detailMall = await getDetailMall(mall_id, req.body._user_id || null);
     if (typeof detailMall == 'string') {
       return res.status(BAD_REQUEST).json({ error: detailMall });
     }

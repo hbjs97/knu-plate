@@ -306,8 +306,8 @@ export async function getDetailMall(
 }
 
 export async function getMyRecommendMallList(
-  user_id: string,
-  cursor: number
+  cursor: number,
+  user_id?: string
 ): Promise<(mallAttributes & { reviewCount?: number })[]> {
   const myRecommendList = await getMyRecommendList(user_id);
   if (typeof myRecommendList == 'string') {

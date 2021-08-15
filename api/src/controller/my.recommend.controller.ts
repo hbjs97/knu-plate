@@ -133,7 +133,7 @@ export async function deleteRecommendFromMall(
 }
 
 export async function getMyRecommendList(
-  user_id: string
+  user_id?: string
 ): Promise<my_recommend[] | string> {
   const myRecommendList = await my_recommend.findAll({
     order: [['recommend_id', 'DESC']],
