@@ -488,15 +488,16 @@ export async function updateMallEvaluate(
     return 'inactive mall';
   }
 
-  const average = theMall.reviews
-    ? reduce(
-        theMall.reviews,
-        (sum, review) => {
-          return sum + review.evaluate!;
-        },
-        0
-      ) / theMall.reviews.length
-    : 0;
+  const average =
+    theMall.reviews && theMall.reviews.length
+      ? reduce(
+          theMall.reviews,
+          (sum, review) => {
+            return sum + review.evaluate!;
+          },
+          0
+        ) / theMall.reviews.length
+      : 0;
   await mall.update(
     {
       ...theMall.get({ plain: true }),
