@@ -20,14 +20,7 @@ import {
   errorHandler,
   regexTestDecoded,
 } from '../lib/common';
-import {
-  BAD_REQUEST,
-  INTERNAL_ERROR,
-  OK,
-  REG_EMAIL,
-  REG_ENG_NUM,
-  REG_ENG_NUM_KR,
-} from '../lib/constant';
+import { BAD_REQUEST, INTERNAL_ERROR, OK, REG_ENG_NUM } from '../lib/constant';
 import { DB } from '../lib/sequelize';
 import { userAttributes } from '../models/user';
 import { v4 as uuidV4 } from 'uuid';
@@ -49,18 +42,8 @@ const router = Router();
  *      - in: formData
  *        type: string
  *        required: true
- *        name: display_name
- *        description: 표시할 이름. 표시할 이름 2자 이상 10자 이하.
- *      - in: formData
- *        type: string
- *        required: true
  *        name: password
  *        description: 비밀번호. 4자 이상 30자 제한.
- *      - in: formData
- *        type: string
- *        required: true
- *        name: mail_address
- *        description: 메일 주소
  *      - in: formData
  *        type: file
  *        required: false
@@ -79,9 +62,8 @@ router.post(
   errorHandler(async (req: Request, res: Response) => {
     const userInfo: userAttributes = {
       user_name: req.body.user_name.trim(),
-      display_name: req.body.display_name.trim(),
+      display_name: uuidV4().split('-')[0] + uuidV4().split('-')[0],
       password: encrypt_password(String(req.body.password.trim())),
-      mail_address: req.body.mail_address,
     };
 
     // user_name
@@ -114,41 +96,41 @@ router.post(
       });
     }
 
-    // display_name
-    if (!userInfo.display_name) {
-      return res.status(BAD_REQUEST).json({ error: 'display_name is empty' });
-    }
-    if (userInfo.display_name.length < 2 || userInfo.display_name.length > 10) {
-      return res
-        .status(BAD_REQUEST)
-        .json({ error: 'display_name length is too short or too long' });
-    }
-    if (!regexTestDecoded(REG_ENG_NUM_KR, userInfo.display_name)) {
-      return res.status(BAD_REQUEST).json({
-        error: 'display_name is english and number only',
-      });
-    }
+    // // display_name
+    // if (!userInfo.display_name) {
+    //   return res.status(BAD_REQUEST).json({ error: 'display_name is empty' });
+    // }
+    // if (userInfo.display_name.length < 2 || userInfo.display_name.length > 10) {
+    //   return res
+    //     .status(BAD_REQUEST)
+    //     .json({ error: 'display_name length is too short or too long' });
+    // }
+    // if (!regexTestDecoded(REG_ENG_NUM_KR, userInfo.display_name)) {
+    //   return res.status(BAD_REQUEST).json({
+    //     error: 'display_name is english and number only',
+    //   });
+    // }
 
     const isDuplicated = await userDuplicateChecker(
       userInfo.user_name,
-      userInfo.display_name
+      userInfo.display_name!
     );
     if (typeof isDuplicated == 'string') {
       return res.status(INTERNAL_ERROR).json({ error: isDuplicated });
     }
 
-    if (userInfo.mail_address) {
-      if (userInfo.mail_address.length > 255) {
-        return res.status(BAD_REQUEST).json({ error: 'mail_address too long' });
-      }
-      if (!regexTestDecoded(REG_EMAIL, userInfo.mail_address)) {
-        return res.status(BAD_REQUEST).json({
-          error: 'incorrect mail_address format',
-        });
-      }
-    } else {
-      return res.status(BAD_REQUEST).json({ error: 'mail_address is empty' });
-    }
+    // if (userInfo.mail_address) {
+    //   if (userInfo.mail_address.length > 255) {
+    //     return res.status(BAD_REQUEST).json({ error: 'mail_address too long' });
+    //   }
+    //   if (!regexTestDecoded(REG_EMAIL, userInfo.mail_address)) {
+    //     return res.status(BAD_REQUEST).json({
+    //       error: 'incorrect mail_address format',
+    //     });
+    //   }
+    // } else {
+    //   return res.status(BAD_REQUEST).json({ error: 'mail_address is empty' });
+    // }
     // verification
 
     // insert into db
