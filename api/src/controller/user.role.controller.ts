@@ -1,5 +1,4 @@
 import { Transaction } from 'sequelize/types';
-import { DB } from '../lib/sequelize';
 import { user_role, user_roleAttributes } from '../models/user_role';
 import {
   user_role_group,
@@ -14,7 +13,7 @@ export async function setRoleToUser(
 ): Promise<string> {
   const groupIndex = await user_role_group.findOne({
     where: {
-      name: 'NON_AUTH_USER',
+      name: 'COMMON_USER',
     },
     attributes: ['user_role_group_id'],
     transaction,

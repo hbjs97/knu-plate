@@ -46,6 +46,7 @@ export const USER_ROLE_GROUP = {
   ADMIN: 1,
   NON_AUTH_USER: 2,
   AUTH_USER: 3,
+  COMMON_USER: 4,
 };
 
 export const KAKAO_MAP_API_URL =
