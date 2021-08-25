@@ -318,21 +318,30 @@ router.get(
     const cursor = Number(req.query.cursor) || Number.MAX_SAFE_INTEGER;
 
     if (req.headers.authorization) {
-      const token = <string>req.headers.authorization;
+      const token = req.headers.authorization
+        ? String(req.headers.authorization)
+        : '';
+      if (!token) {
+        return res.status(UNAUTHORIZED).json({ error: 'token is empty' });
+      }
       if (!token.includes('Bearer ')) {
         return res.status(UNAUTHORIZED).json({ error: 'invalid token type' });
       }
       const checkedToken = token.replace('Bearer ', '');
 
-      const verifyToken: verificationToken | string = jwt.verify(
-        checkedToken,
-        JWT_SALT
-      );
-      if (typeof verifyToken == 'string') {
-        return res.status(UNAUTHORIZED).json({ error: 'token verify fail' });
-      }
+      try {
+        const verifyToken: verificationToken | string = jwt.verify(
+          checkedToken,
+          JWT_SALT
+        );
+        if (typeof verifyToken == 'string') {
+          throw new Error('token verify fail');
+        }
 
-      req.body._user_id = verifyToken.user_id;
+        req.body._user_id = verifyToken.user_id;
+      } catch (error) {
+        return res.status(UNAUTHORIZED).json({ error: error.message });
+      }
     }
 
     const myRecommendMallList = await getMyRecommendMallList(
@@ -479,21 +488,30 @@ router.get(
     }
 
     if (req.headers.authorization) {
-      const token = <string>req.headers.authorization;
+      const token = req.headers.authorization
+        ? String(req.headers.authorization)
+        : '';
+      if (!token) {
+        return res.status(UNAUTHORIZED).json({ error: 'token is empty' });
+      }
       if (!token.includes('Bearer ')) {
         return res.status(UNAUTHORIZED).json({ error: 'invalid token type' });
       }
       const checkedToken = token.replace('Bearer ', '');
 
-      const verifyToken: verificationToken | string = jwt.verify(
-        checkedToken,
-        JWT_SALT
-      );
-      if (typeof verifyToken == 'string') {
-        return res.status(UNAUTHORIZED).json({ error: 'token verify fail' });
-      }
+      try {
+        const verifyToken: verificationToken | string = jwt.verify(
+          checkedToken,
+          JWT_SALT
+        );
+        if (typeof verifyToken == 'string') {
+          throw new Error('token verify fail');
+        }
 
-      req.body._user_id = verifyToken.user_id;
+        req.body._user_id = verifyToken.user_id;
+      } catch (error) {
+        return res.status(UNAUTHORIZED).json({ error: error.message });
+      }
     }
 
     const detailMall = await getDetailMall(mall_id, req.body._user_id || null);
