@@ -1,16 +1,60 @@
 import { AWS_BUCKET_NAME, AWS_S3_URL, NODE_ENV, S3 } from '../lib/config';
 import { file_folder } from '../models/file_folder';
 import { file, fileAttributes } from '../models/file';
-import crypto from 'crypto';
-import { uploadFileType } from '../lib/constant';
-import { changeModelTimestamp } from '../lib/common';
-import { fileTimestampable } from '../lib/type';
 import { Transaction } from 'sequelize';
-import { DB } from '../lib/sequelize';
-import { fileUploadReturnUrlDevelop } from './file.develop.controller';
-import axios from 'axios';
 import { v4 as uuidV4 } from 'uuid';
 import { ManagedUpload } from 'aws-sdk/clients/s3';
+
+export async function emptyS3Directory(fileFolder: string) {
+  const listParams = {
+    Bucket: AWS_BUCKET_NAME,
+    Prefix: `${fileFolder}/`,
+  };
+
+  const listedObjects = await S3.listObjectsV2(listParams).promise();
+
+  if (listedObjects.Contents?.length === 0) return;
+
+  const deleteParams = {
+    Bucket: AWS_BUCKET_NAME,
+    Delete: { Objects: [] as any },
+  };
+
+  listedObjects.Contents?.forEach(({ Key }) => {
+    deleteParams.Delete.Objects.push({ Key });
+  });
+
+  await S3.deleteObjects(deleteParams).promise();
+
+  if (listedObjects.IsTruncated) await emptyS3Directory(fileFolder);
+}
+
+export async function deleteFileFolder(
+  fileFolder: string,
+  transaction?: Transaction
+): Promise<string> {
+  try {
+    const fileList = await getFileListFromFileFolder(fileFolder!);
+    if (typeof fileList == 'string') {
+      throw new Error(fileList);
+    }
+
+    await Promise.all(
+      fileList.map(async (v) => {
+        await v.destroy({ transaction });
+      })
+    );
+
+    await file_folder.destroy({
+      where: { file_folder_id: fileFolder },
+      transaction,
+    });
+    await emptyS3Directory(fileFolder);
+    return 'ok';
+  } catch (error) {
+    return error.message;
+  }
+}
 
 export async function fileUploadReturnUrl(
   uploader: string,
@@ -62,38 +106,6 @@ export async function fileUploadReturnUrl(
     return error.message || 'upload fail';
   }
 }
-
-// export async function initMallFileFolder(
-//   uploader: string,
-//   transaction?: Transaction
-// ): Promise<string | file_folder> {
-//   try {
-//     const newFileFolder = uuidV4();
-//     const uploadParams = {
-//       Bucket: AWS_BUCKET_NAME,
-//       Body: '',
-//       Key: `${newFileFolder}/`,
-//       ACL: 'public-read',
-//     };
-
-//     S3.upload(uploadParams).promise();
-
-//     const folder = await file_folder.create(
-//       {
-//         file_folder_id: newFileFolder,
-//         type: 'thumbnail',
-//       },
-//       { transaction }
-//     );
-//     if (!folder) {
-//       throw new Error('file_folder create fail');
-//     }
-
-//     return folder;
-//   } catch (error) {
-//     return error.message || 'mall folder init fail';
-//   }
-// }
 
 export async function getFileFolderById(
   file_folder_id: string

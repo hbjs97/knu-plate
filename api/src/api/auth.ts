@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { includes, isArray } from 'lodash';
 import {
+  deleteFileFolder,
   fileUploadReturnUrl,
   getFileFolderById,
   getFileListFromFileFolder,
@@ -335,7 +336,7 @@ router.patch(
         }
 
         if (force == 'Y' && prevUserThumbNail) {
-          const deleteResult = await deleteFileFolderDevelop(
+          const deleteResult = await deleteFileFolder(
             prevUserThumbNail,
             transaction
           );
